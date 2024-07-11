@@ -21,8 +21,6 @@ class UNRANKHUNTER_API IKYG_WeaponInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	// Set input state of weapon firing.
-	// If you want to fire weapon, you can use 'SetFireInput(true)'.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	void SetFireInput(bool bInput);
 
@@ -51,4 +49,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool IsZooming();
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	void SetWeaponEnabled(bool bNewEnabled);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	bool GetWeaponEnabled();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	void AttachWeaponToSocket(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "");
+
 };
