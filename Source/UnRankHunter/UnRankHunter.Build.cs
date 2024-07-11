@@ -7,8 +7,10 @@ public class UnRankHunter : ModuleRules
 	public UnRankHunter(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+
+        PublicIncludePaths.AddRange(new string[] { "UnRankHunter/Public/AJH", "UnRankHunter/Public/JSH", "UnRankHunter/Public/KBH", "UnRankHunter/Public/KYG", "UnRankHunter/Public/YYJ" });
+
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
