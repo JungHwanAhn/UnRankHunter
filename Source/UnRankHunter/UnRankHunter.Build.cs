@@ -10,6 +10,9 @@ public class UnRankHunter : ModuleRules
 
         PublicIncludePaths.AddRange(new string[] { "UnRankHunter/Public/AJH", "UnRankHunter/Public/JSH", "UnRankHunter/Public/KBH", "UnRankHunter/Public/KYG", "UnRankHunter/Public/YYJ" });
 
+		// AJH
+		PublicIncludePaths.AddRange(new string[] { "UnRankHunter/Public/AJH/Interface", "UnRankHunter/Public/AJH/Subsystem"});
+
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
