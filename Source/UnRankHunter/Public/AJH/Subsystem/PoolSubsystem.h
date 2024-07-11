@@ -21,7 +21,7 @@ struct FPoolArray {
 
 	void Add(AActor* ActorToAdd) {
 		ObjectPool.Add(ActorToAdd);
-	}
+	} 
 };
 
 UCLASS()

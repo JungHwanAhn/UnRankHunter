@@ -52,7 +52,6 @@ AActor* UPoolSubsystem::GetActorFromPool(TSubclassOf<AActor> PoolClass, FVector 
     // Retrieves an actor from the pool
     if (!ObjectPool.IsEmpty())
     {
-        UE_LOG(LogTemp, Warning, TEXT("Spawn"));
         AActor* Actor = ObjectPool.Pop();
         if (Actor) {
             Actor->SetActorLocationAndRotation(Location, Rotation);
@@ -62,7 +61,6 @@ AActor* UPoolSubsystem::GetActorFromPool(TSubclassOf<AActor> PoolClass, FVector 
             return Actor;
         }
     }
-    UE_LOG(LogTemp, Warning, TEXT("Create"));
     //creates a new one if the pool is empty
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
