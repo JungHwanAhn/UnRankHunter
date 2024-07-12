@@ -51,13 +51,20 @@ public:
 	bool IsZooming();
 
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void SetWeaponEnabled(bool bNewEnabled);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	bool GetWeaponEnabled();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void AttachWeaponToSocket(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "");
 
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
+	int GetRemainAmmoCount();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
+	int GetMaximumAmmoCount();
 };
