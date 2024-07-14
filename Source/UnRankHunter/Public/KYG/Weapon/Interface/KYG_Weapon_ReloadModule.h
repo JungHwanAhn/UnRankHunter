@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "KYG_WeaponModuleInterface.h"
 #include "KYG_Weapon_ReloadModule.generated.h"
 
 // This class does not need to be modified.
@@ -14,12 +15,21 @@ class UKYG_Weapon_ReloadModule : public UInterface
 };
 
 /**
- * 
+ *
  */
-class UNRANKHUNTER_API IKYG_Weapon_ReloadModule
+class UNRANKHUNTER_API IKYG_Weapon_ReloadModule : public IKYG_WeaponModuleInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
+	void StartReload();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
+	void StopReload();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
+	bool CanReload();
 };

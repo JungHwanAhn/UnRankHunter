@@ -25,6 +25,9 @@ class UNRANKHUNTER_API IWeaponPropertyInterface
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Property")
+	FName GetWeaponID();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Property")
 	void GetWeaponParameter(FKYG_WeaponParameter& Output);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Property")

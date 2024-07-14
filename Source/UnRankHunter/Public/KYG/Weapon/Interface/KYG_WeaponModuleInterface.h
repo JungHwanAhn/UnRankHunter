@@ -4,26 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "KYG_WeaponModuleInterface.h"
-#include "KYG_Weapon_ShooterModule.generated.h"
+#include "KYG_WeaponModuleInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UKYG_Weapon_ShooterModule : public UInterface
+class UKYG_WeaponModuleInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
 /**
- *
+ * 
  */
-class UNRANKHUNTER_API IKYG_Weapon_ShooterModule : public IKYG_WeaponModuleInterface
+class UNRANKHUNTER_API IKYG_WeaponModuleInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Shooter Module")
-	bool FireWeapon();
 };
