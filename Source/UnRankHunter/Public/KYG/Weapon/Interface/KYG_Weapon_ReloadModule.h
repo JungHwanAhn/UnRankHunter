@@ -32,4 +32,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
 	bool CanReload();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
+	bool IsReloading();
+
 };
