@@ -25,7 +25,7 @@ class UNRANKHUNTER_API IKYG_Weapon_ReloadModule : public IKYG_WeaponModuleInterf
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
-	void StartReload();
+	void SetReloadInput(bool bInput);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Reload Module")
 	void StopReload();

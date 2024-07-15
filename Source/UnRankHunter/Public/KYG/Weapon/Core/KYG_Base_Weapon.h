@@ -29,7 +29,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	// Implement "IKYG_WeaponInterface"
+private:
+	// Force set weapon active.
+	void SetWeaponActive(bool bActive);
 
 #pragma region [Interface]
 #pragma region [KYG_WeaponInterface]
@@ -61,14 +63,10 @@ public:
 
 	virtual bool GetWeaponEnabled_Implementation() override;
 
-	virtual void AttachWeaponToSocket_Implementation(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "") override;
+	//virtual void AttachWeaponToSocket_Implementation(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "") override;
 
 	virtual void SetupWeaponAttachment_Implementation(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "") override;
 
-
-	virtual void GetFinalStat_Implementation(FKYG_WeaponStat& Output) override;
-
-	virtual int GetRemainAmmoCount_Implementation() override;
 #pragma endregion
 #pragma region [KYG_WeaponPropertyInterface]
 	virtual FName GetWeaponID_Implementation() override;
@@ -81,8 +79,20 @@ public:
 #pragma endregion
 #pragma endregion
 
+	const FKYG_WeaponParameter& GetWeaponParameter() const;
+
+	const FKYG_WeaponStat& GetFinalStat() const;
+
+	const FKYG_WeaponStat& GetBasicStat() const;
 
 private:
+	bool bIsActive{ false };
+
+	FKYG_WeaponParameter WeaponParameter;
+
+	FKYG_WeaponStat BasicStat;
+
+protected:
 	IKYG_Weapon_TriggerModule* TriggerModule{};
 
 	IKYG_Weapon_ShooterModule* ShooterModule{};
@@ -98,4 +108,10 @@ private:
 
 
 	int32 RemainAmmo{ 0 };
+
+
+protected:
+	AActor* WeaponOwner{};
+
+
 };

@@ -21,44 +21,44 @@ class UNRANKHUNTER_API IKYG_WeaponInterface
 public:
 
 	// Set start or stop weapon firing.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	void SetFireInput(bool bInput);
 
 	// Set start or stop weapon reloading.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	void SetReloadInput(bool bInput);
 
 	// Set start or stop weapon zooming.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	void SetZoomInput(bool bInput);
 
 
 	// Return this weapon can fire now.
 	// If CanFire() is false, this weapon must not be fired.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool CanFire();
 
 	// Return this weapon can reload now.
 	// If CanReload() is false, this weapon must not be reloaded.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool CanReload();
 
 	// Return this weapon can zoom now.
 	// If CanZoom() is false, this weapon must not be zoomed.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool CanZoom();
 
 
 	// Return this weapon is firing now.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool IsFiring();
 
 	// Return this weapon is reloading now.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool IsReloading();
 
 	// Return this weapon is zooming now.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool IsZooming();
 
 
@@ -79,4 +79,11 @@ public:
 	// When this weapon is created, must use this function to initialize.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void SetupWeaponAttachment(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "");
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
+	int32 GetRemainAmmoCount();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
+	void RefillAmmoCount(int32 AmmoCount);
 };
