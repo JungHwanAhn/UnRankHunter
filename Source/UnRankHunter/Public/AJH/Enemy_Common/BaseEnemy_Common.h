@@ -40,7 +40,7 @@ public:
 
 	FOnAttackEnd OnAttackEnd;
 
-	bool isEnemyDie = false;
+	bool bIsEnemyDie = false;
 
 	UPROPERTY(VisibleAnywhere, Category = "Collision")
 	class UBoxComponent* LHCollision;
@@ -48,7 +48,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Collision")
 	class UBoxComponent* RHCollision;
 
-	bool isActive = false;
+	bool bIsActive = false;
 private:
 	
 };

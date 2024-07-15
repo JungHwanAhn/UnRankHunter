@@ -12,7 +12,7 @@ void AAIController_Common::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (PlayerPawn && ControlledPawn->isActive) {
+	if (PlayerPawn && ControlledPawn->bIsActive) {
 		SetFocus(PlayerPawn);
 		MoveToActor(PlayerPawn, 130);
 	}

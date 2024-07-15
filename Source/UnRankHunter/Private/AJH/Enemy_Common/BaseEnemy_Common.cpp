@@ -41,7 +41,7 @@ void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AAc
 
 void ABaseEnemy_Common::EnemyDie()
 {
-	isEnemyDie = true;
+	bIsEnemyDie = true;
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -60,11 +60,11 @@ void ABaseEnemy_Common::OnCollisionEnd_Implementation()
 
 void ABaseEnemy_Common::OnSpawnFromPool_Implementation()
 {
-	isActive = true;
+	bIsActive = true;
 }
 
 void ABaseEnemy_Common::OnReturnToPool_Implementation()
 {
-	isActive = false;
+	bIsActive = false;
 }
 
