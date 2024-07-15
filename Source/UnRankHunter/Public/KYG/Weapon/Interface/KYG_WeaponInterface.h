@@ -81,7 +81,7 @@ public:
 	void SetupWeaponAttachment(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "");
 
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	FName GetWeaponID();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
