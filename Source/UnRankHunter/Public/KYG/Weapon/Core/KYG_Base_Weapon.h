@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Weapon/Interface/KYG_WeaponInterface.h"
+#include "Weapon/Interface/KYG_WeaponPropertyInterface.h"
 #include "Weapon/Interface/KYG_Weapon_TriggerModule.h"
 #include "Weapon/Interface/KYG_Weapon_ShooterModule.h"
 #include "Weapon/Interface/KYG_Weapon_ReloadModule.h"
 #include "KYG_Base_Weapon.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API AKYG_Base_Weapon : public AActor, public IKYG_WeaponInterface
+class UNRANKHUNTER_API AKYG_Base_Weapon : public AActor, public IKYG_WeaponInterface, public IKYG_WeaponPropertyInterface
 {
 	GENERATED_BODY()
 
@@ -29,6 +30,9 @@ public:
 
 
 	// Implement "IKYG_WeaponInterface"
+
+#pragma region [Interface]
+#pragma region [KYG_WeaponInterface]
 public:
 	virtual void SetFireInput_Implementation(bool bInput) override;
 
@@ -65,6 +69,18 @@ public:
 	virtual void GetFinalStat_Implementation(FKYG_WeaponStat& Output) override;
 
 	virtual int GetRemainAmmoCount_Implementation() override;
+#pragma endregion
+#pragma region [KYG_WeaponPropertyInterface]
+	virtual FName GetWeaponID_Implementation() override;
+
+	virtual void GetWeaponParameter_Implementation(FKYG_WeaponParameter& Output) override;
+
+	virtual void GetFinalStat_Implementation(FKYG_WeaponStat& Output) override;
+
+	virtual void GetBasicStat_Implementation(FKYG_WeaponStat& Output) override;
+#pragma endregion
+#pragma endregion
+
 
 private:
 	IKYG_Weapon_TriggerModule* TriggerModule{};

@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Weapon/Structure/KYG_WeaponStuctContainer.h"
-#include "WeaponPropertyInterface.generated.h"
+#include "KYG_WeaponPropertyInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UWeaponPropertyInterface : public UInterface
+class UKYG_WeaponPropertyInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,7 +17,7 @@ class UWeaponPropertyInterface : public UInterface
 /**
  *
  */
-class UNRANKHUNTER_API IWeaponPropertyInterface
+class UNRANKHUNTER_API IKYG_WeaponPropertyInterface
 {
 	GENERATED_BODY()
 

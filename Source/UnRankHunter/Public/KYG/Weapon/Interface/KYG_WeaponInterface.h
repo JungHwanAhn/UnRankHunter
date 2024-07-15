@@ -33,29 +33,41 @@ public:
 	void SetZoomInput(bool bInput);
 
 
+	// Return this weapon can fire now.
+	// If CanFire() is false, this weapon must not be fired.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool CanFire();
 
+	// Return this weapon can reload now.
+	// If CanReload() is false, this weapon must not be reloaded.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool CanReload();
 
+	// Return this weapon can zoom now.
+	// If CanZoom() is false, this weapon must not be zoomed.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool CanZoom();
 
 
+	// Return this weapon is firing now.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool IsFiring();
 
+	// Return this weapon is reloading now.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool IsReloading();
 
+	// Return this weapon is zooming now.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Interface", meta = (ForceAsFunction))
 	bool IsZooming();
 
 
+	// Set weapon enable state.
+	// If you set this property false, this weapon become invisible, no collision, tick disabled.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void SetWeaponEnabled(bool bNewEnabled);
 
+	// Return weapon enable state.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	bool GetWeaponEnabled();
 
@@ -64,13 +76,7 @@ public:
 	void AttachWeaponToSocket(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "");
 
 	// Setup and initialize weapon attachment.
+	// When this weapon is created, must use this function to initialize.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void SetupWeaponAttachment(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "");
-
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Properties", meta = (ForceAsFunction))
-	void GetFinalStat(FKYG_WeaponStat& Output);
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Properties", meta = (ForceAsFunction))
-	int GetRemainAmmoCount();
 };
