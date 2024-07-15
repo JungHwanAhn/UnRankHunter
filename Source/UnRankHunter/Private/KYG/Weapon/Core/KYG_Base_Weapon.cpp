@@ -154,10 +154,10 @@ bool AKYG_Base_Weapon::GetWeaponEnabled_Implementation()
 //{
 //}
 
-void AKYG_Base_Weapon::SetupWeaponAttachment_Implementation(AActor* Owner, USceneComponent* AttachParent, FName SocketName)
+void AKYG_Base_Weapon::SetupWeaponAttachment_Implementation(AActor* NewOwner, USceneComponent* AttachParent, FName SocketName)
 {
 	AttachToComponent(AttachParent, FAttachmentTransformRules::KeepRelativeTransform, SocketName);
-	WeaponOwner = Owner;
+	WeaponOwner = NewOwner;
 }
 
 FName AKYG_Base_Weapon::GetWeaponID_Implementation()

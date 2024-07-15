@@ -13,22 +13,6 @@ UKYG_Base_WeaponModule::UKYG_Base_WeaponModule()
 	// ...
 }
 
-
-// Called when the game starts
 void UKYG_Base_WeaponModule::BeginPlay()
 {
-	Super::BeginPlay();
-
-	// ...
-	
 }
-
-
-// Called every frame
-void UKYG_Base_WeaponModule::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-

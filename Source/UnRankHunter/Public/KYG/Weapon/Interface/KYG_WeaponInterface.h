@@ -71,7 +71,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	bool GetWeaponEnabled();
 
-	// Deprecated Function. Use SetupWeaponAttachment instead of this.
+	// No Used Function. Use SetupWeaponAttachment instead of this.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction, DeprecatedFunction))
 	void AttachWeaponToSocket(AActor* Player, USkeletalMeshComponent* Mesh, FName SocketName = "");
 

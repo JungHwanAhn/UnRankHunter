@@ -15,4 +15,6 @@ class UNRANKHUNTER_API UKYG_Base_WeaponModule : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UKYG_Base_WeaponModule();
+
+	virtual void BeginPlay() override;
 };

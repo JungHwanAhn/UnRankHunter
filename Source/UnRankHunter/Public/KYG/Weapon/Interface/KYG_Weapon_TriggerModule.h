@@ -36,5 +36,5 @@ public:
 	bool IsTriggered();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Trigger Module")
-	void SetTriggerCallback(FKYG_OnWeaponTriggeredDelegate Callback);
+	void SetTriggerCallback(const FKYG_OnWeaponTriggeredDelegate& Callback);
 };
