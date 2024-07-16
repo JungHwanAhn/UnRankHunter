@@ -1,5 +1,6 @@
 #include "BaseEnemy_Common.h"
 #include "AIController_Common.h"
+#include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
 
 ABaseEnemy_Common::ABaseEnemy_Common()
@@ -39,9 +40,20 @@ void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AAc
 	
 }
 
+void ABaseEnemy_Common::Attack()
+{
+	RHCollision->OnComponentBeginOverlap.RemoveDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
+	RHCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
+	LHCollision->OnComponentBeginOverlap.RemoveDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
+	LHCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
+}
+
 void ABaseEnemy_Common::EnemyDie()
 {
-	bIsEnemyDie = true;
+	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
+	if (PoolSubsystem) {
+		PoolSubsystem->ReturnToPool(this);
+	}
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -65,6 +77,7 @@ void ABaseEnemy_Common::OnSpawnFromPool_Implementation()
 
 void ABaseEnemy_Common::OnReturnToPool_Implementation()
 {
+	bIsEnemyDie = false;
 	bIsActive = false;
 }
 

@@ -16,6 +16,9 @@ class UNRANKHUNTER_API ABaseEnemy_Common : public ACharacter, public ICollisionC
 public:
 	ABaseEnemy_Common();
 
+	UFUNCTION()
+	virtual void Attack();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -27,8 +30,9 @@ protected:
 
 	virtual void EnemyDie();
 
-	FTimerHandle DieTimerHandle;
-
+	float randomPattern = 0.0f;
+	float damage = 0.0f;
+	float dieDelay = 3.0f;
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
