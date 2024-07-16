@@ -18,4 +18,7 @@ public:
 private:
 	class APawn* PlayerPawn;
 	class ABaseEnemy_Common* ControlledPawn;
+
+	bool bIsAttack = false;
+	int32 attackDelay = 2;
 };
