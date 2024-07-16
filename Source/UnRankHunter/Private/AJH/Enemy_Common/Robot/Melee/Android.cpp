@@ -32,6 +32,33 @@ AAndroid::AAndroid()
 	RHCollision->SetRelativeLocation(FVector(0, 0, 70));
 }
 
+void AAndroid::Attack()
+{
+	if (!bIsEnemyDie) {
+		Super::Attack();
+
+		damage = 20.0f;
+		randomPattern = FMath::RandRange(1, 9);
+
+		UAndroid_Anim* AndroidAnim = Cast<UAndroid_Anim>(GetMesh()->GetAnimInstance());
+		if (AndroidAnim == nullptr) return;
+
+	
+		if (randomPattern <= 3) {
+			AndroidAnim->Attack("Attack_A");
+		}
+		else if (randomPattern <= 6) {
+			AndroidAnim->Attack("Attack_B");
+		}
+		else {
+			AndroidAnim->Attack("Attack_C");
+		}
+
+		AndroidAnim->OnMontageEnded.RemoveDynamic(this, &AAndroid::OnAttackMontageEnded);
+		AndroidAnim->OnMontageEnded.AddDynamic(this, &AAndroid::OnAttackMontageEnded);
+	}
+}
+
 void AAndroid::OnSpawnFromPool_Implementation()
 {
 	Super::OnSpawnFromPool_Implementation();
@@ -60,7 +87,27 @@ void AAndroid::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* Othe
 	Super::AttackCheckOverlap(OverlapComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 }
 
+float AAndroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (actualDamage > 0.f && !bIsEnemyDie) {
+		androidHP -= actualDamage;
+		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
+		if (androidHP <= 0.f) EnemyDie();
+	}
+	return actualDamage;
+}
+
 void AAndroid::EnemyDie()
 {
-	Super::EnemyDie();
+	bIsEnemyDie = true;
+
+	UAndroid_Anim* AndroidAnim = Cast<UAndroid_Anim>(GetMesh()->GetAnimInstance());
+	if (AndroidAnim == nullptr) return;
+
+	AndroidAnim->Die();
+
+	FTimerHandle DieTimerHandle;
+	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, dieDelay, false);
 }
