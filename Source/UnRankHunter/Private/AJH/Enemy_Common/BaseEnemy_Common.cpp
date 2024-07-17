@@ -1,7 +1,10 @@
 #include "BaseEnemy_Common.h"
 #include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+#define ECC_Enemy ECC_GameTraceChannel1
 
 ABaseEnemy_Common::ABaseEnemy_Common()
 {
@@ -15,12 +18,16 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	RHCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RightHand"));
 	RHCollision->SetupAttachment(GetMesh());
 	RHCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RHCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Enemy, ECollisionResponse::ECR_Ignore);
 	RHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 
 	LHCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftHand"));
 	LHCollision->SetupAttachment(GetMesh());
 	LHCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LHCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Enemy, ECollisionResponse::ECR_Ignore);
 	LHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
+
+	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Enemy);
 }
 
 void ABaseEnemy_Common::BeginPlay()
@@ -55,6 +62,7 @@ void ABaseEnemy_Common::EnemyDie()
 	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
 	if (PoolSubsystem) {
 		PoolSubsystem->ReturnToPool(this);
+		bIsEnemyDie = false;
 	}
 }
 
