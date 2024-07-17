@@ -2,16 +2,32 @@
 
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseShooterModule.h"
-
+#include "Weapon/Core/BaseClass/BaseWeapon.h"
 
 void UACBaseShooterModule::ShotBullet_Implementation(float TriggerRate) {}
 
-const FTransform& UACBaseShooterModule::GetShooterOrigin(EWeaponShooterOrigin Type)
+FTransform UACBaseShooterModule::GetMuzzlePosition()
 {
 	if (OwnerWeapon == nullptr)
 		return FTransform{};
 
+	return OwnerWeapon->GetMuzzlePosition()->GetComponentTransform();
+}
 
+FTransform UACBaseShooterModule::GetCameraPosition()
+{
+	if (OwnerWeapon == nullptr)
+		return FTransform{};
 
-	return 
+	return OwnerWeapon->GetCameraPosition()->GetComponentTransform();
+}
+
+FTransform UACBaseShooterModule::GetSettingPosition()
+{
+	if (OwnerWeapon == nullptr)
+		return FTransform{};
+
+	return (WeaponShooterOrigin == EWeaponShooterOrigin::MuzzlePosition) ?
+		OwnerWeapon->GetMuzzlePosition()->GetComponentTransform() :
+		OwnerWeapon->GetCameraPosition()->GetComponentTransform();
 }

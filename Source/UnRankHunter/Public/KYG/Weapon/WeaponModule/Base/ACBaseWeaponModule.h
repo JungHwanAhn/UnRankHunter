@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Weapon/Interface/WeaponInterface.h"
 #include "ACBaseWeaponModule.generated.h"
 
 
@@ -22,11 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void GetOwnerWeapon(IWeaponInterface*& IWeaponInterface)
-	{
-		IWeaponInterface = OwnerWeapon;
-	}
+	class ABaseWeapon* GetOwnerWeapon();
 
 protected:
-	IWeaponInterface* OwnerWeapon{};
+	class ABaseWeapon* OwnerWeapon{};
 };

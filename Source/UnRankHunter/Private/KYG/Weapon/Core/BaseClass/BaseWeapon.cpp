@@ -8,10 +8,13 @@
 ABaseWeapon::ABaseWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-	FirePointComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
-	FirePointComponent->SetupAttachment(RootComponent);
+	auto RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
+	SetRootComponent(RootComp);
+
+	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
+	MuzzlePositionComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -26,8 +29,13 @@ void ABaseWeapon::BeginPlay()
 
 	TriggerModule->OnFireNotified.BindDynamic(this, &ABaseWeapon::ReceiveFireNotify);
 
-	// last
+	auto AttachParent = GetAttachParentActor();
 
+	if (AttachParent)
+	{
+		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
+
+	}
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -162,7 +170,11 @@ void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
 
 	bWeaponEnabled = bNewEnabled;
 
+	auto AllComps = GetComponents();
+	for (auto Comp : AllComps)
+	{
 
+	}
 }
 
 bool ABaseWeapon::GetWeaponEnabled_Implementation()
@@ -191,6 +203,16 @@ int32 ABaseWeapon::GetRemainAmmoCount_Implementation()
 void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 {
 	// Implementation logic here
+}
+
+USceneComponent* ABaseWeapon::GetCameraPosition()
+{
+	return CameraPositionComponent;
+}
+
+USceneComponent* ABaseWeapon::GetMuzzlePosition()
+{
+	return MuzzlePositionComponent;
 }
 
 #pragma endregion

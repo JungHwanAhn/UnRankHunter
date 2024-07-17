@@ -3,32 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "Weapon/Interface/WeaponInterface.h"
-#include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
-#include "Elemental/Enum/ElementalEnums.h"
-#include "BaseWeapon.generated.h"
+#include "ACWeaponManager.generated.h"
 
-UCLASS(BlueprintType, Blueprintable)
-class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
+struct FWeaponFactoryParams
+{
+
+};
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface
 {
 	GENERATED_BODY()
 
 public:
-	ABaseWeapon();
+	UACWeaponManager();
 
-protected:
-	virtual void BeginPlay() override;
+public:
+	IWeaponInterface* GetEquiptedWeapon();
+
+	// Create and add a weapon to the slot position.
+	bool AddWeaponToSlot(int SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd = false);
 
 private:
-	void GenerateBasicModule();
 
-
-private:
-	void ReceiveFireNotify(float Value);
+	TSubclassOf<IWeaponInterface> GetWeaponBlueprintClass(FName WeaponID) const;
 
 #pragma region [Weapon Interface Implementation]
 	// Set start or stop weapon firing.
@@ -83,44 +83,12 @@ private:
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;
 #pragma endregion
 
-public:
-	USceneComponent* GetCameraPosition();
-
-	USceneComponent* GetMuzzlePosition();
-
 protected:
-	int32 GetMaxAmmoCapacity();
-
-	float GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical);
-
-protected:
-	// Assign On Begin Play
-	UACBaseTriggerModule* TriggerModule{};
-	UACBaseShooterModule* ShooterModule{};
-	UACBaseReloadModule* ReloadModule{};
-	UACBaseScopeModule* ScopeModule{};
-
-protected:
-	UPROPERTY();
-	USceneComponent* CameraPositionComponent{};
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
-	class UArrowComponent* MuzzlePositionComponent{};
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
-	int32 RemainAmmoCount{ 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Ammo")
-	bool bIsInfiniteAmmo{ false };
+	int ContainerSize{ 2 };
 
 private:
-	bool bWeaponEnabled{ false };
+	UPROPERTY()
+	TArray<IWeaponInterface*> WeaponArray{};
 
-
-public:
-	// On Bullet Fired
-	// On Occur Damage
-	// On Change Trigger/Reload/Zoom State
-	// On Recover
+	IWeaponInterface* EquiptedWeapon{};
 };

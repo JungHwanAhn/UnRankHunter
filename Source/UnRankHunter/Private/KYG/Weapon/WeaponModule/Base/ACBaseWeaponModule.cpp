@@ -2,6 +2,7 @@
 
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
+#include "Weapon/Core/BaseClass/BaseWeapon.h"
 
 // Sets default values for this component's properties
 UACBaseWeaponModule::UACBaseWeaponModule()
@@ -19,8 +20,12 @@ void UACBaseWeaponModule::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto OwnerInst = Cast<IWeaponInterface>(GetOwner());
+	auto OwnerInst = Cast<ABaseWeapon>(GetOwner());
 
 	OwnerWeapon = OwnerInst;
 }
 
+ABaseWeapon* UACBaseWeaponModule::GetOwnerWeapon()
+{
+	return OwnerWeapon;
+}
