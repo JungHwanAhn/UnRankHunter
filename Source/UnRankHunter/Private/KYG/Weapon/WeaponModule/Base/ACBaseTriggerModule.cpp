@@ -48,3 +48,15 @@ void UACBaseTriggerModule::ExecuteTriggerEvent()
 {
 	OnFireNotified.ExecuteIfBound(TriggerValue);
 }
+
+void UACBaseTriggerModule::OnTriggerBegin_Implementation()
+{
+}
+
+void UACBaseTriggerModule::OnTriggerEnd_Implementation()
+{
+}
+
+void UACBaseTriggerModule::OnTriggerTick_Implementation()
+{
+}

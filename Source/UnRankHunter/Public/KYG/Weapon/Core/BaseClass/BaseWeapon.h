@@ -4,18 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Weapon/Interface/WeaponInterface.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
+#include "Elemental/Enum/ElementalEnums.h"
 #include "BaseWeapon.generated.h"
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ABaseWeapon();
 
 protected:
@@ -31,7 +33,7 @@ protected:
 	UACBaseScopeModule* ScopeModule{};
 
 private:
-	void ReceiveFireNotify(float TriggerValue);
+	void ReceiveFireNotify(float Value);
 
 #pragma region [Weapon Interface Implementation]
 	// Set start or stop weapon firing.
@@ -76,7 +78,7 @@ private:
 
 	// Setup and initialize weapon attachment.
 	// When this weapon is created, must use this function to initialize.
-	virtual void SetupWeaponAttachment_Implementation(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "") override;
+	virtual void SetupWeaponAttachment_Implementation(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName = "") override;
 
 
 	virtual FName GetWeaponID_Implementation() override;
@@ -89,17 +91,12 @@ private:
 protected:
 	int32 GetMaxAmmoCapacity();
 
-	float GetDamageAmount(int DamageType, float Falloff, FName HitTag, EElementType Type)
-	{
-		FWeaponParameter Param;
-		FWeaponStat FinStat;
-
-		Execute_GetWeaonParameter(this, Param);
-		Execute_GetWeaponFinalStat(this, FinStat);
-		
-	}
+	float GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
 	int32 RemainAmmoCount{ 0 };
+
+private:
+	bool bWeaponEnabled{ false };
 };

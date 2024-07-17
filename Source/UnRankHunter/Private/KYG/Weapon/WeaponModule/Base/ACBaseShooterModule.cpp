@@ -3,3 +3,5 @@
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseShooterModule.h"
 
+
+void UACBaseShooterModule::ShotBullet_Implementation(float TriggerRate) {}

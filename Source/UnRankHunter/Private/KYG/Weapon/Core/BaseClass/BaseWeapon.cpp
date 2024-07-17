@@ -21,7 +21,7 @@ void ABaseWeapon::BeginPlay()
 	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
 	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
 
-	TriggerModule->OnFireNotified.BindDynamic(this, ABaseWeapon::ReceiveFireNotify);
+	TriggerModule->OnFireNotified.BindDynamic(this, &ABaseWeapon::ReceiveFireNotify);
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -44,9 +44,9 @@ void ABaseWeapon::GenerateBasicModule()
 	}
 }
 
-void ABaseWeapon::ReceiveFireNotify(float TriggerValue)
+void ABaseWeapon::ReceiveFireNotify(float Value)
 {
-	ShooterModule->ShotBullet(TriggerValue);
+	ShooterModule->ShotBullet(Value);
 }
 
 
@@ -88,39 +88,75 @@ bool ABaseWeapon::CanFire_Implementation()
 
 bool ABaseWeapon::CanReload_Implementation()
 {
+	if (TriggerModule == nullptr || ReloadModule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s Weapon Class Should Contains All Modules Components!"), __FUNCTION__);
+		return false;
+	}
+
 	bool bCanReload = TriggerModule->IsTrigger() == false
-		&& ReloadModule->CanReload();
+		&& ReloadModule->CanReload()
+		&& RemainAmmoCount < GetMaxAmmoCapacity();
 
 	return false;
 }
 
 bool ABaseWeapon::CanZoom_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	if (ScopeModule == nullptr || ReloadModule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s Weapon Class Should Contains All Modules Components!"), __FUNCTION__);
+		return false;
+	}
+
+	bool bCanZoom = ReloadModule->IsReloading() == false
+		&& ScopeModule->CanZoom();
+	return bCanZoom;
 }
 
 bool ABaseWeapon::IsFiring_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	if (TriggerModule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s Weapon Class Should Contains All Modules Components!"), __FUNCTION__);
+		return false;
+	}
+
+	return TriggerModule->IsTrigger();
 }
 
 bool ABaseWeapon::IsReloading_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	if (ReloadModule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s Weapon Class Should Contains All Modules Components!"), __FUNCTION__);
+		return false;
+	}
+
+	return ReloadModule->IsReloading();
 }
 
 bool ABaseWeapon::IsZooming_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	if (ScopeModule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s Weapon Class Should Contains All Modules Components!"), __FUNCTION__);
+		return false;
+	}
+
+	return ScopeModule->IsZooming();
 }
 
 void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
 {
-	// Implementation logic here
+	if (bWeaponEnabled == bNewEnabled)
+	{
+		return;
+	}
+
+	bWeaponEnabled = bNewEnabled;
+
+
 }
 
 bool ABaseWeapon::GetWeaponEnabled_Implementation()
@@ -129,7 +165,7 @@ bool ABaseWeapon::GetWeaponEnabled_Implementation()
 	return false;  // Placeholder return value
 }
 
-void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* Owner, USceneComponent* AttachParent, FName SocketName /*= ""*/)
+void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName /*= ""*/)
 {
 	// Implementation logic here
 }
@@ -167,4 +203,50 @@ int32 ABaseWeapon::GetMaxAmmoCapacity()
 	int Result = Param.AmmoCapacity * FinStat.AmmoCapacityMultiplier + FinStat.AmmoCapacityAdditive;
 
 	return Result;
+}
+
+float ABaseWeapon::GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical)
+{
+	FWeaponParameter Param;
+	FWeaponStat FinStat;
+
+	Execute_GetWeaonParameter(this, Param);
+	Execute_GetWeaponFinalStat(this, FinStat);
+
+	// Base Damage = Default Damage * Multiplier
+	float BaseDamage = Param.BaseDamage *
+		(DamageType == EDamageEffectType::Explosion ? Param.ExplosionDamageMultiplier :
+			DamageType == EDamageEffectType::Bullet ? Param.BulletDamageMultiplier :
+			DamageType == EDamageEffectType::Special ? Param.DamageMultiplier0 :
+			Param.DamageMultiplier1);
+
+	float BonusByDamageType =
+		DamageType == EDamageEffectType::Explosion ? FinStat.ExplosionDamage :
+		DamageType == EDamageEffectType::Bullet ? FinStat.ProjectileDamage :
+		DamageType == EDamageEffectType::Special ? FinStat.SpecialDamage :
+		0.0f;
+
+	float BonusByElementalType =
+		Type == EDamageElementalType::Basic ? FinStat.BasicDamage :
+		Type == EDamageElementalType::Bleeding ? FinStat.BleedingElementalDamage :
+		Type == EDamageElementalType::Frozen ? FinStat.FrozenElementalDamage :
+		Type == EDamageElementalType::Lightning ? FinStat.LightningElementalDamage :
+		0.0f;
+
+	float BonusByHitTarget =
+		HitTag == "Common" ? FinStat.CommonDamage :
+		HitTag == "Elite" ? FinStat.EliteDamage :
+		HitTag == "Boss" ? FinStat.BossDamage :
+		0.0f;
+
+	// Sum all bonus damages.
+	float AllBonus = FinStat.AllDamage + BonusByDamageType + BonusByElementalType + BonusByHitTarget;
+
+	// Calculate critical damage.
+	float CritDamage = bIsCritical ? FinStat.CritDamage : 1.0f;
+
+	float FinalDamage = BaseDamage * (1.0f + AllBonus) * CritDamage;
+
+	return FinalDamage;
+
 }

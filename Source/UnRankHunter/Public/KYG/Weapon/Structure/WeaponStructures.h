@@ -24,6 +24,15 @@ enum class EScopeType : uint8
 	Sniper,
 };
 
+UENUM(BlueprintType)
+enum class EDamageEffectType : uint8
+{
+	None = 0,
+	Bullet,
+	Explosion,
+	Special
+};
+
 USTRUCT(Atomic, BlueprintType)
 struct FWeaponStat
 {
@@ -198,8 +207,8 @@ struct FWeaponParameter
 
 	// [Scope]
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<EScopeType> ScopeType{ EScopeType::None };
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//TEnumAsByte<EScopeType> ScopeType{ EScopeType::None };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ScopeRatio{ 1.0f };

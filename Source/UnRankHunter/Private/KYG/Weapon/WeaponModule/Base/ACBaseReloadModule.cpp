@@ -38,3 +38,15 @@ bool UACBaseReloadModule::SetReloadInput(bool bInput)
 
 	return true;
 }
+
+void UACBaseReloadModule::OnReloadBegin_Implementation()
+{
+}
+
+void UACBaseReloadModule::OnReloadEnd_Implementation()
+{
+}
+
+void UACBaseReloadModule::OnReloadTick_Implementation()
+{
+}

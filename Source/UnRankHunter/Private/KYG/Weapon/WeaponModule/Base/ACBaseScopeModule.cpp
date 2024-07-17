@@ -38,3 +38,15 @@ bool UACBaseScopeModule::SetZoomInput(bool bInput)
 
 	return true;
 }
+
+void UACBaseScopeModule::OnScopeBegin_Implementation()
+{
+}
+
+void UACBaseScopeModule::OnScopeEnd_Implementation()
+{
+}
+
+void UACBaseScopeModule::OnScopeTick_Implementation()
+{
+}

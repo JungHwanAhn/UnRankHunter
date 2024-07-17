@@ -7,7 +7,7 @@
 #include "WeaponModuleInterface.h"
 #include "TriggerModuleInterface.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
+//DECLARE_DYNAMIC_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -27,21 +27,21 @@ class UNRANKHUNTER_API ITriggerModuleInterface : public IWeaponModuleInterface
 public:
 
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	bool CanTrigger();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//bool CanTrigger();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	bool IsTrigger();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//bool IsTrigger();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	void SetTriggerInput(bool bInput);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//void SetTriggerInput(bool bInput);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	void BindCallback(const FTriggerModuleCallback& Callback);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//void BindCallback(const FTriggerModuleCallback& Callback);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	void UnbindCallback(const FTriggerModuleCallback& Callback);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//void UnbindCallback(const FTriggerModuleCallback& Callback);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	float GetTriggerRate();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	//float GetTriggerRate();
 };
