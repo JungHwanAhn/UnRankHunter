@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
 
-UCLASS(Abstract, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseTriggerModule : public UACBaseWeaponModule
 {
 	GENERATED_BODY()
@@ -51,7 +51,7 @@ public:
 
 protected:
 	// Notify weapon fire event.
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Modules|Trigger Module")
 	void ExecuteTriggerEvent();
 
 #pragma region [Implementation Method]

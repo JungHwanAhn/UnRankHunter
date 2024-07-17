@@ -97,6 +97,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
 	int32 RemainAmmoCount{ 0 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Ammo")
+	bool bIsInfiniteAmmo{ false };
+
 private:
 	bool bWeaponEnabled{ false };
 };

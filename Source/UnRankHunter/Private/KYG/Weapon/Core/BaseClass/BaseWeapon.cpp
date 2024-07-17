@@ -81,7 +81,7 @@ bool ABaseWeapon::CanFire_Implementation()
 
 	bool bCanFire = TriggerModule->CanTrigger()
 		&& ReloadModule->IsReloading() == false
-		&& RemainAmmoCount > 0;
+		&& (bIsInfiniteAmmo || RemainAmmoCount > 0);
 
 	return bCanFire;
 }

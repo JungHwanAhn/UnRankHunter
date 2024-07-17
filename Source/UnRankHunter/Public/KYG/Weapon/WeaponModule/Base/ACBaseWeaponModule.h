@@ -8,7 +8,7 @@
 #include "ACBaseWeaponModule.generated.h"
 
 
-UCLASS(Abstract, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseWeaponModule : public UActorComponent
 {
 	GENERATED_BODY()

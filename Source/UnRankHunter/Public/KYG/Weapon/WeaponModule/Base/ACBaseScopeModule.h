@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS(Abstract, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseScopeModule : public UACBaseWeaponModule
 {
 	GENERATED_BODY()
