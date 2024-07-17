@@ -15,15 +15,18 @@ void AAIController_Common::Tick(float DeltaSeconds)
 	if (PlayerPawn) {
 		if (ControlledPawn->bIsActive && !ControlledPawn->bIsEnemyDie) {
 			SetFocus(PlayerPawn);
-			MoveToActor(PlayerPawn, 130);
 
-			float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-			if (distance < 250.0f && !bIsAttack) {
-				bIsAttack = true;
-				FTimerHandle AttackTimerHandle;
-				FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; });
-				GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, attackDelay, false);
-				ControlledPawn->Attack();
+			if (!bIsAttack) {
+				MoveToActor(PlayerPawn, 130);
+
+				float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+				if (distance < 250.0f) {
+					bIsAttack = true;
+					FTimerHandle AttackTimerHandle;
+					FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; });
+					GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, attackDelay, false);
+					ControlledPawn->Attack();
+				}
 			}
 		}
 		else {
