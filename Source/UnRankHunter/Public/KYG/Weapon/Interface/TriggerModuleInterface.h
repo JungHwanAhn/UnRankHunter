@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WeaponModuleInterface.h"
 #include "TriggerModuleInterface.generated.h"
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -16,10 +19,29 @@ class UTriggerModuleInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API ITriggerModuleInterface
+class UNRANKHUNTER_API ITriggerModuleInterface : public IWeaponModuleInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	bool CanTrigger();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	bool IsTrigger();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	void SetTriggerInput(bool bInput);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	void BindCallback(FTriggerModuleCallback& Callback);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	void UnbindCallback(FTriggerModuleCallback& Callback);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
+	float GetTriggerRate();
 };

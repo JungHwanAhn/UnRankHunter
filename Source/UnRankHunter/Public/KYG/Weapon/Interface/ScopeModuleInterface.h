@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WeaponModuleInterface.h"
 #include "ScopeModuleInterface.generated.h"
 
 // This class does not need to be modified.
@@ -16,10 +17,19 @@ class UScopeModuleInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IScopeModuleInterface
+class UNRANKHUNTER_API IScopeModuleInterface : IWeaponModuleInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Scope Module")
+	bool CanZoom();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shooter Module")
+	bool IsZooming();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shooter Module")
+	void SetZoomInput(bool bInput);
 };

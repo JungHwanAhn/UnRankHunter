@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WeaponModuleInterface.h"
 #include "ReloadModuleInterface.generated.h"
 
 // This class does not need to be modified.
@@ -16,10 +17,19 @@ class UReloadModuleInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IReloadModuleInterface
+class UNRANKHUNTER_API IReloadModuleInterface : public IWeaponModuleInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shooter Module")
+	bool CanReload();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shooter Module")
+	bool IsReloading();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Shooter Module")
+	void SetReloadInput(bool bInput);
 };
