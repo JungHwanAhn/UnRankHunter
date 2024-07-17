@@ -85,10 +85,13 @@ private:
 
 
 protected:
+	// Assign On Begin Play
 	UACBaseTriggerModule* TriggerModule{};
 	UACBaseShooterModule* ShooterModule{};
 	UACBaseReloadModule* ReloadModule{};
 	UACBaseScopeModule* ScopeModule{};
+
+	USceneComponent* CameraPointComponent{};
 
 protected:
 	USceneComponent* FirePointComponent{};
