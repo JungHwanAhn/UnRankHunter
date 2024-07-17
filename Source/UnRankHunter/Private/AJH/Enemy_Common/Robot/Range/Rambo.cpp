@@ -65,6 +65,8 @@ float ARambo::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 void ARambo::EnemyDie()
 {
+	bIsEnemyDie = true;
+
 	URambo_Anim* RamboAnim = Cast<URambo_Anim>(GetMesh()->GetAnimInstance());
 	if (RamboAnim == nullptr) return;
 
