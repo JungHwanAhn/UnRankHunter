@@ -26,11 +26,6 @@ protected:
 private:
 	void GenerateBasicModule();
 
-protected:
-	UACBaseTriggerModule* TriggerModule{};
-	UACBaseShooterModule* ShooterModule{};
-	UACBaseReloadModule* ReloadModule{};
-	UACBaseScopeModule* ScopeModule{};
 
 private:
 	void ReceiveFireNotify(float Value);
@@ -88,6 +83,17 @@ private:
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;
 #pragma endregion
 
+
+protected:
+	UACBaseTriggerModule* TriggerModule{};
+	UACBaseShooterModule* ShooterModule{};
+	UACBaseReloadModule* ReloadModule{};
+	UACBaseScopeModule* ScopeModule{};
+
+protected:
+	USceneComponent* FirePointComponent{};
+	// last
+
 protected:
 	int32 GetMaxAmmoCapacity();
 
@@ -102,4 +108,11 @@ protected:
 
 private:
 	bool bWeaponEnabled{ false };
+
+
+public:
+	// On Bullet Fired
+	// On Occur Damage
+	// On Change Trigger/Reload/Zoom State
+	// On Recover 
 };

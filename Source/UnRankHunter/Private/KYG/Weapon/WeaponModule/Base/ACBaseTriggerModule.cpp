@@ -33,12 +33,18 @@ bool UACBaseTriggerModule::SetTriggerInput(bool bInput)
 	if (bInputState == true && bCanTrigger)
 	{
 		OnTriggerBegin();
-		SetComponentTickEnabled(true);
+		if (bUseTriggerTick)
+		{
+			SetComponentTickEnabled(true);
+		}
 	}
 	else if (bInputState == false)
 	{
 		OnTriggerEnd();
-		SetComponentTickEnabled(false);
+		if (bUseTriggerTick)
+		{
+			SetComponentTickEnabled(false);
+		}
 	}
 
 	return true;

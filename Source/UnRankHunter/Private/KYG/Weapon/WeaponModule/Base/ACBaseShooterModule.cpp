@@ -5,3 +5,13 @@
 
 
 void UACBaseShooterModule::ShotBullet_Implementation(float TriggerRate) {}
+
+const FTransform& UACBaseShooterModule::GetShooterOrigin(EWeaponShooterOrigin Type)
+{
+	if (OwnerWeapon == nullptr)
+		return FTransform{};
+
+
+
+	return 
+}
