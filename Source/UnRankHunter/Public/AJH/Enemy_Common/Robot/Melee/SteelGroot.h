@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AJH/Enemy_Common/BaseEnemy_Common.h"
+#include "BaseEnemy_Common.h"
 #include "SteelGroot.generated.h"
 
 UCLASS()

@@ -1,5 +1,6 @@
 #include "SteelGroot.h"
 #include "SteelGroot_Anim.h"
+#include "AIController_Common.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -7,8 +8,10 @@ ASteelGroot::ASteelGroot()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	AIControllerClass = AAIController_Common::StaticClass();
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		GrootMesh(TEXT("SkeletalMesh'/Game/02_Asset/Enemy/SteamPunkCollection/SteamPunkBoss/Mesh/Character/SK_SteamPunkBoss.SK_SteamPunkBoss'"));
+		GrootMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkBoss/Mesh/Character/SK_SteamPunkBoss.SK_SteamPunkBoss'"));
 	if (GrootMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);

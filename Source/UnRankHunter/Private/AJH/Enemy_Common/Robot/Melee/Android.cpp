@@ -1,13 +1,16 @@
 #include "Android.h"
 #include "Android_Anim.h"
+#include "AIController_Common.h"
 #include "Components/BoxComponent.h"
 
 AAndroid::AAndroid()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	AIControllerClass = AAIController_Common::StaticClass();
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		AndroidMesh(TEXT("SkeletalMesh'/Game/02_Asset/Enemy/SteamPunkCollection/SteamPunkAndroid/Mesh/Character/SK_SteamPunkAndroid.SK_SteamPunkAndroid'"));
+		AndroidMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkAndroid/Mesh/Character/SK_SteamPunkAndroid.SK_SteamPunkAndroid'"));
 	if (AndroidMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -16,7 +19,7 @@ AAndroid::AAndroid()
 	AndroidWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AndroidWeapon"));
 	AndroidWeapon->SetupAttachment(GetMesh());
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>
-		WeaponMesh(TEXT("StaticMesh'/Game/02_Asset/Enemy/SteamPunkCollection/SteamPunkAndroid/Mesh/Weapon/AndroidWeapon.AndroidWeapon'"));
+		WeaponMesh(TEXT("StaticMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkAndroid/Mesh/Weapon/AndroidWeapon.AndroidWeapon'"));
 	if (WeaponMesh.Succeeded()) {
 		AndroidWeapon->SetStaticMesh(WeaponMesh.Object);
 		AndroidWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));

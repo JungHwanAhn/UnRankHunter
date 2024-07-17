@@ -1,5 +1,4 @@
 #include "BaseEnemy_Common.h"
-#include "AIController_Common.h"
 #include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -8,7 +7,6 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Common::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	GetMesh()->GetOwner()->Tags.Add("Enemy");

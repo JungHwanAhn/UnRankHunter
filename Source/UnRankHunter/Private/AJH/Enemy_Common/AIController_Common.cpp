@@ -1,6 +1,5 @@
 #include "AIController_Common.h"
 #include "BaseEnemy_Common.h"
-#include "Android.h"
 #include "Kismet/GameplayStatics.h"
 
 void AAIController_Common::BeginPlay()
