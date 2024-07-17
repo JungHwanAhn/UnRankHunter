@@ -4,15 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "KYG/Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
-#include "Weapon/Interface/ShooterModuleInterface.h"
 #include "ACBaseShooterModule.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(Abstract, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class UNRANKHUNTER_API UACBaseShooterModule : public UACBaseWeaponModule, public IShooterModuleInterface
+class UNRANKHUNTER_API UACBaseShooterModule : public UACBaseWeaponModule
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Shooter Module")
+	void ShotBullet(float TriggerRate);
 };
