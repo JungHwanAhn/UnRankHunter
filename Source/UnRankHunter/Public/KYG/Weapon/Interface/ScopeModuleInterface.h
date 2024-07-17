@@ -17,7 +17,7 @@ class UScopeModuleInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IScopeModuleInterface : IWeaponModuleInterface
+class UNRANKHUNTER_API IScopeModuleInterface : public IWeaponModuleInterface
 {
 	GENERATED_BODY()
 

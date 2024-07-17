@@ -37,10 +37,10 @@ public:
 	void SetTriggerInput(bool bInput);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	void BindCallback(FTriggerModuleCallback& Callback);
+	void BindCallback(const FTriggerModuleCallback& Callback);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
-	void UnbindCallback(FTriggerModuleCallback& Callback);
+	void UnbindCallback(const FTriggerModuleCallback& Callback);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Trigger Module")
 	float GetTriggerRate();
