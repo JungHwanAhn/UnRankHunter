@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Weapon/Interface/WeaponDataInterface.h"
 #include "WeaponInterface.generated.h"
 
 // This class does not need to be modified.
@@ -16,7 +17,7 @@ class UWeaponInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IWeaponInterface
+class UNRANKHUNTER_API IWeaponInterface : public IWeaponDataInterface
 {
 	GENERATED_BODY()
 
@@ -78,6 +79,7 @@ public:
 	// When this weapon is created, must use this function to initialize.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	void SetupWeaponAttachment(AActor* Owner, USceneComponent* AttachParent, FName SocketName = "");
+
 
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
