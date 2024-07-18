@@ -6,13 +6,14 @@
 #include "KYG/Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
 #include "ACBaseTriggerModule.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTriggerModuleCallback, float, Value);
+//DECLARE_DELEGATE_OneParam(FTriggerModuleCallback__, float Value);
 
 UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseTriggerModule : public UACBaseWeaponModule
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,7 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Trigger Module")
 	bool CanTrigger()
 	{
-		return bCanTrigger;
+		return bCanTrigger && !bIsTrigger;
 	}
 
 	// Return this weapon is firing.
@@ -66,12 +67,15 @@ protected:
 
 	// A event on tick while input stay.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Trigger Module")
-	void OnTriggerTick();
+	void OnTriggerTick(float DeltaTime);
 #pragma endregion
 
 public:
 	UPROPERTY()
 	FTriggerModuleCallback OnFireNotified{};
+
+	//UPROPERTY()
+	//FTriggerModuleCallback__ OnFireNotified__{};
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modules|Trigger Module")
@@ -80,10 +84,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Trigger Module")
 	bool bUseTriggerTick{ false };
 
-private:
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Trigger Module")
 	bool bInputState{ false };
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Modules|Trigger Module")
 	bool bIsTrigger{ false };
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Modules|Trigger Module")
 	bool bCanTrigger{ true };
 };

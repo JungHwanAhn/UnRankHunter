@@ -28,7 +28,7 @@ public:
 
 private:
 
-	TSubclassOf<IWeaponInterface> GetWeaponBlueprintClass(FName WeaponID) const;
+	UClass* GetWeaponBlueprintClass(FName WeaponID) const;
 
 #pragma region [Weapon Interface Implementation]
 	// Set start or stop weapon firing.

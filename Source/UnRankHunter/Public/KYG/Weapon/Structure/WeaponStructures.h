@@ -6,7 +6,7 @@
 #include "WeaponStructures.generated.h"
 
 /**
- * 
+ *
  */
 class UNRANKHUNTER_API WeaponStructures
 {

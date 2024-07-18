@@ -4,6 +4,7 @@
 #include "KYG/Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
+#include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -28,14 +29,13 @@ void ABaseWeapon::BeginPlay()
 	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
 	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
 
-	TriggerModule->OnFireNotified.BindDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
 
 	auto AttachParent = GetAttachParentActor();
 
 	if (AttachParent)
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
-
 	}
 }
 
@@ -187,7 +187,7 @@ bool ABaseWeapon::GetWeaponEnabled_Implementation()
 void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
 	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
-	
+
 	if (OwnerCharacter == nullptr)
 	{
 		return;
@@ -205,13 +205,25 @@ FName ABaseWeapon::GetWeaponID_Implementation()
 
 int32 ABaseWeapon::GetRemainAmmoCount_Implementation()
 {
-	// Implementation logic here
-	return 0;  // Placeholder return value
+	return RemainAmmoCount;
 }
 
 void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 {
-	// Implementation logic here
+	// -1 means infinite ammo.
+	if (RemainAmmoCount == -1)
+		return;
+
+	RemainAmmoCount = (RemainAmmoCount + AmmoCount);
+	RemainAmmoCount = (RemainAmmoCount > GetAmmoCapacity()) ? GetAmmoCapacity() : (RemainAmmoCount < 0) ? 0 : RemainAmmoCount;
+}
+
+#pragma endregion
+
+
+int32 ABaseWeapon::GetAmmoCapacity()
+{
+	return AmmoCapacity;
 }
 
 USceneComponent* ABaseWeapon::GetCameraPosition()
@@ -223,10 +235,6 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition()
 {
 	return MuzzlePositionComponent;
 }
-
-#pragma endregion
-
-
 
 
 int32 ABaseWeapon::GetMaxAmmoCapacity()

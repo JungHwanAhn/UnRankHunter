@@ -13,7 +13,7 @@ void UACBaseTriggerModule::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	OnTriggerTick();
+	OnTriggerTick(DeltaTime);
 }
 
 void UACBaseTriggerModule::BeginPlay()
@@ -52,7 +52,21 @@ bool UACBaseTriggerModule::SetTriggerInput(bool bInput)
 
 void UACBaseTriggerModule::ExecuteTriggerEvent()
 {
-	OnFireNotified.ExecuteIfBound(TriggerValue);
+	if (OnFireNotified.IsBound())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Fire!"));
+		OnFireNotified.Broadcast(TriggerValue);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("No Fire!"));
+	}
+
+	//if(OnFireNotified__.ExecuteIfBound(TriggerValue))
+	//	UE_LOG(LogTemp, Log, TEXT("Fire!"));
+	//else
+	//	UE_LOG(LogTemp, Log, TEXT("Fire!"));
+
 }
 
 void UACBaseTriggerModule::OnTriggerBegin_Implementation()
@@ -63,6 +77,6 @@ void UACBaseTriggerModule::OnTriggerEnd_Implementation()
 {
 }
 
-void UACBaseTriggerModule::OnTriggerTick_Implementation()
+void UACBaseTriggerModule::OnTriggerTick_Implementation(float DeltaTime)
 {
 }

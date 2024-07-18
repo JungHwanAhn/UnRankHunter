@@ -15,7 +15,7 @@ class UWeaponDataInterface : public UInterface
 };
 
 /**
- * 
+ *
  */
 class UNRANKHUNTER_API IWeaponDataInterface
 {

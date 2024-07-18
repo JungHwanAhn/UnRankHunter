@@ -31,14 +31,14 @@ bool UACWeaponManager::AddWeaponToSlot(int SlotIndex, FName WeaponID, FWeaponFac
 
 	auto WeaponBlueprintClass = GetWeaponBlueprintClass(WeaponID);
 
-	if (!WeaponBlueprintClass)
+	if (WeaponBlueprintClass)
 	{
 		return false;
 	}
 
 	IWeaponInterface* WeaponInst{};
 
-	auto TempObj = GetWorld()->SpawnActor(WeaponBlueprintClass->GetClass());
+	auto TempObj = GetWorld()->SpawnActor(WeaponBlueprintClass);
 	WeaponInst = Cast<IWeaponInterface>(TempObj);
 
 	if (!WeaponInst)
@@ -56,12 +56,12 @@ bool UACWeaponManager::AddWeaponToSlot(int SlotIndex, FName WeaponID, FWeaponFac
 	USceneComponent* AttachParent = GetOwner()->FindComponentByTag<USceneComponent>("Equip Body");
 	FName SocketName = "";
 
-	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner(), AttachParent, SocketName);
+	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
 
 	return true;
 }
 
-TSubclassOf<IWeaponInterface> UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
+UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 {
 	UE_LOG(LogTemp, Log, TEXT("%s: Not Implement Function"), __FUNCTION__);
 	return nullptr;
