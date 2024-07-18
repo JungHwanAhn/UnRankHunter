@@ -3,6 +3,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #define ECC_Enemy ECC_GameTraceChannel1
 
@@ -28,6 +29,7 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	LHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Enemy);
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 }
 
 void ABaseEnemy_Common::BeginPlay()
