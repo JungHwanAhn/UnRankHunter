@@ -3,6 +3,7 @@
 
 #include "KYG/Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Components/ArrowComponent.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -183,9 +184,17 @@ bool ABaseWeapon::GetWeaponEnabled_Implementation()
 	return false;  // Placeholder return value
 }
 
-void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName /*= ""*/)
+void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
-	// Implementation logic here
+	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
+	
+	if (OwnerCharacter == nullptr)
+	{
+		return;
+	}
+
+	FName SocketName = "rHand_weapon_sniper1";
+	this->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
 }
 
 FName ABaseWeapon::GetWeaponID_Implementation()

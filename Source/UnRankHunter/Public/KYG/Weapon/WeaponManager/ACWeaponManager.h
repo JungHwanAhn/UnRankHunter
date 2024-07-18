@@ -73,7 +73,7 @@ private:
 
 	// Setup and initialize weapon attachment.
 	// When this weapon is created, must use this function to initialize.
-	virtual void SetupWeaponAttachment_Implementation(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName = "") override;
+	virtual void SetupWeaponAttachment_Implementation(AActor* WeaponOwner) override;
 
 
 	virtual FName GetWeaponID_Implementation() override;

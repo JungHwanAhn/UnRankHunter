@@ -136,11 +136,11 @@ bool UACWeaponManager::GetWeaponEnabled_Implementation()
 	return EquiptedWeapon ? IWeaponInterface::Execute_GetWeaponEnabled(EquiptedWeapon->_getUObject()) : false;
 }
 
-void UACWeaponManager::SetupWeaponAttachment_Implementation(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName)
+void UACWeaponManager::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
 	if (EquiptedWeapon)
 	{
-		IWeaponInterface::Execute_SetupWeaponAttachment(EquiptedWeapon->_getUObject(), WeaponOwner, AttachParent, SocketName);
+		IWeaponInterface::Execute_SetupWeaponAttachment(EquiptedWeapon->_getUObject(), WeaponOwner);
 	}
 }
 

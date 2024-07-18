@@ -78,7 +78,7 @@ public:
 	// Setup and initialize weapon attachment.
 	// When this weapon is created, must use this function to initialize.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
-	void SetupWeaponAttachment(AActor* WeaponOwner, USceneComponent* AttachParent, FName SocketName = "");
+	void SetupWeaponAttachment(AActor* WeaponOwner);
 
 
 
