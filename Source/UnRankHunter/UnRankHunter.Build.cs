@@ -11,9 +11,11 @@ public class UnRankHunter : ModuleRules
         PublicIncludePaths.AddRange(new string[] { "UnRankHunter/Public/AJH", "UnRankHunter/Public/JSH", "UnRankHunter/Public/KBH", "UnRankHunter/Public/KYG", "UnRankHunter/Public/YYJ" });
 
 		// AJH
-		PublicIncludePaths.AddRange(new string[] { "UnRankHunter/Public/AJH/Interface", "UnRankHunter/Public/AJH/Subsystem"});
+		PublicIncludePaths.AddRange(new string[] {
+			"UnRankHunter/Public/AJH/Interface", "UnRankHunter/Public/AJH/Subsystem", "UnRankHunter/Public/AJH/Enemy_Common",
+			"UnRankHunter/Public/AJH/Enemy_Common/Robot", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Melee", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Range", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Elite" });
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AnimGraphRuntime", "AIModule" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
