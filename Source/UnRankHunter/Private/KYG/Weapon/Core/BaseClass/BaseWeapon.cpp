@@ -209,9 +209,11 @@ void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 	if (WeaponOwner == nullptr)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		WeaponOwner = nullptr;
+		WeaponParent = nullptr;
 		return;
 	}
+
+	WeaponParent = WeaponOwner;
 
 	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
 
@@ -255,6 +257,39 @@ void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 int32 ABaseWeapon::GetAmmoCapacity()
 {
 	return AmmoCapacity;
+}
+
+bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
+{
+	OutRemainAmmo = RemainAmmoCount;
+	OutReduceAmmo = 0;
+
+	if (bIsInfiniteAmmo)
+	{
+		return true;
+	}
+
+	int32 FinalAmmo = RemainAmmoCount - Cost;
+
+	if (FinalAmmo < 0)
+	{
+		if (bFailOnLess)
+		{
+			return false;
+		}
+
+		OutReduceAmmo = Cost + RemainAmmoCount;
+		RemainAmmoCount = 0;
+		OutRemainAmmo = 0;
+		return OutReduceAmmo > 0;	// Return ammo is decrease?
+	}
+	else
+	{
+		RemainAmmoCount = FinalAmmo;
+		OutRemainAmmo = RemainAmmoCount;
+		OutReduceAmmo = Cost;
+		return true;
+	}
 }
 
 USceneComponent* ABaseWeapon::GetCameraPosition()
