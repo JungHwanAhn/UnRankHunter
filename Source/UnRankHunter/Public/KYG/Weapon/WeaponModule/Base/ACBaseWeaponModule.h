@@ -21,8 +21,22 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	class ABaseWeapon* GetOwnerWeapon();
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module")
+	void SetModuleEnabled(bool bNewEnabled);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
+	void OnModuleEnableChanged(bool bNewEnabled);
+
 protected:
-	class ABaseWeapon* OwnerWeapon{};
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module")
+	ABaseWeapon* OwnerWeapon{};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Module")
+	bool bUseTick{ false };
+
+private:
+	bool bIsEnabled{ false };
 };

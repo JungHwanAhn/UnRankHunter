@@ -5,6 +5,7 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -170,31 +171,61 @@ void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
 	}
 
 	bWeaponEnabled = bNewEnabled;
+	SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
 	auto AllComps = GetComponents();
 	for (auto Comp : AllComps)
 	{
+		Comp->SetActive(bNewEnabled);
 
+		auto Col = Cast<UPrimitiveComponent>(Comp);
+		if (Col != nullptr)
+		{
+			Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		}
+
+		auto Mesh = Cast<USceneComponent>(Comp);
+		if (Mesh != nullptr)
+		{
+			Mesh->SetVisibility(bNewEnabled);
+		}
+
+		auto Module = Cast<UACBaseWeaponModule>(Comp);
+		if (Module != nullptr)
+		{
+			Module->SetModuleEnabled(bNewEnabled);
+		}
 	}
 }
 
 bool ABaseWeapon::GetWeaponEnabled_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	return bWeaponEnabled;
 }
 
 void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
-	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
-
-	if (OwnerCharacter == nullptr)
+	// Detach weapon from actor.
+	if (WeaponOwner == nullptr)
 	{
+		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		WeaponOwner = nullptr;
 		return;
 	}
 
-	FName SocketName = "rHand_weapon_sniper1";
-	this->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
+
+	// Attach to character.
+	if (OwnerCharacter != nullptr)
+	{
+		FName SocketName = WeaponSocket;
+		this->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	}
+	// Attach to non-character.
+	else
+	{
+		AttachToActor(WeaponOwner, FAttachmentTransformRules::KeepRelativeTransform);
+	}
 }
 
 FName ABaseWeapon::GetWeaponID_Implementation()

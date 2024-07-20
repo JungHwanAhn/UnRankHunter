@@ -81,9 +81,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modules|Trigger Module")
 	float TriggerValue{ 0 };
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Trigger Module")
-	bool bUseTriggerTick{ false };
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Trigger Module")
 	bool bInputState{ false };

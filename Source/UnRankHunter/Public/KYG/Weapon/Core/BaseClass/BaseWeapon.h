@@ -28,6 +28,7 @@ private:
 
 
 private:
+	UFUNCTION()
 	void ReceiveFireNotify(float Value);
 
 #pragma region [Weapon Interface Implementation]
@@ -89,8 +90,10 @@ public:
 	int32 GetAmmoCapacity();
 
 public:
+	UFUNCTION()
 	USceneComponent* GetCameraPosition();
 
+	UFUNCTION()
 	USceneComponent* GetMuzzlePosition();
 
 protected:
@@ -111,6 +114,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
 	class UArrowComponent* MuzzlePositionComponent{};
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
+	bool bUseWeaponTick{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
+	FName WeaponSocket{};
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
