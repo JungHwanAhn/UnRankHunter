@@ -98,7 +98,7 @@ public:
 	// Returns
 	// OutRemainAmmo: Return remain ammo count after consume ammo.
 	// OutDecreaseCount: Return real ammo cost.
-	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Ammo")
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
 
 public:

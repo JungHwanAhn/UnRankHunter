@@ -7,7 +7,7 @@
 // Sets default values for this component's properties
 UACBaseWeaponModule::UACBaseWeaponModule()
 {
-	PrimaryComponentTick.bCanEverTick = bUseTick;
+	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
