@@ -63,6 +63,9 @@ void ABaseWeapon::GenerateBasicModule()
 void ABaseWeapon::ReceiveFireNotify(float Value)
 {
 	ShooterModule->ShotBullet(Value);
+
+	FWeaponFireInfo Info{};
+	OnWeaponFireEvent.Broadcast(this, Info);
 }
 
 

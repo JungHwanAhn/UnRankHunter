@@ -26,6 +26,15 @@ struct FWeaponFireInfo
 {
 	GENERATED_USTRUCT_BODY()
 
+	FWeaponFireInfo() {}
+	FWeaponFireInfo(EBulletType BulletType, TArray<AActor*> Bullets, TArray<FHitResult> HitResults, int32 BulletCount)
+	{
+		this->BulletType = BulletType;
+		this->Bullets = Bullets;
+		this->HitResults = HitResults;
+		this->BulletCount = BulletCount;
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EBulletType BulletType{};
 
@@ -36,13 +45,10 @@ struct FWeaponFireInfo
 	TArray<FHitResult> HitResults{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ABaseWeapon* Weapon{};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* Owner{};
+	int32 BulletCount{};
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponFireEvent, FWeaponFireInfo&, WeaponInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
 
 UCLASS(BlueprintType, Blueprintable)
 class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
@@ -179,8 +185,8 @@ private:
 	bool bWeaponEnabled{ true };
 
 
+	// Events
 public:
-	// On Bullet Fired
-	// On Change Trigger/Reload/Zoom State
-	// On Recover
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
+	FWeaponFireEvent OnWeaponFireEvent{};
 };
