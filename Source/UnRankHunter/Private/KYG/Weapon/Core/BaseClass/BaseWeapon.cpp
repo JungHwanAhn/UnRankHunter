@@ -74,17 +74,26 @@ void ABaseWeapon::ReceiveFireNotify(float Value)
 
 void ABaseWeapon::SetFireInput_Implementation(bool bInput)
 {
-	TriggerModule->SetTriggerInput(bInput);
+	if (TriggerModule)
+	{
+		TriggerModule->SetTriggerInput(bInput);
+	}
 }
 
 void ABaseWeapon::SetReloadInput_Implementation(bool bInput)
 {
-	ReloadModule->SetReloadInput(bInput);
+	if(ReloadModule)
+	{
+		ReloadModule->SetReloadInput(bInput);
+	}
 }
 
 void ABaseWeapon::SetZoomInput_Implementation(bool bInput)
 {
-	ScopeModule->SetZoomInput(bInput);
+	if(ScopeModule)
+	{
+		ScopeModule->SetZoomInput(bInput);
+	}
 }
 
 bool ABaseWeapon::CanFire_Implementation()

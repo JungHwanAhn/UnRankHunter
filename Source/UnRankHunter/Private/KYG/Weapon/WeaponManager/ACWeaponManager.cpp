@@ -10,7 +10,16 @@ UACWeaponManager::UACWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
+	ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
+	if (DT_WepTb.Succeeded())
+	{
+		WeaponTable = DT_WepTb.Object;
+	}
+}
 
+void UACWeaponManager::BeginPlay()
+{
+	WeaponArray.Init(nullptr, ContainerSize);
 }
 
 IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
@@ -20,44 +29,56 @@ IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
 
 bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd)
 {
+	// Exception handling: Index out of range.
 	if (!WeaponArray.IsValidIndex(SlotIndex))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: %d is out of range index."), SlotIndex);
 		return false;
 	}
 
+	// If slot already contains weapon, return fail.
 	if (bForceAdd == false && WeaponArray[SlotIndex] != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Trying to add weapon to assigned slot."));
 		return false;
 	}
 
 	auto WeaponBlueprintClass = GetWeaponBlueprintClass(WeaponID);
 
-	if (WeaponBlueprintClass)
+	// Exception handling: No weapon class exists for the given WeaponID.
+	if (WeaponBlueprintClass == nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: %s is invalid id."), *WeaponID.ToString());
 		return false;
 	}
 
+	// Create weapon instance.
 	ABaseWeapon* WeaponInst{};
 
 	auto TempObj = GetWorld()->SpawnActor(WeaponBlueprintClass);
 	WeaponInst = Cast<ABaseWeapon>(TempObj);
 
-	if (!WeaponInst)
+	if (WeaponInst == nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Weapon is not ABaseWeapon"));
 		return false;
 	}
 
+	// Destroy the previous weapon instance in the slot.
 	if (WeaponArray[SlotIndex] != nullptr)
 	{
 		// Remove Weapon Logic.
+		ABaseWeapon* RemoveWeapon{};
+		RemoveWeaponFromSlot(RemoveWeapon, SlotIndex, true);
 	}
 
 	WeaponArray[SlotIndex] = WeaponInst;
 
-	USceneComponent* AttachParent = GetOwner()->FindComponentByTag<USceneComponent>("Equip Body");
-	FName SocketName = "";
-
+	// Initialize the instance.
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
+	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
+
+	UE_LOG(LogTemp, Log, TEXT("WeaponManager: SUCCESS Add weapon to slot."));
 
 	return true;
 }
@@ -143,11 +164,15 @@ int32 UACWeaponManager::GetSubSlot()
 
 UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 {
-	UE_LOG(LogTemp, Log, TEXT("%s: Not Implement Function"), __FUNCTION__);
+	// If Table is invalid, return fail.
+	if (!WeaponTable)
+	{
+		return nullptr;
+	}
 
+	auto Row = WeaponTable->FindRow<FWeaponDataTableRow>(WeaponID, TEXT(""));
 
-
-	return nullptr;
+	return Row->WeaponClass;
 }
 
 #pragma region [Weapon Interface Implementation]

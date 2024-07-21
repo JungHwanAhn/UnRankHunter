@@ -37,6 +37,9 @@ class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeapon
 public:
 	UACWeaponManager();
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	IWeaponInterface* GetEquippedWeapon();
 
@@ -125,13 +128,17 @@ private:
 #pragma endregion
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon Manager Setting")
+	UDataTable* WeaponTable;
+
+protected:
 	const int ContainerSize{ 2 };
 
-private:
-	UPROPERTY()
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
 	TArray<class ABaseWeapon*> WeaponArray{};
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
 	class ABaseWeapon* EquippedWeapon{};
 
 	UPROPERTY()

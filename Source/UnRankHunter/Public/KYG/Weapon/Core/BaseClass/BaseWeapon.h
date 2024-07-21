@@ -12,6 +12,38 @@
 #include "Elemental/Enum/ElementalEnums.h"
 #include "BaseWeapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EBulletType
+{
+	None = 0,
+	Hitscan,
+	Projectile,
+	Area,
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponFireInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EBulletType BulletType{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> Bullets{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FHitResult> HitResults{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ABaseWeapon* Weapon{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* Owner{};
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponFireEvent, FWeaponFireInfo&, WeaponInfo);
+
 UCLASS(BlueprintType, Blueprintable)
 class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
 {
@@ -89,15 +121,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Ammo")
 	int32 GetAmmoCapacity();
 
-	// Decrease remain ammo count.
-	// This function recommended to run by trigger module.
-	// Return is successed.
-	// Parameters
-	// Cost: Required ammo reduction amount.
-	// bFailOnLess: No reduce ammo if ammo is less than required amount.
-	// Returns
-	// OutRemainAmmo: Return remain ammo count after consume ammo.
-	// OutDecreaseCount: Return real ammo cost.
+	// Decreases the remaining ammo count based on the provided cost.
+	// If bFailOnLess is true, no ammo is reduced if there is insufficient ammo.
+	// Returns the remaining ammo and the actual ammo cost.
+
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
 
@@ -128,7 +155,7 @@ protected:
 	class UArrowComponent* MuzzlePositionComponent{};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class AActor* WeaponParent;
+	class AActor* WeaponParent{};
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
@@ -149,12 +176,11 @@ protected:
 	bool bIsInfiniteAmmo{ false };
 
 private:
-	bool bWeaponEnabled{ false };
+	bool bWeaponEnabled{ true };
 
 
 public:
 	// On Bullet Fired
-	// On Occur Damage
 	// On Change Trigger/Reload/Zoom State
 	// On Recover
 };
