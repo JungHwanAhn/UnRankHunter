@@ -123,6 +123,10 @@ private:
 #pragma endregion
 
 public:
+	// Toggles the weapon's active state.
+	// This function always works regardless of the current active state of the weapon, and frequent use may cause performance issues.
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void ForceSetWeaponEnable(bool bNewEnabled);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Ammo")
 	int32 GetAmmoCapacity();

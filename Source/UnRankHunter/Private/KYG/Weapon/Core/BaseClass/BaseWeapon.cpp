@@ -182,32 +182,34 @@ void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
 		return;
 	}
 
-	bWeaponEnabled = bNewEnabled;
-	SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
+	ForceSetWeaponEnable(bNewEnabled);
 
-	auto AllComps = GetComponents();
-	for (auto Comp : AllComps)
-	{
-		Comp->SetActive(bNewEnabled);
+	//bWeaponEnabled = bNewEnabled;
+	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
-		auto Col = Cast<UPrimitiveComponent>(Comp);
-		if (Col != nullptr)
-		{
-			Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
-		}
+	//auto AllComps = GetComponents();
+	//for (auto Comp : AllComps)
+	//{
+	//	Comp->SetActive(bNewEnabled);
 
-		auto Mesh = Cast<USceneComponent>(Comp);
-		if (Mesh != nullptr)
-		{
-			Mesh->SetVisibility(bNewEnabled);
-		}
+	//	auto Col = Cast<UPrimitiveComponent>(Comp);
+	//	if (Col != nullptr)
+	//	{
+	//		Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+	//	}
 
-		auto Module = Cast<UACBaseWeaponModule>(Comp);
-		if (Module != nullptr)
-		{
-			Module->SetModuleEnabled(bNewEnabled);
-		}
-	}
+	//	auto Mesh = Cast<USceneComponent>(Comp);
+	//	if (Mesh != nullptr)
+	//	{
+	//		Mesh->SetVisibility(bNewEnabled);
+	//	}
+
+	//	auto Module = Cast<UACBaseWeaponModule>(Comp);
+	//	if (Module != nullptr)
+	//	{
+	//		Module->SetModuleEnabled(bNewEnabled);
+	//	}
+	//}
 }
 
 bool ABaseWeapon::GetWeaponEnabled_Implementation()
@@ -265,6 +267,36 @@ void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 
 #pragma endregion
 
+
+void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
+{
+	bWeaponEnabled = bNewEnabled;
+	SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
+
+	auto AllComps = GetComponents();
+	for (auto Comp : AllComps)
+	{
+		Comp->SetActive(bNewEnabled);
+
+		auto Col = Cast<UPrimitiveComponent>(Comp);
+		if (Col != nullptr)
+		{
+			Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		}
+
+		auto Mesh = Cast<USceneComponent>(Comp);
+		if (Mesh != nullptr)
+		{
+			Mesh->SetVisibility(bNewEnabled);
+		}
+
+		auto Module = Cast<UACBaseWeaponModule>(Comp);
+		if (Module != nullptr)
+		{
+			Module->SetModuleEnabled(bNewEnabled);
+		}
+	}
+}
 
 int32 ABaseWeapon::GetAmmoCapacity()
 {

@@ -76,7 +76,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 
 	// Initialize the instance.
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
-	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
+	WeaponInst->ForceSetWeaponEnable(false);
 
 	UE_LOG(LogTemp, Log, TEXT("WeaponManager: SUCCESS Add weapon to slot."));
 
