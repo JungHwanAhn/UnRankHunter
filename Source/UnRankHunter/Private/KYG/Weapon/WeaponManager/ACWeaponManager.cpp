@@ -101,7 +101,7 @@ bool UACWeaponManager::RemoveWeaponFromSlot(ABaseWeapon*& OutWeaponInstance, int
 
 	if (SlotIndex == EquippedSlot)
 	{
-		ChangeWeaponSlot(GetSubSlot());
+		SelectWeaponSlot(GetSubSlot());
 	}
 
 	auto WeaponInst = WeaponArray[SlotIndex];
@@ -119,9 +119,9 @@ bool UACWeaponManager::RemoveWeaponFromSlot(ABaseWeapon*& OutWeaponInstance, int
 	return true;
 }
 
-void UACWeaponManager::ChangeWeaponSlot(int32 SlotIndex)
+void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 {
-	if (WeaponArray.IsValidIndex(SlotIndex) == false)
+	if (WeaponArray.IsValidIndex(SlotIndex) == false && SlotIndex != -1)
 	{
 		return;
 	}
@@ -142,9 +142,12 @@ void UACWeaponManager::ChangeWeaponSlot(int32 SlotIndex)
 	auto NewWeaponInst = WeaponArray[SlotIndex];
 	IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
+	UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+
 	// Change controlled weapon.
 	EquippedSlot = SlotIndex;
 	EquippedWeapon = NewWeaponInst;
+
 }
 
 void UACWeaponManager::ForceEquipWeaponSlot(int32 SlotIndex)

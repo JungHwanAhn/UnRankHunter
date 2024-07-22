@@ -29,15 +29,18 @@ ABaseWeapon* UACBaseWeaponModule::GetOwnerWeapon()
 
 void UACBaseWeaponModule::OnModuleEnableChanged_Implementation(bool bNewEnabled)
 {
-	if (bNewEnabled != bIsEnabled)
-	{
-		bIsEnabled = bNewEnabled;
-		SetComponentTickEnabled(bUseTick && bNewEnabled);
-		OnModuleEnableChanged(bNewEnabled);
-	}
 }
 
-void UACBaseWeaponModule::SetModuleEnabled(bool bNewEnabled)
+void UACBaseWeaponModule::SetModuleEnabled(bool bNewEnabled, bool bForce)
 {
-	SetComponentTickEnabled(bUseTick && bNewEnabled);
+	if (bForce || bNewEnabled != bIsEnabled)
+	{
+		bIsEnabled = bNewEnabled;
+		OnModuleEnableChanged(bNewEnabled);
+
+		if (bNewEnabled == false)
+		{
+			SetComponentTickEnabled(false);
+		}
+	}
 }

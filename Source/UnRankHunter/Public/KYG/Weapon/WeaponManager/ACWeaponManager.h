@@ -55,7 +55,7 @@ public:
 	// Change the currently active weapon.
 	// Does not activate if attempting to activate an already active weapon.
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
-	void ChangeWeaponSlot(int32 SlotIndex);
+	void SelectWeaponSlot(int32 SlotIndex);
 
 	// Always change the currently active weapon.
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")

@@ -25,8 +25,9 @@ public:
 	class ABaseWeapon* GetOwnerWeapon();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Module")
-	void SetModuleEnabled(bool bNewEnabled);
+	void SetModuleEnabled(bool bNewEnabled, bool bForce = false);
 
+protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	void OnModuleEnableChanged(bool bNewEnabled);
 

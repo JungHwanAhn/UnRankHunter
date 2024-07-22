@@ -11,7 +11,8 @@
 ABaseWeapon::ABaseWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	auto RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
 	SetRootComponent(RootComp);
@@ -270,13 +271,15 @@ void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 
 void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 {
+	//UE_LOG(LogTemp, Log, TEXT("Weapon Set Enabled"));
+
 	bWeaponEnabled = bNewEnabled;
-	SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
+	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
 	auto AllComps = GetComponents();
 	for (auto Comp : AllComps)
 	{
-		Comp->SetActive(bNewEnabled);
+		//Comp->SetActive(bNewEnabled);
 
 		auto Col = Cast<UPrimitiveComponent>(Comp);
 		if (Col != nullptr)
@@ -288,6 +291,8 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 		if (Mesh != nullptr)
 		{
 			Mesh->SetVisibility(bNewEnabled);
+
+			//UE_LOG(LogTemp, Log, TEXT("Weapon Set Enabled Is Scene Component %s"), *Mesh->GetName());
 		}
 
 		auto Module = Cast<UACBaseWeaponModule>(Comp);
