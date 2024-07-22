@@ -21,4 +21,12 @@ private:
 
 	bool bIsAttack = false;
 	int32 attackDelay = 2;
+	float acceptanceRadius = 130.0f;
+	float avoidanceRadius = 300.0f;
+	float avoidanceStrength = 1.5f;
+	float lastEnemyScan = 0.0f;
+	float enemyScanInterval = 0.2f;
+
+	FVector AvoidanceVector;
+	void EnemyScan();
 };
