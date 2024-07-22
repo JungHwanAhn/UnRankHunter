@@ -2,6 +2,7 @@
 #include "Android_Anim.h"
 #include "AIController_Common.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 AAndroid::AAndroid()
 {
@@ -12,6 +13,8 @@ AAndroid::AAndroid()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		AndroidMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkAndroid/Mesh/Character/SK_SteamPunkAndroid.SK_SteamPunkAndroid'"));
 	if (AndroidMesh.Succeeded()) {
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
+		GetMesh()->SetRelativeScale3D(FVector(1.5));
 		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
@@ -33,6 +36,7 @@ AAndroid::AAndroid()
 
 	RHCollision->SetBoxExtent(FVector(28, 16, 45));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 70));
+	GetCapsuleComponent()->InitCapsuleSize(34.0f, 120.0f);
 }
 
 void AAndroid::Attack()

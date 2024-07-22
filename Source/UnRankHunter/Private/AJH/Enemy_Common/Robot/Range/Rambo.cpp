@@ -12,7 +12,8 @@ ARambo::ARambo()
 	if (RamboMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(RamboMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -140), FRotator(0, -180, 0));
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -300), FRotator(0, -180, 0));
+		GetMesh()->SetRelativeScale3D(FVector(2));
 		GetMesh()->GetOwner()->Tags.Add("Rambo");
 	}
 
@@ -22,7 +23,7 @@ ARambo::ARambo()
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
-	GetCapsuleComponent()->InitCapsuleSize(60.0f, 100.0f);
+	GetCapsuleComponent()->InitCapsuleSize(125.0f, 180.0f);
 }
 
 void ARambo::Attack()
