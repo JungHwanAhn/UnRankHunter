@@ -18,9 +18,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Android State")
 	float speed = 0.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Android State")
-	float direction = 0.0f;
-
 private:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
@@ -35,5 +32,4 @@ private:
 	class AAndroid* Android;
 
 	FVector velocity;
-	FRotator androidRotation;
 };
