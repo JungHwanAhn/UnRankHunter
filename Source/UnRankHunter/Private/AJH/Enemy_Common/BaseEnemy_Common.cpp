@@ -29,7 +29,7 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	LHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Enemy);
-	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 850.0f;
 }
 
 void ABaseEnemy_Common::BeginPlay()
