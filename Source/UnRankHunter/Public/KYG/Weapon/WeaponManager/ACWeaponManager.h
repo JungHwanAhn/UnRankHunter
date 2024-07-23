@@ -5,14 +5,31 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Weapon/Interface/WeaponInterface.h"
+//#include "Weapon/Core/BaseClass/BaseWeapon.h"
+#include "Engine/DataTable.h"
 #include "ACWeaponManager.generated.h"
 
+USTRUCT(BlueprintType)
 struct FWeaponFactoryParams
 {
+	GENERATED_USTRUCT_BODY()
+
 
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+USTRUCT(BlueprintType)
+struct FWeaponDataTableRow : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName WeaponID{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class ABaseWeapon> WeaponClass;
+};
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface
 {
 	GENERATED_BODY()
@@ -20,14 +37,41 @@ class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeapon
 public:
 	UACWeaponManager();
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
-	IWeaponInterface* GetEquiptedWeapon();
+	IWeaponInterface* GetEquippedWeapon();
 
 	// Create and add a weapon to the slot position.
-	bool AddWeaponToSlot(int SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd = false);
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	bool AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd = false);
+
+	// Removes the weapon at the specified slot index and returns the result.
+	// Use the bDestroyInstance parameter to choose whether to completely destroy the instance or just remove it from the manager.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	bool RemoveWeaponFromSlot(class ABaseWeapon*& OutWeaponInstance, int32 SlotIndex, bool bDestroyInstance = true);
+
+	// Change the currently active weapon.
+	// Does not activate if attempting to activate an already active weapon.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	void SelectWeaponSlot(int32 SlotIndex);
+
+	// Always change the currently active weapon.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	void ForceEquipWeaponSlot(int32 SlotIndex);
+
+	// Returns the currently equipped weapon index.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	int32 GetEquippedSlot();
+
+	// Returns the index of the inactive weapon slot.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	int32 GetSubSlot();
+
 
 private:
-
+	// Returns the weapon blueprint class for the given weapon ID.
 	UClass* GetWeaponBlueprintClass(FName WeaponID) const;
 
 #pragma region [Weapon Interface Implementation]
@@ -84,11 +128,19 @@ private:
 #pragma endregion
 
 protected:
-	int ContainerSize{ 2 };
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon Manager Setting")
+	UDataTable* WeaponTable;
 
-private:
+protected:
+	const int ContainerSize{ 2 };
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
+	TArray<class ABaseWeapon*> WeaponArray{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
+	class ABaseWeapon* EquippedWeapon{};
+
 	UPROPERTY()
-	TArray<IWeaponInterface*> WeaponArray{};
-
-	IWeaponInterface* EquiptedWeapon{};
+	int32 EquippedSlot{ -1 };
 };

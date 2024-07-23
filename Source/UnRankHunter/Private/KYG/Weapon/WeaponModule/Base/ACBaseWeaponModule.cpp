@@ -7,11 +7,8 @@
 // Sets default values for this component's properties
 UACBaseWeaponModule::UACBaseWeaponModule()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
 
@@ -28,4 +25,22 @@ void UACBaseWeaponModule::BeginPlay()
 ABaseWeapon* UACBaseWeaponModule::GetOwnerWeapon()
 {
 	return OwnerWeapon;
+}
+
+void UACBaseWeaponModule::OnModuleEnableChanged_Implementation(bool bNewEnabled)
+{
+}
+
+void UACBaseWeaponModule::SetModuleEnabled(bool bNewEnabled, bool bForce)
+{
+	if (bForce || bNewEnabled != bIsEnabled)
+	{
+		bIsEnabled = bNewEnabled;
+		OnModuleEnableChanged(bNewEnabled);
+
+		if (bNewEnabled == false)
+		{
+			SetComponentTickEnabled(false);
+		}
+	}
 }
