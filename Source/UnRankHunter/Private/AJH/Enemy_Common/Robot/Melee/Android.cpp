@@ -99,7 +99,6 @@ float AAndroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, 
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		androidHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (androidHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

@@ -60,7 +60,6 @@ float ASpider::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		spiderHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (spiderHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

@@ -58,7 +58,6 @@ float ARambo::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		ramboHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (ramboHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

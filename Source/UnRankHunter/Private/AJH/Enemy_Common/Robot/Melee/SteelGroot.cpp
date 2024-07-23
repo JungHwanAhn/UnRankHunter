@@ -66,7 +66,6 @@ float ASteelGroot::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		grootHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (grootHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

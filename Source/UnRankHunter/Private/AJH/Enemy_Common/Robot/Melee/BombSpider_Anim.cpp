@@ -11,7 +11,7 @@ UBombSpider_Anim::UBombSpider_Anim()
 	}
 }
 
-void UBombSpider_Anim::Attack(FString pattern)
+void UBombSpider_Anim::Attack()
 {
 	Montage_Play(AttackMontage);
 	BombSpider->EnemyDie();

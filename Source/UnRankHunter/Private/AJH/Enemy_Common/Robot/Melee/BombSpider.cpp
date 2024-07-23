@@ -38,7 +38,7 @@ void ABombSpider::Attack()
 		if (BombSpiderAnim == nullptr) return;
 
 
-		BombSpiderAnim->Attack("Attack");
+		BombSpiderAnim->Attack();
 
 		BombSpiderAnim->OnMontageEnded.RemoveDynamic(this, &ABombSpider::OnAttackMontageEnded);
 		BombSpiderAnim->OnMontageEnded.AddDynamic(this, &ABombSpider::OnAttackMontageEnded);

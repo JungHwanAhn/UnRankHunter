@@ -11,7 +11,7 @@ class UNRANKHUNTER_API UBombSpider_Anim : public UAnimInstance
 	
 public:
 	UBombSpider_Anim();
-	void Attack(FString pattern);
+	void Attack();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BombSpider State")
