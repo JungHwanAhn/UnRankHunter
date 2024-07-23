@@ -20,7 +20,7 @@ private:
 	class ABaseEnemy_Common* ControlledPawn;
 
 	bool bIsAttack = false;
-	int32 attackDelay = 2;
+	float attackDelay = 3.0f;
 	float acceptanceRadius = 130.0f;
 	float avoidanceRadius = 300.0f;
 	float avoidanceStrength = 1.5f;
