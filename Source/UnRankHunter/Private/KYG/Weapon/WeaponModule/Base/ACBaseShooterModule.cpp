@@ -8,7 +8,7 @@ void UACBaseShooterModule::ShotBullet_Implementation(float TriggerRate) {}
 
 FTransform UACBaseShooterModule::GetMuzzlePosition()
 {
-	if (OwnerWeapon == nullptr)
+	if (OwnerWeapon == nullptr || OwnerWeapon->GetMuzzlePosition() == nullptr)
 		return FTransform{};
 
 	return OwnerWeapon->GetMuzzlePosition()->GetComponentTransform();
@@ -16,7 +16,7 @@ FTransform UACBaseShooterModule::GetMuzzlePosition()
 
 FTransform UACBaseShooterModule::GetCameraPosition()
 {
-	if (OwnerWeapon == nullptr)
+	if (OwnerWeapon == nullptr || OwnerWeapon->GetCameraPosition() == nullptr)
 		return FTransform{};
 
 	return OwnerWeapon->GetCameraPosition()->GetComponentTransform();

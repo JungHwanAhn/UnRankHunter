@@ -246,7 +246,7 @@ void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 		AttachToActor(WeaponOwner, FAttachmentTransformRules::KeepRelativeTransform);
 	}
 
-	CameraPositionComponent = WeaponOwner->FindComponentByTag<USceneComponent>("Main Camera");
+	CameraPositionComponent = WeaponOwner->FindComponentByTag<USceneComponent>("MainCamera");
 }
 
 FName ABaseWeapon::GetWeaponID_Implementation()
