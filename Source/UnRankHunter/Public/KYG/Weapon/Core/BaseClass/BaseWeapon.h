@@ -12,6 +12,44 @@
 #include "Elemental/Enum/ElementalEnums.h"
 #include "BaseWeapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EBulletType
+{
+	None = 0,
+	Hitscan,
+	Projectile,
+	Area,
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponFireInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	FWeaponFireInfo() {}
+	FWeaponFireInfo(EBulletType BulletType, TArray<AActor*> Bullets, TArray<FHitResult> HitResults, int32 BulletCount)
+	{
+		this->BulletType = BulletType;
+		this->Bullets = Bullets;
+		this->HitResults = HitResults;
+		this->BulletCount = BulletCount;
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EBulletType BulletType{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> Bullets{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FHitResult> HitResults{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BulletCount{};
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
+
 UCLASS(BlueprintType, Blueprintable)
 class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
 {
@@ -28,6 +66,7 @@ private:
 
 
 private:
+	UFUNCTION()
 	void ReceiveFireNotify(float Value);
 
 #pragma region [Weapon Interface Implementation]
@@ -84,13 +123,26 @@ private:
 #pragma endregion
 
 public:
+	// Toggles the weapon's active state.
+	// This function always works regardless of the current active state of the weapon, and frequent use may cause performance issues.
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void ForceSetWeaponEnable(bool bNewEnabled);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Ammo")
 	int32 GetAmmoCapacity();
 
+	// Decreases the remaining ammo count based on the provided cost.
+	// If bFailOnLess is true, no ammo is reduced if there is insufficient ammo.
+	// Returns the remaining ammo and the actual ammo cost.
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
+
 public:
+	UFUNCTION()
 	USceneComponent* GetCameraPosition();
 
+	UFUNCTION()
 	USceneComponent* GetMuzzlePosition();
 
 protected:
@@ -106,11 +158,21 @@ protected:
 	UACBaseScopeModule* ScopeModule{};
 
 protected:
-	UPROPERTY();
+	UPROPERTY()
 	USceneComponent* CameraPositionComponent{};
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UArrowComponent* MuzzlePositionComponent{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class AActor* WeaponParent{};
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
+	bool bUseWeaponTick{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
+	FName WeaponSocket{};
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
@@ -124,12 +186,11 @@ protected:
 	bool bIsInfiniteAmmo{ false };
 
 private:
-	bool bWeaponEnabled{ false };
+	bool bWeaponEnabled{ true };
 
 
+	// Events
 public:
-	// On Bullet Fired
-	// On Occur Damage
-	// On Change Trigger/Reload/Zoom State
-	// On Recover
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
+	FWeaponFireEvent OnWeaponFireEvent{};
 };

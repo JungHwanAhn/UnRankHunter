@@ -46,8 +46,6 @@ protected:
 	void OnScopeTick();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Scope Module")
-	bool bUseScopeTick{ false };
 
 protected:
 	bool bInputState{ false };

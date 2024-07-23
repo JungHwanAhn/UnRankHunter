@@ -3,17 +3,15 @@
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 
-UACBaseScopeModule::UACBaseScopeModule()
-{
-	PrimaryComponentTick.bCanEverTick = bUseScopeTick;
-	PrimaryComponentTick.bStartWithTickEnabled = false;
-}
-
 void UACBaseScopeModule::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	OnScopeTick();
+}
+
+UACBaseScopeModule::UACBaseScopeModule()
+{
 }
 
 bool UACBaseScopeModule::SetZoomInput(bool bInput)
