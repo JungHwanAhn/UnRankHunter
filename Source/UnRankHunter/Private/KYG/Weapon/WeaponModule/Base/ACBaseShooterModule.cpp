@@ -27,7 +27,19 @@ FTransform UACBaseShooterModule::GetSettingPosition()
 	if (OwnerWeapon == nullptr)
 		return FTransform{};
 
-	return (WeaponShooterOrigin == EWeaponShooterOrigin::MuzzlePosition) ?
-		OwnerWeapon->GetMuzzlePosition()->GetComponentTransform() :
-		OwnerWeapon->GetCameraPosition()->GetComponentTransform();
+	USceneComponent* PositionComp{};
+
+	switch (WeaponShooterOrigin)
+	{
+	case EWeaponShooterOrigin::MainCameraCenter:
+		PositionComp = OwnerWeapon->GetCameraPosition();
+		break;
+	case EWeaponShooterOrigin::MuzzlePosition:
+		PositionComp = OwnerWeapon->GetMuzzlePosition();
+		break;
+	default:
+		break;
+	}
+
+	return PositionComp == nullptr ? FTransform{} : PositionComp->GetComponentTransform();
 }

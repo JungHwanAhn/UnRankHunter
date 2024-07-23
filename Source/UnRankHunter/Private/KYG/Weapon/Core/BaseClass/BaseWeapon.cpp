@@ -220,13 +220,15 @@ bool ABaseWeapon::GetWeaponEnabled_Implementation()
 
 void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
-	// Detach weapon from actor.
+	// Weapon Detached.
 	if (WeaponOwner == nullptr)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		WeaponParent = nullptr;
 		return;
 	}
+
+	// Weapon Attached.
 
 	WeaponParent = WeaponOwner;
 
@@ -243,6 +245,8 @@ void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 	{
 		AttachToActor(WeaponOwner, FAttachmentTransformRules::KeepRelativeTransform);
 	}
+
+	CameraPositionComponent = WeaponOwner->FindComponentByTag<USceneComponent>("Main Camera");
 }
 
 FName ABaseWeapon::GetWeaponID_Implementation()
