@@ -29,7 +29,7 @@ struct FWeaponDataTableRow : public FTableRowBase
 	TSubclassOf<class ABaseWeapon> WeaponClass;
 };
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface
 {
 	GENERATED_BODY()

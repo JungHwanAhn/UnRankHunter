@@ -142,7 +142,7 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 	auto NewWeaponInst = WeaponArray[SlotIndex];
 	IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
-	UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+	//UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
 
 	// Change controlled weapon.
 	EquippedSlot = SlotIndex;
