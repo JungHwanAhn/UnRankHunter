@@ -59,6 +59,14 @@ void ABaseEnemy_Common::Attack()
 	LHCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
 }
 
+void ABaseEnemy_Common::DashAttack()
+{
+}
+
+void ABaseEnemy_Common::JumpAttack()
+{
+}
+
 void ABaseEnemy_Common::EnemyDie()
 {
 	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
