@@ -23,7 +23,9 @@ void UACWeaponManager::BeginPlay()
 
 	WeaponArray.Init(nullptr, ContainerSize);
 
-	UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
+
+	InitializeBlueprint();
 }
 
 IWeaponInterface* UACWeaponManager::GetEquippedWeapon()

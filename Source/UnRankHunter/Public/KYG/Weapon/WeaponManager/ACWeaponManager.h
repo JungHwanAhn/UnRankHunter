@@ -40,6 +40,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Manager")
+	void InitializeBlueprint();
+
 public:
 	IWeaponInterface* GetEquippedWeapon();
 
