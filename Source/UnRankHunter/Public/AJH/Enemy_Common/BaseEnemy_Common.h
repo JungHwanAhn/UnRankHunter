@@ -19,6 +19,9 @@ public:
 	UFUNCTION()
 	virtual void Attack();
 
+	virtual void DashAttack();
+	virtual void JumpAttack();
+
 protected:
 	virtual void BeginPlay() override;
 

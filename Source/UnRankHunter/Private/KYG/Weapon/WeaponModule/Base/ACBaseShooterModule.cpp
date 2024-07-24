@@ -19,7 +19,22 @@ FTransform UACBaseShooterModule::GetCameraPosition()
 	if (OwnerWeapon == nullptr || OwnerWeapon->GetCameraPosition() == nullptr)
 		return FTransform{};
 
-	return OwnerWeapon->GetCameraPosition()->GetComponentTransform();
+	FTransform CameraOriginTr = OwnerWeapon->GetCameraPosition()->GetComponentTransform();
+
+	// Calculate a cross position with camera and muzzle point.
+	// axis dot v = length of v on the axis.
+	FVector MuzzleLoc = GetMuzzlePosition().GetLocation();
+
+	FVector CamForwardVector = CameraOriginTr.GetRotation().GetForwardVector();
+	FVector CamToMuzzleVector = MuzzleLoc - CameraOriginTr.GetLocation();
+
+	float Distance = FVector::DotProduct(CamForwardVector, CamToMuzzleVector);
+	FVector FinalVector = CamForwardVector * Distance;
+
+	CameraOriginTr.SetLocation(CameraOriginTr.GetLocation() + FinalVector);
+	// End calculate.
+
+	return CameraOriginTr;
 }
 
 FTransform UACBaseShooterModule::GetSettingPosition()

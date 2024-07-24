@@ -7,6 +7,15 @@
 #include "Weapon/Interface/WeaponDataInterface.h"
 #include "WeaponInterface.generated.h"
 
+UENUM(BlueprintType, meta = (Bitflags))
+enum class EWeaponAbortSelection : uint8
+{
+	None = 0,
+	Fire = 1 << 0,
+	Reload = 1 << 1,
+	Zoom = 1 << 2
+};
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UWeaponInterface : public UInterface
@@ -64,6 +73,11 @@ public:
 	// Return this weapon is zooming now.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
 	bool IsZooming();
+
+
+	// Function to safely stop the weapon action.
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Control", meta = (ForceAsFunction))
+	void CancelWeaponAction(EWeaponAbortSelection AbortSelection);
 
 
 	// Set weapon enable state.

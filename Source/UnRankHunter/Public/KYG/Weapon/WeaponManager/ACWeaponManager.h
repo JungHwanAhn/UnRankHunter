@@ -40,6 +40,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Manager")
+	void InitializeBlueprint();
+
 public:
 	IWeaponInterface* GetEquippedWeapon();
 
@@ -106,6 +109,10 @@ private:
 
 	// Return this weapon is zooming now.
 	virtual bool IsZooming_Implementation() override;
+
+
+	// Function to safely stop the weapon action.
+	virtual void CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection) override;
 
 
 	// Set weapon enable state.

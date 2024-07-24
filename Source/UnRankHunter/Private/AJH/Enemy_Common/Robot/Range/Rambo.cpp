@@ -12,7 +12,8 @@ ARambo::ARambo()
 	if (RamboMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(RamboMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -140), FRotator(0, -180, 0));
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -260), FRotator(0, -180, 0));
+		GetMesh()->SetRelativeScale3D(FVector(1.8));
 		GetMesh()->GetOwner()->Tags.Add("Rambo");
 	}
 
@@ -22,7 +23,7 @@ ARambo::ARambo()
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
-	GetCapsuleComponent()->InitCapsuleSize(60.0f, 100.0f);
+	GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
 
 void ARambo::Attack()
@@ -57,7 +58,6 @@ float ARambo::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		ramboHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (ramboHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

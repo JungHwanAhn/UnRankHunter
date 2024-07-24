@@ -19,7 +19,13 @@ UACWeaponManager::UACWeaponManager()
 
 void UACWeaponManager::BeginPlay()
 {
+	Super::BeginPlay();
+
 	WeaponArray.Init(nullptr, ContainerSize);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
+
+	InitializeBlueprint();
 }
 
 IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
@@ -32,14 +38,14 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 	// Exception handling: Index out of range.
 	if (!WeaponArray.IsValidIndex(SlotIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: %d is out of range index."), SlotIndex);
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. %d is out of range index. Container size is %d."), SlotIndex, WeaponArray.Num());
 		return false;
 	}
 
 	// If slot already contains weapon, return fail.
 	if (bForceAdd == false && WeaponArray[SlotIndex] != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Trying to add weapon to assigned slot."));
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. Trying to add weapon to assigned slot."));
 		return false;
 	}
 
@@ -48,7 +54,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 	// Exception handling: No weapon class exists for the given WeaponID.
 	if (WeaponBlueprintClass == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: %s is invalid id."), *WeaponID.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. %s is invalid id."), *WeaponID.ToString());
 		return false;
 	}
 
@@ -60,7 +66,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 
 	if (WeaponInst == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Weapon is not ABaseWeapon"));
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. Weapon is not ABaseWeapon"));
 		return false;
 	}
 
@@ -78,7 +84,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
 	WeaponInst->ForceSetWeaponEnable(false);
 
-	UE_LOG(LogTemp, Log, TEXT("WeaponManager: SUCCESS Add weapon to slot."));
+	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
 
 	return true;
 }
@@ -123,11 +129,13 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 {
 	if (WeaponArray.IsValidIndex(SlotIndex) == false && SlotIndex != -1)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Fail to select weapon slot. %d is out of range."), SlotIndex);
 		return;
 	}
 
 	if (EquippedSlot == SlotIndex)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
 		return;
 	}
 
@@ -139,6 +147,15 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 		IWeaponInterface::Execute_SetWeaponEnabled(PreWeaponInst, false);
 	}
 
+	if (SlotIndex == -1)
+	{
+		EquippedSlot = -1;
+		EquippedWeapon = nullptr;
+
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
+		return;
+	}
+	
 	auto NewWeaponInst = WeaponArray[SlotIndex];
 	IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
@@ -147,7 +164,6 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 	// Change controlled weapon.
 	EquippedSlot = SlotIndex;
 	EquippedWeapon = NewWeaponInst;
-
 }
 
 void UACWeaponManager::ForceEquipWeaponSlot(int32 SlotIndex)
@@ -232,6 +248,14 @@ bool UACWeaponManager::IsReloading_Implementation()
 bool UACWeaponManager::IsZooming_Implementation()
 {
 	return EquippedWeapon ? IWeaponInterface::Execute_IsZooming(EquippedWeapon->_getUObject()) : false;
+}
+
+void UACWeaponManager::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection)
+{
+	if (EquippedWeapon)
+	{
+		IWeaponInterface::Execute_CancelWeaponAction(EquippedWeapon, AbortSelection);
+	}
 }
 
 void UACWeaponManager::SetWeaponEnabled_Implementation(bool bNewEnabled)
