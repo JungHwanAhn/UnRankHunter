@@ -16,26 +16,24 @@ void AAIController_Elite::Tick(float DeltaSeconds)
 			SetFocus(PlayerPawn);
 
 			if (!bIsAttack) {
+				float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+
 				if (!bIsDash) {
 					MoveToActor(PlayerPawn, 1500);
-					float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
 					if (distance < 1700.0f) {
 						bIsAttack = true;
 						bIsDash = true;
-						FTimerHandle AttackTimerHandle;
-						FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; });
+						attackDelay = 3.0f;
 						GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, attackDelay, false);
-						ControlledPawn->DashAttack();
+						ControlledPawn->Attack();
 					}
 				}
 				else {
 					MoveToActor(PlayerPawn, 210);
-					float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
 					if (distance < 410.0f) {
 						bIsAttack = true;
 						int randomPattern = FMath::RandRange(1, 4);
-						FTimerHandle AttackTimerHandle;
-						FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; attackDelay = 3.0f; });
+
 						if (randomPattern <= 3) {
 							GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, attackDelay, false);
 							ControlledPawn->Attack();
@@ -65,5 +63,6 @@ void AAIController_Elite::OnPossess(APawn* InPawn)
 	if (InPawn) {
 		PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		ControlledPawn = Cast<ABaseEnemy_Common>(InPawn);
+		AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; attackDelay = 2.0f; });
 	}
 }

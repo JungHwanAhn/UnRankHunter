@@ -19,8 +19,10 @@ private:
 	class APawn* PlayerPawn;
 	class ABaseEnemy_Common* ControlledPawn;
 
-	bool bIsAttack = false;
-	float attackDelay = 2.5;
+	FTimerHandle AttackTimerHandle;
+	FTimerDelegate AttackCD;
 
+	bool bIsAttack = false;
+	float attackDelay = 2.0f;
 	bool bIsDash = false;
 };
