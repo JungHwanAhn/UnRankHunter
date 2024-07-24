@@ -26,12 +26,10 @@ bool UACBaseReloadModule::SetReloadInput(bool bInput)
 	if (bInputState == true && bCanReload)
 	{
 		OnReloadBegin();
-		SetComponentTickEnabled(true);
 	}
 	else if (bInputState == false)
 	{
 		OnReloadEnd();
-		SetComponentTickEnabled(false);
 	}
 
 	return true;
