@@ -5,12 +5,14 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	auto RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
 	SetRootComponent(RootComp);
@@ -62,6 +64,9 @@ void ABaseWeapon::GenerateBasicModule()
 void ABaseWeapon::ReceiveFireNotify(float Value)
 {
 	ShooterModule->ShotBullet(Value);
+
+	FWeaponFireInfo Info{};
+	OnWeaponFireEvent.Broadcast(this, Info);
 }
 
 
@@ -73,17 +78,26 @@ void ABaseWeapon::ReceiveFireNotify(float Value)
 
 void ABaseWeapon::SetFireInput_Implementation(bool bInput)
 {
-	TriggerModule->SetTriggerInput(bInput);
+	if (TriggerModule)
+	{
+		TriggerModule->SetTriggerInput(bInput);
+	}
 }
 
 void ABaseWeapon::SetReloadInput_Implementation(bool bInput)
 {
-	ReloadModule->SetReloadInput(bInput);
+	if(ReloadModule)
+	{
+		ReloadModule->SetReloadInput(bInput);
+	}
 }
 
 void ABaseWeapon::SetZoomInput_Implementation(bool bInput)
 {
-	ScopeModule->SetZoomInput(bInput);
+	if(ScopeModule)
+	{
+		ScopeModule->SetZoomInput(bInput);
+	}
 }
 
 bool ABaseWeapon::CanFire_Implementation()
@@ -169,32 +183,70 @@ void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
 		return;
 	}
 
-	bWeaponEnabled = bNewEnabled;
+	ForceSetWeaponEnable(bNewEnabled);
 
-	auto AllComps = GetComponents();
-	for (auto Comp : AllComps)
-	{
+	//bWeaponEnabled = bNewEnabled;
+	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
-	}
+	//auto AllComps = GetComponents();
+	//for (auto Comp : AllComps)
+	//{
+	//	Comp->SetActive(bNewEnabled);
+
+	//	auto Col = Cast<UPrimitiveComponent>(Comp);
+	//	if (Col != nullptr)
+	//	{
+	//		Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+	//	}
+
+	//	auto Mesh = Cast<USceneComponent>(Comp);
+	//	if (Mesh != nullptr)
+	//	{
+	//		Mesh->SetVisibility(bNewEnabled);
+	//	}
+
+	//	auto Module = Cast<UACBaseWeaponModule>(Comp);
+	//	if (Module != nullptr)
+	//	{
+	//		Module->SetModuleEnabled(bNewEnabled);
+	//	}
+	//}
 }
 
 bool ABaseWeapon::GetWeaponEnabled_Implementation()
 {
-	// Implementation logic here
-	return false;  // Placeholder return value
+	return bWeaponEnabled;
 }
 
 void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
-	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
-
-	if (OwnerCharacter == nullptr)
+	// Weapon Detached.
+	if (WeaponOwner == nullptr)
 	{
+		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		WeaponParent = nullptr;
 		return;
 	}
 
-	FName SocketName = "rHand_weapon_sniper1";
-	this->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	// Weapon Attached.
+
+	WeaponParent = WeaponOwner;
+
+	auto OwnerCharacter = Cast<ACharacter>(WeaponOwner);
+
+	// Attach to character.
+	if (OwnerCharacter != nullptr)
+	{
+		FName SocketName = WeaponSocket;
+		this->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	}
+	// Attach to non-character.
+	else
+	{
+		AttachToActor(WeaponOwner, FAttachmentTransformRules::KeepRelativeTransform);
+	}
+
+	CameraPositionComponent = WeaponOwner->FindComponentByTag<USceneComponent>("MainCamera");
 }
 
 FName ABaseWeapon::GetWeaponID_Implementation()
@@ -221,9 +273,76 @@ void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 #pragma endregion
 
 
+void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Weapon Set Enabled"));
+
+	bWeaponEnabled = bNewEnabled;
+	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
+
+	auto AllComps = GetComponents();
+	for (auto Comp : AllComps)
+	{
+		//Comp->SetActive(bNewEnabled);
+
+		auto Col = Cast<UPrimitiveComponent>(Comp);
+		if (Col != nullptr)
+		{
+			Col->SetCollisionEnabled(bNewEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		}
+
+		auto Mesh = Cast<USceneComponent>(Comp);
+		if (Mesh != nullptr)
+		{
+			Mesh->SetVisibility(bNewEnabled);
+
+			//UE_LOG(LogTemp, Log, TEXT("Weapon Set Enabled Is Scene Component %s"), *Mesh->GetName());
+		}
+
+		auto Module = Cast<UACBaseWeaponModule>(Comp);
+		if (Module != nullptr)
+		{
+			Module->SetModuleEnabled(bNewEnabled);
+		}
+	}
+}
+
 int32 ABaseWeapon::GetAmmoCapacity()
 {
 	return AmmoCapacity;
+}
+
+bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
+{
+	OutRemainAmmo = RemainAmmoCount;
+	OutReduceAmmo = 0;
+
+	if (bIsInfiniteAmmo)
+	{
+		return true;
+	}
+
+	int32 FinalAmmo = RemainAmmoCount - Cost;
+
+	if (FinalAmmo < 0)
+	{
+		if (bFailOnLess)
+		{
+			return false;
+		}
+
+		OutReduceAmmo = Cost + RemainAmmoCount;
+		RemainAmmoCount = 0;
+		OutRemainAmmo = 0;
+		return OutReduceAmmo > 0;	// Return ammo is decrease?
+	}
+	else
+	{
+		RemainAmmoCount = FinalAmmo;
+		OutRemainAmmo = RemainAmmoCount;
+		OutReduceAmmo = Cost;
+		return true;
+	}
 }
 
 USceneComponent* ABaseWeapon::GetCameraPosition()

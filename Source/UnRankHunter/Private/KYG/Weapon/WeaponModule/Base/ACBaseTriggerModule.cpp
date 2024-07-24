@@ -5,8 +5,6 @@
 
 UACBaseTriggerModule::UACBaseTriggerModule()
 {
-	PrimaryComponentTick.bCanEverTick = bUseTriggerTick;
-	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
 void UACBaseTriggerModule::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -33,7 +31,7 @@ bool UACBaseTriggerModule::SetTriggerInput(bool bInput)
 	if (bInputState == true && bCanTrigger)
 	{
 		OnTriggerBegin();
-		if (bUseTriggerTick)
+		if (bUseTick)
 		{
 			SetComponentTickEnabled(true);
 		}
@@ -41,7 +39,7 @@ bool UACBaseTriggerModule::SetTriggerInput(bool bInput)
 	else if (bInputState == false)
 	{
 		OnTriggerEnd();
-		if (bUseTriggerTick)
+		if (bUseTick)
 		{
 			SetComponentTickEnabled(false);
 		}

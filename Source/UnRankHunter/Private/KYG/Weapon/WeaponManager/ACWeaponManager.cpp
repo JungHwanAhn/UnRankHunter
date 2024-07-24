@@ -3,162 +3,289 @@
 
 #include "KYG/Weapon/WeaponManager/ACWeaponManager.h"
 #include "Weapon/Interface/WeaponInterface.h"
+#include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
 
 UACWeaponManager::UACWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-
+	ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
+	if (DT_WepTb.Succeeded())
+	{
+		WeaponTable = DT_WepTb.Object;
+	}
 }
 
-IWeaponInterface* UACWeaponManager::GetEquiptedWeapon()
+void UACWeaponManager::BeginPlay()
 {
-	return EquiptedWeapon;
+	Super::BeginPlay();
+
+	WeaponArray.Init(nullptr, ContainerSize);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
+
+	InitializeBlueprint();
 }
 
-bool UACWeaponManager::AddWeaponToSlot(int SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd)
+IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
 {
+	return EquippedWeapon;
+}
+
+bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd)
+{
+	// Exception handling: Index out of range.
 	if (!WeaponArray.IsValidIndex(SlotIndex))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. %d is out of range index. Container size is %d."), SlotIndex, WeaponArray.Num());
 		return false;
 	}
 
+	// If slot already contains weapon, return fail.
 	if (bForceAdd == false && WeaponArray[SlotIndex] != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. Trying to add weapon to assigned slot."));
 		return false;
 	}
 
 	auto WeaponBlueprintClass = GetWeaponBlueprintClass(WeaponID);
 
-	if (WeaponBlueprintClass)
+	// Exception handling: No weapon class exists for the given WeaponID.
+	if (WeaponBlueprintClass == nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. %s is invalid id."), *WeaponID.ToString());
 		return false;
 	}
 
-	IWeaponInterface* WeaponInst{};
+	// Create weapon instance.
+	ABaseWeapon* WeaponInst{};
 
 	auto TempObj = GetWorld()->SpawnActor(WeaponBlueprintClass);
-	WeaponInst = Cast<IWeaponInterface>(TempObj);
+	WeaponInst = Cast<ABaseWeapon>(TempObj);
 
-	if (!WeaponInst)
+	if (WeaponInst == nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponManager: Fail to add weapon. Weapon is not ABaseWeapon"));
 		return false;
 	}
 
+	// Destroy the previous weapon instance in the slot.
 	if (WeaponArray[SlotIndex] != nullptr)
 	{
 		// Remove Weapon Logic.
+		ABaseWeapon* RemoveWeapon{};
+		RemoveWeaponFromSlot(RemoveWeapon, SlotIndex, true);
 	}
 
 	WeaponArray[SlotIndex] = WeaponInst;
 
-	USceneComponent* AttachParent = GetOwner()->FindComponentByTag<USceneComponent>("Equip Body");
-	FName SocketName = "";
-
+	// Initialize the instance.
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
+	WeaponInst->ForceSetWeaponEnable(false);
+
+	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
 
 	return true;
 }
 
+bool UACWeaponManager::RemoveWeaponFromSlot(ABaseWeapon*& OutWeaponInstance, int32 SlotIndex, bool bDestroyInstance)
+{
+	OutWeaponInstance = nullptr;
+
+	// Escape if index out of range.
+	if (WeaponArray.IsValidIndex(SlotIndex) == false)
+	{
+		return false;
+	}
+
+	// Escape if empty slot.
+	if (WeaponArray[SlotIndex] == nullptr)
+	{
+		return false;
+	}
+
+	if (SlotIndex == EquippedSlot)
+	{
+		SelectWeaponSlot(GetSubSlot());
+	}
+
+	auto WeaponInst = WeaponArray[SlotIndex];
+	WeaponArray[SlotIndex] = nullptr;
+
+	if (bDestroyInstance)
+	{
+		WeaponInst->Destroy();
+	}
+	else
+	{
+		OutWeaponInstance = WeaponInst;
+	}
+
+	return true;
+}
+
+void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
+{
+	if (WeaponArray.IsValidIndex(SlotIndex) == false && SlotIndex != -1)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Fail to select weapon slot. %d is out of range."), SlotIndex);
+		return;
+	}
+
+	if (EquippedSlot == SlotIndex)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
+		return;
+	}
+
+	// If manager equip any weapon, Disable this weapon.
+	if (WeaponArray.IsValidIndex(GetEquippedSlot()) == true && WeaponArray[GetEquippedSlot()] != nullptr)
+	{
+		auto PreWeaponInst = WeaponArray[GetEquippedSlot()];
+
+		IWeaponInterface::Execute_SetWeaponEnabled(PreWeaponInst, false);
+	}
+
+	if (SlotIndex == -1)
+	{
+		EquippedSlot = -1;
+		EquippedWeapon = nullptr;
+
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
+		return;
+	}
+	
+	auto NewWeaponInst = WeaponArray[SlotIndex];
+	IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
+
+	//UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+
+	// Change controlled weapon.
+	EquippedSlot = SlotIndex;
+	EquippedWeapon = NewWeaponInst;
+}
+
+void UACWeaponManager::ForceEquipWeaponSlot(int32 SlotIndex)
+{
+
+}
+
+int32 UACWeaponManager::GetEquippedSlot()
+{
+	return EquippedSlot;
+}
+
+int32 UACWeaponManager::GetSubSlot()
+{
+	return EquippedSlot == 0 ? 1 : 0;
+}
+
 UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 {
-	UE_LOG(LogTemp, Log, TEXT("%s: Not Implement Function"), __FUNCTION__);
-	return nullptr;
+	// If Table is invalid, return fail.
+	if (!WeaponTable)
+	{
+		return nullptr;
+	}
+
+	auto Row = WeaponTable->FindRow<FWeaponDataTableRow>(WeaponID, TEXT(""));
+
+	return Row->WeaponClass;
 }
 
 #pragma region [Weapon Interface Implementation]
 
 void UACWeaponManager::SetFireInput_Implementation(bool bInput)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_SetFireInput(EquiptedWeapon->_getUObject(), bInput);
+		IWeaponInterface::Execute_SetFireInput(EquippedWeapon->_getUObject(), bInput);
 	}
 }
 
 void UACWeaponManager::SetReloadInput_Implementation(bool bInput)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_SetReloadInput(EquiptedWeapon->_getUObject(), bInput);
+		IWeaponInterface::Execute_SetReloadInput(EquippedWeapon->_getUObject(), bInput);
 	}
 }
 
 void UACWeaponManager::SetZoomInput_Implementation(bool bInput)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_SetZoomInput(EquiptedWeapon->_getUObject(), bInput);
+		IWeaponInterface::Execute_SetZoomInput(EquippedWeapon->_getUObject(), bInput);
 	}
 }
 
 bool UACWeaponManager::CanFire_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_CanFire(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_CanFire(EquippedWeapon->_getUObject()) : false;
 }
 
 bool UACWeaponManager::CanReload_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_CanReload(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_CanReload(EquippedWeapon->_getUObject()) : false;
 }
 
 bool UACWeaponManager::CanZoom_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_CanZoom(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_CanZoom(EquippedWeapon->_getUObject()) : false;
 }
 
 bool UACWeaponManager::IsFiring_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_IsFiring(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_IsFiring(EquippedWeapon->_getUObject()) : false;
 }
 
 bool UACWeaponManager::IsReloading_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_IsReloading(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_IsReloading(EquippedWeapon->_getUObject()) : false;
 }
 
 bool UACWeaponManager::IsZooming_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_IsZooming(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_IsZooming(EquippedWeapon->_getUObject()) : false;
 }
 
 void UACWeaponManager::SetWeaponEnabled_Implementation(bool bNewEnabled)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_SetWeaponEnabled(EquiptedWeapon->_getUObject(), bNewEnabled);
+		IWeaponInterface::Execute_SetWeaponEnabled(EquippedWeapon->_getUObject(), bNewEnabled);
 	}
 }
 
 bool UACWeaponManager::GetWeaponEnabled_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_GetWeaponEnabled(EquiptedWeapon->_getUObject()) : false;
+	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponEnabled(EquippedWeapon->_getUObject()) : false;
 }
 
 void UACWeaponManager::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_SetupWeaponAttachment(EquiptedWeapon->_getUObject(), WeaponOwner);
+		IWeaponInterface::Execute_SetupWeaponAttachment(EquippedWeapon->_getUObject(), WeaponOwner);
 	}
 }
 
 FName UACWeaponManager::GetWeaponID_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_GetWeaponID(EquiptedWeapon->_getUObject()) : FName("Invalid");
+	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponID(EquippedWeapon->_getUObject()) : FName("Invalid");
 }
 
 int32 UACWeaponManager::GetRemainAmmoCount_Implementation()
 {
-	return EquiptedWeapon ? IWeaponInterface::Execute_GetRemainAmmoCount(EquiptedWeapon->_getUObject()) : 0;
+	return EquippedWeapon ? IWeaponInterface::Execute_GetRemainAmmoCount(EquippedWeapon->_getUObject()) : 0;
 }
 
 void UACWeaponManager::RefillAmmoCount_Implementation(int32 AmmoCount)
 {
-	if (EquiptedWeapon)
+	if (EquippedWeapon)
 	{
-		IWeaponInterface::Execute_RefillAmmoCount(EquiptedWeapon->_getUObject(), AmmoCount);
+		IWeaponInterface::Execute_RefillAmmoCount(EquippedWeapon->_getUObject(), AmmoCount);
 	}
 }
 

@@ -7,7 +7,7 @@
 #include "ACBaseReloadModule.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseReloadModule : public UACBaseWeaponModule
@@ -19,7 +19,7 @@ public:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	
+
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Reload Module")
 	bool CanReload()
@@ -47,8 +47,6 @@ protected:
 	void OnReloadTick();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Scope Module")
-	bool bUseReloadTick{ false };
 
 protected:
 	bool bInputState{ false };

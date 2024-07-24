@@ -5,14 +5,12 @@
 
 UACBaseReloadModule::UACBaseReloadModule()
 {
-	PrimaryComponentTick.bCanEverTick = bUseReloadTick;
-	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
 void UACBaseReloadModule::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
 	OnReloadTick();
 }
 
