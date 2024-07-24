@@ -71,7 +71,7 @@ protected:
 #pragma endregion
 
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable, Category = "Modules|Trigger Module")
 	FTriggerModuleCallback OnFireNotified{};
 
 	//UPROPERTY()
