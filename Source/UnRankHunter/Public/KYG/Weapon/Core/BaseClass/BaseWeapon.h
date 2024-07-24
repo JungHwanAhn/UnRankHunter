@@ -103,6 +103,11 @@ private:
 	virtual bool IsZooming_Implementation() override;
 
 
+
+	// Function to safely stop the weapon action.
+	virtual void CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection) override;
+
+
 	// Set weapon enable state.
 	// If you set this property false, this weapon become invisible, no collision, tick disabled.
 	virtual void SetWeaponEnabled_Implementation(bool bNewEnabled) override;
@@ -134,7 +139,6 @@ public:
 	// Decreases the remaining ammo count based on the provided cost.
 	// If bFailOnLess is true, no ammo is reduced if there is insufficient ammo.
 	// Returns the remaining ammo and the actual ammo cost.
-
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
 
@@ -146,6 +150,7 @@ public:
 	USceneComponent* GetMuzzlePosition();
 
 protected:
+	UFUNCTION(meta = (DeprecatedFunction))
 	int32 GetMaxAmmoCapacity();
 
 	float GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical);

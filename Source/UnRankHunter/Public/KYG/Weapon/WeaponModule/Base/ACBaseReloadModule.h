@@ -21,37 +21,40 @@ public:
 
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Reload Module")
 	bool CanReload()
 	{
-		return bCanReload;
+		return bCanReload && !bIsReloading;
 	}
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Reload Module")
 	bool IsReloading()
 	{
 		return bIsReloading;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Reload Module")
 	bool SetReloadInput(bool bInput);
 
 protected:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Reload Module")
 	void OnReloadBegin();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Reload Module")
 	void OnReloadEnd();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Reload Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Reload Module")
 	void OnReloadTick();
 
 protected:
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module|Reload Module")
 	bool bInputState{ false };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon Module|Reload Module")
 	bool bIsReloading{ false };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon Module|Reload Module")
 	bool bCanReload{ true };
 };

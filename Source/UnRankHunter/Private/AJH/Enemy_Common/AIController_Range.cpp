@@ -19,7 +19,7 @@ void AAIController_Range::Tick(float DeltaSeconds)
 				MoveToActor(PlayerPawn, 1500);
 
 				float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-				if (distance < 1650.0f) {
+				if (distance < 1700.0f) {
 					bIsAttack = true;
 					FTimerHandle AttackTimerHandle;
 					FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; });

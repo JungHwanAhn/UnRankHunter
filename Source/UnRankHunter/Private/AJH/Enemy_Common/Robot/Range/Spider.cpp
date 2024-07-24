@@ -13,6 +13,8 @@ ASpider::ASpider()
 		SpiderMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SpiderMech/Mesh/SpiderMech/SK_SpriderMech.SK_SpriderMech'"));
 	if (SpiderMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(SpiderMesh.Object);
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
+		GetMesh()->SetRelativeScale3D(FVector(1.9));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->GetOwner()->Tags.Add("Spider");
 	}
@@ -23,7 +25,7 @@ ASpider::ASpider()
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
-	GetCapsuleComponent()->InitCapsuleSize(65.0f, 80.0f);
+	GetCapsuleComponent()->InitCapsuleSize(100.0f, 115.0f);
 }
 
 void ASpider::Attack()
@@ -58,7 +60,6 @@ float ASpider::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		spiderHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (spiderHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

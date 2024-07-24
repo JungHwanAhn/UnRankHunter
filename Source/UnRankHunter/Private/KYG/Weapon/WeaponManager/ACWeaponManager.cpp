@@ -250,6 +250,14 @@ bool UACWeaponManager::IsZooming_Implementation()
 	return EquippedWeapon ? IWeaponInterface::Execute_IsZooming(EquippedWeapon->_getUObject()) : false;
 }
 
+void UACWeaponManager::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection)
+{
+	if (EquippedWeapon)
+	{
+		IWeaponInterface::Execute_CancelWeaponAction(EquippedWeapon, AbortSelection);
+	}
+}
+
 void UACWeaponManager::SetWeaponEnabled_Implementation(bool bNewEnabled)
 {
 	if (EquippedWeapon)

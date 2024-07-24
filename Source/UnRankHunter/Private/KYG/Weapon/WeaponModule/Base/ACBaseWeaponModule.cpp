@@ -41,6 +41,17 @@ void UACBaseWeaponModule::SetModuleEnabled(bool bNewEnabled, bool bForce)
 		if (bNewEnabled == false)
 		{
 			SetComponentTickEnabled(false);
+			CancelModuleAction();	// cancel to running module actions safety.
 		}
 	}
+}
+
+void UACBaseWeaponModule::CancelModuleAction()
+{
+	OnModuleActionCancelled();
+	OnModuleActionCancelled_Blueprint();
+}
+
+void UACBaseWeaponModule::OnModuleActionCancelled()
+{
 }

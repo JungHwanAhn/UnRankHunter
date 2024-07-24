@@ -111,6 +111,10 @@ private:
 	virtual bool IsZooming_Implementation() override;
 
 
+	// Function to safely stop the weapon action.
+	virtual void CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection) override;
+
+
 	// Set weapon enable state.
 	// If you set this property false, this weapon become invisible, no collision, tick disabled.
 	virtual void SetWeaponEnabled_Implementation(bool bNewEnabled) override;

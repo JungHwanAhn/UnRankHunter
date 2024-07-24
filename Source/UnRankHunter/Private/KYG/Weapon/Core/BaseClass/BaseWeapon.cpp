@@ -80,22 +80,34 @@ void ABaseWeapon::SetFireInput_Implementation(bool bInput)
 {
 	if (TriggerModule)
 	{
+		if (bInput == true && !IWeaponInterface::Execute_CanFire(this))
+		{
+			return;
+		}
 		TriggerModule->SetTriggerInput(bInput);
 	}
 }
 
 void ABaseWeapon::SetReloadInput_Implementation(bool bInput)
 {
-	if(ReloadModule)
+	if (ReloadModule)
 	{
+		if (bInput == true && !IWeaponInterface::Execute_CanReload(this))
+		{
+			return;
+		}
 		ReloadModule->SetReloadInput(bInput);
 	}
 }
 
 void ABaseWeapon::SetZoomInput_Implementation(bool bInput)
 {
-	if(ScopeModule)
+	if (ScopeModule)
 	{
+		if (bInput == true && !IWeaponInterface::Execute_CanZoom(this))
+		{
+			return;
+		}
 		ScopeModule->SetZoomInput(bInput);
 	}
 }
@@ -125,9 +137,9 @@ bool ABaseWeapon::CanReload_Implementation()
 
 	bool bCanReload = TriggerModule->IsTrigger() == false
 		&& ReloadModule->CanReload()
-		&& RemainAmmoCount < GetMaxAmmoCapacity();
+		&& RemainAmmoCount < GetAmmoCapacity();
 
-	return false;
+	return bCanReload;
 }
 
 bool ABaseWeapon::CanZoom_Implementation()
@@ -174,6 +186,27 @@ bool ABaseWeapon::IsZooming_Implementation()
 	}
 
 	return ScopeModule->IsZooming();
+}
+
+void ABaseWeapon::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection)
+{
+	if (AbortSelection == EWeaponAbortSelection::None)
+		return;
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
+	{
+		TriggerModule->CancelModuleAction();
+	}
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
+	{
+		ReloadModule->CancelModuleAction();
+	}
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
+	{
+		ScopeModule->CancelModuleAction();
+	}
 }
 
 void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)
@@ -358,6 +391,8 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition()
 
 int32 ABaseWeapon::GetMaxAmmoCapacity()
 {
+	return AmmoCapacity;
+
 	FWeaponParameter Param;
 	FWeaponStat FinStat;
 
