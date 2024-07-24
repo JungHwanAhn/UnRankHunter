@@ -43,8 +43,5 @@ void UAndroid_Anim::NativeUpdateAnimation(float DeltaSeconds)
 	if (Android) {
 		velocity = Android->GetVelocity();
 		speed = velocity.Size2D();
-
-		androidRotation = Android->GetActorRotation();
-		direction = UKismetAnimationLibrary::CalculateDirection(velocity, androidRotation);
 	}
 }
