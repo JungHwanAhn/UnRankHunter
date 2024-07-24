@@ -86,7 +86,7 @@ void ABaseWeapon::SetFireInput_Implementation(bool bInput)
 
 void ABaseWeapon::SetReloadInput_Implementation(bool bInput)
 {
-	if(ReloadModule)
+	if (ReloadModule)
 	{
 		ReloadModule->SetReloadInput(bInput);
 	}
@@ -94,7 +94,7 @@ void ABaseWeapon::SetReloadInput_Implementation(bool bInput)
 
 void ABaseWeapon::SetZoomInput_Implementation(bool bInput)
 {
-	if(ScopeModule)
+	if (ScopeModule)
 	{
 		ScopeModule->SetZoomInput(bInput);
 	}
@@ -174,6 +174,27 @@ bool ABaseWeapon::IsZooming_Implementation()
 	}
 
 	return ScopeModule->IsZooming();
+}
+
+void ABaseWeapon::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortSelection)
+{
+	if (AbortSelection == EWeaponAbortSelection::None)
+		return;
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
+	{
+		TriggerModule->CancelModuleAction();
+	}
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
+	{
+		ReloadModule->CancelModuleAction();
+	}
+
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
+	{
+		ScopeModule->CancelModuleAction();
+	}
 }
 
 void ABaseWeapon::SetWeaponEnabled_Implementation(bool bNewEnabled)

@@ -24,12 +24,27 @@ public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	class ABaseWeapon* GetOwnerWeapon();
 
+	// Change the module activation state.
 	UFUNCTION(BlueprintCallable, Category = "Weapon Module")
 	void SetModuleEnabled(bool bNewEnabled, bool bForce = false);
+
+	// Gracefully terminate the currently running module action.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module")
+	void CancelModuleAction();
+
+protected:
+	// Module action cancel event implemented in C++.
+	virtual void OnModuleActionCancelled();
+
+	// Module action cancel event implemented in Blueprint.
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Module", meta = (DisplayName = "On Module Action Cancelled"))
+	void OnModuleActionCancelled_Blueprint();
+
 
 protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	void OnModuleEnableChanged(bool bNewEnabled);
+
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module")
