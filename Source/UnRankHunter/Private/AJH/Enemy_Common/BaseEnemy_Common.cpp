@@ -29,7 +29,7 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	LHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Enemy);
-	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 850.0f;
 }
 
 void ABaseEnemy_Common::BeginPlay()
@@ -57,6 +57,14 @@ void ABaseEnemy_Common::Attack()
 	RHCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
 	LHCollision->OnComponentBeginOverlap.RemoveDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
 	LHCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy_Common::AttackCheckOverlap);
+}
+
+void ABaseEnemy_Common::DashAttack()
+{
+}
+
+void ABaseEnemy_Common::JumpAttack()
+{
 }
 
 void ABaseEnemy_Common::EnemyDie()

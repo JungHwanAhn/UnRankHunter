@@ -2,20 +2,20 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Android_Anim.generated.h"
+#include "Saw_Anim.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API UAndroid_Anim : public UAnimInstance
+class UNRANKHUNTER_API USaw_Anim : public UAnimInstance
 {
 	GENERATED_BODY()
 	
 public:
-	UAndroid_Anim();
-	void Attack(FString pattern);
+	USaw_Anim();
+	void Attack();
 	void Die();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Android State")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Saw State")
 	float speed = 0.0f;
 
 private:
@@ -29,7 +29,7 @@ private:
 	UAnimMontage* DieMontage;
 
 	class APawn* Owner;
-	class AAndroid* Android;
+	class ASaw* Saw;
 
 	FVector velocity;
 };

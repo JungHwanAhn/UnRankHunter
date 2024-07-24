@@ -2,20 +2,22 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Android_Anim.generated.h"
+#include "Titan_Anim.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API UAndroid_Anim : public UAnimInstance
+class UNRANKHUNTER_API UTitan_Anim : public UAnimInstance
 {
 	GENERATED_BODY()
 	
 public:
-	UAndroid_Anim();
+	UTitan_Anim();
 	void Attack(FString pattern);
+	void DashAttack();
+	void JumpAttack();
 	void Die();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Android State")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Titan State")
 	float speed = 0.0f;
 
 private:
@@ -26,10 +28,16 @@ private:
 	UAnimMontage* AttackMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* DashMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* JumpMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;
 
 	class APawn* Owner;
-	class AAndroid* Android;
+	class ATitan* Titan;
 
 	FVector velocity;
 };

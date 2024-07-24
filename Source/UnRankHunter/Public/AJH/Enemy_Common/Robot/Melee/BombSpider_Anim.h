@@ -2,22 +2,20 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Android_Anim.generated.h"
+#include "BombSpider_Anim.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API UAndroid_Anim : public UAnimInstance
+class UNRANKHUNTER_API UBombSpider_Anim : public UAnimInstance
 {
 	GENERATED_BODY()
 	
 public:
-	UAndroid_Anim();
-	void Attack(FString pattern);
-	void Die();
+	UBombSpider_Anim();
+	void Attack();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Android State")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "BombSpider State")
 	float speed = 0.0f;
-
 private:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
@@ -25,11 +23,8 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* AttackMontage;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
-	UAnimMontage* DieMontage;
-
 	class APawn* Owner;
-	class AAndroid* Android;
+	class ABombSpider* BombSpider;
 
 	FVector velocity;
 };

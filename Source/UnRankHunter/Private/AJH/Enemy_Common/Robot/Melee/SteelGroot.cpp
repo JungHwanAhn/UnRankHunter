@@ -14,6 +14,8 @@ ASteelGroot::ASteelGroot()
 		GrootMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkBoss/Mesh/Character/SK_SteamPunkBoss.SK_SteamPunkBoss'"));
 	if (GrootMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -110));
+		GetMesh()->SetRelativeScale3D(FVector(1.1));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
@@ -29,7 +31,7 @@ ASteelGroot::ASteelGroot()
 	LHCollision->SetBoxExtent(FVector(50, 40, 40));
 	LHCollision->SetRelativeLocation(FVector(20, 0, 0));
 
-	GetCapsuleComponent()->InitCapsuleSize(60.0f, 85.0f);
+	GetCapsuleComponent()->InitCapsuleSize(60.0f, 105.0f);
 }
 
 void ASteelGroot::Attack()
@@ -64,7 +66,6 @@ float ASteelGroot::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		grootHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (grootHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;

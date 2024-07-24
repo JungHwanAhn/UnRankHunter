@@ -2,6 +2,7 @@
 #include "Android_Anim.h"
 #include "AIController_Common.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 AAndroid::AAndroid()
 {
@@ -12,6 +13,8 @@ AAndroid::AAndroid()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		AndroidMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkAndroid/Mesh/Character/SK_SteamPunkAndroid.SK_SteamPunkAndroid'"));
 	if (AndroidMesh.Succeeded()) {
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
+		GetMesh()->SetRelativeScale3D(FVector(1.4));
 		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
@@ -33,6 +36,7 @@ AAndroid::AAndroid()
 
 	RHCollision->SetBoxExtent(FVector(28, 16, 45));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 70));
+	GetCapsuleComponent()->InitCapsuleSize(34.0f, 110.0f);
 }
 
 void AAndroid::Attack()
@@ -95,7 +99,6 @@ float AAndroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, 
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
 		androidHP -= actualDamage;
-		UE_LOG(LogTemp, Warning, TEXT("takeDamage: %f"), actualDamage);
 		if (androidHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
