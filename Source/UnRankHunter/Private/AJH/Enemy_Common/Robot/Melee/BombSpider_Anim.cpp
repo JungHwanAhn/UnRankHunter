@@ -15,9 +15,6 @@ void UBombSpider_Anim::Attack()
 {
 	Montage_Play(AttackMontage);
 	BombSpider->EnemyDie();
-	FTimerHandle AttackTimerHandle;
-	FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() { BombSpider->RadialDamage(); });
-	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, Montage_Play(AttackMontage), false);
 }
 
 void UBombSpider_Anim::NativeInitializeAnimation()

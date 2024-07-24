@@ -17,6 +17,7 @@ ABombSpider::ABombSpider()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -50));
 		GetMesh()->SetRelativeScale3D(FVector(0.5));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->GetOwner()->Tags.Add("Bomb");
 	}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -68,8 +69,8 @@ float ABombSpider::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 void ABombSpider::EnemyDie()
 {
 	bIsEnemyDie = true;
-
+	float bombDelay = 2.0f;
 	FTimerHandle DieTimerHandle;
 	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
-	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, dieDelay, false);
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, bombDelay, false);
 }

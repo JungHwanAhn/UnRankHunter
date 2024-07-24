@@ -17,9 +17,6 @@ public:
 	virtual void OnReturnToPool_Implementation() override;
 	virtual void EnemyDie() override;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "CPP Function")
-	void RadialDamage();
-
 private:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
