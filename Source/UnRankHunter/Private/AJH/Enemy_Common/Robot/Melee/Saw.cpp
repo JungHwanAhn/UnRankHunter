@@ -14,8 +14,8 @@ ASaw::ASaw()
 		GrootMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkMech2837/Mesh/SK_SteamPunkMech_2837_Saw.SK_SteamPunkMech_2837_Saw'"));
 	if (GrootMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
-		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -200), FRotator(0, -180, 0));
-		GetMesh()->SetRelativeScale3D(FVector(1.5));
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -160), FRotator(0, -180, 0));
+		GetMesh()->SetRelativeScale3D(FVector(1.2));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
@@ -28,7 +28,7 @@ ASaw::ASaw()
 	RHCollision->SetBoxExtent(FVector(50, 30, 50));
 	RHCollision->SetRelativeLocation(FVector(20, 0, 0));
 
-	GetCapsuleComponent()->InitCapsuleSize(90.0f, 160.0f);
+	GetCapsuleComponent()->InitCapsuleSize(60.0f, 120.0f);
 }
 
 void ASaw::Attack()

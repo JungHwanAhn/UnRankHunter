@@ -14,8 +14,8 @@ ASteelGroot::ASteelGroot()
 		GrootMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkBoss/Mesh/Character/SK_SteamPunkBoss.SK_SteamPunkBoss'"));
 	if (GrootMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
-		GetMesh()->SetRelativeLocation(FVector(0, 0, -150));
-		GetMesh()->SetRelativeScale3D(FVector(1.5));
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -110));
+		GetMesh()->SetRelativeScale3D(FVector(1.1));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
@@ -31,7 +31,7 @@ ASteelGroot::ASteelGroot()
 	LHCollision->SetBoxExtent(FVector(50, 40, 40));
 	LHCollision->SetRelativeLocation(FVector(20, 0, 0));
 
-	GetCapsuleComponent()->InitCapsuleSize(80.0f, 150.0f);
+	GetCapsuleComponent()->InitCapsuleSize(60.0f, 105.0f);
 }
 
 void ASteelGroot::Attack()

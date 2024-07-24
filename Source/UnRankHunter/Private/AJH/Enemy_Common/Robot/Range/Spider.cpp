@@ -14,7 +14,7 @@ ASpider::ASpider()
 	if (SpiderMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(SpiderMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
-		GetMesh()->SetRelativeScale3D(FVector(2));
+		GetMesh()->SetRelativeScale3D(FVector(1.9));
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->GetOwner()->Tags.Add("Spider");
 	}
@@ -25,7 +25,7 @@ ASpider::ASpider()
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
-	GetCapsuleComponent()->InitCapsuleSize(100.0f, 140.0f);
+	GetCapsuleComponent()->InitCapsuleSize(100.0f, 115.0f);
 }
 
 void ASpider::Attack()
