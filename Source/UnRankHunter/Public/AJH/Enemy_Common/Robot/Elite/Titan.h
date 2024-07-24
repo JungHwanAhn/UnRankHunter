@@ -16,7 +16,7 @@ public:
 	virtual void Attack() override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "CPP Function")
-	void Dashing();
+	void Dashing(FVector Destination);
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
@@ -34,5 +34,7 @@ private:
 	FTimerHandle DashTimerHandle;
 
 	class UTitan_Anim* TitanAnim;
-	float titanHP = 100;
+
+	bool bIsDash = false;
+	float titanHP = 200;
 };

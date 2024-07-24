@@ -3,6 +3,8 @@
 #include "AIController_Elite.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 ATitan::ATitan()
 {
@@ -17,6 +19,7 @@ ATitan::ATitan()
 		GetMesh()->SetRelativeScale3D(FVector(1.5));
 		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->GetOwner()->Tags.Add("Titan");
 	}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -49,7 +52,11 @@ void ATitan::Attack()
 		damage = 30.0f;
 		randomPattern = FMath::RandRange(1, 9);
 
-		if (randomPattern <= 3) {
+		if (!bIsDash) {
+			bIsDash = true;
+			DashAttack();
+		}
+		else if (randomPattern <= 3) {
 			TitanAnim->Attack("Attack_A");
 		}
 		else if (randomPattern <= 6) {
@@ -70,15 +77,18 @@ void ATitan::DashAttack()
 
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	float TimeElapsed = 0.0f;
-
-
-
-	GetWorldTimerManager().SetTimer(DashTimerHandle, [this, DeltaTime, TimeElapsed]() mutable {
+	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	FVector Destination = Player->GetActorLocation();
+	
+	GetWorldTimerManager().SetTimer(DashTimerHandle, [this, DeltaTime, TimeElapsed, Destination, Player]() mutable {
 		TimeElapsed += DeltaTime;
 		float Alpha = TimeElapsed / 1.13f;
 
 		if (Alpha >= 0.4f) {
-			Dashing();
+			Dashing(Destination);
+			if (Alpha <= 0.6f) {
+				Destination = Player->GetActorLocation();
+			}
 		}
 		if (Alpha >= 1.13f) {
 			GetWorldTimerManager().ClearTimer(DashTimerHandle);
