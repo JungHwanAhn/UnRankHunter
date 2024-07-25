@@ -10,6 +10,7 @@
 #include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Elemental/Enum/ElementalEnums.h"
+#include "Weapon/Structure/WeaponStructure.h"
 #include "BaseWeapon.generated.h"
 
 UENUM(BlueprintType)
@@ -46,44 +47,6 @@ struct FWeaponFireInfo
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BulletCount{};
-};
-
-USTRUCT(BlueprintType)
-struct FWeaponPrimeStat
-{
-	GENERATED_BODY()
-
-	// Basic damage.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Damage{ 0.0f };
-
-	// Maximum ammo capacity.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 AmmoCapacity{ 0 };
-
-	// Elemental strength multiplier.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ElementalStrength{ 0.0f };
-
-	// Reload speed.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ReloadRate{ 0.0f };
-
-	// Weapon attack speed.
-	// For charge weapons, the charging speed increases proportionally to this value.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float RapidRate{ 0.0f };
-
-	// Expansion range of the attack.
-	// Affects the range of some hitscan, projectile object scale, explosion range, etc.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ImpactArea{ 0.0f };
-
-	// Effective range expansion multiplier.
-	// If the target is a projectile object, it affects the projectile speed.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float EffectiveRange{ 0.0f };
-
 };
 
 
@@ -230,7 +193,7 @@ private:
 #pragma region [ WeaponStat ] 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponPrimeStat& CalculateStat();
+	const FWeaponPrimeStat& GetFinalStat();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")

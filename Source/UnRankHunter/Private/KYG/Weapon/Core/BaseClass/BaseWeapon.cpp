@@ -39,6 +39,8 @@ void ABaseWeapon::BeginPlay()
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
+
+	RemainAmmoCount = GetAmmoCapacity();
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -342,7 +344,7 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 
 int32 ABaseWeapon::GetAmmoCapacity()
 {
-	return AmmoCapacity;
+	return GetFinalStat().AmmoCapacity;
 }
 
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
@@ -389,7 +391,7 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition()
 	return MuzzlePositionComponent;
 }
 
-const FWeaponPrimeStat& ABaseWeapon::CalculateStat()
+const FWeaponPrimeStat& ABaseWeapon::GetFinalStat()
 {
 	// Â÷ÈÄ 
 	return BaseStat;
