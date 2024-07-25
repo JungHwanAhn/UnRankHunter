@@ -13,11 +13,11 @@ ATitan::ATitan()
 	AIControllerClass = AAIController_Elite::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		AndroidMesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonCrunch/Characters/Heroes/Crunch/Skins/Teir_1/Military/Meshes/Crunch_Military.Crunch_Military'"));
-	if (AndroidMesh.Succeeded()) {
+		TitanMesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonCrunch/Characters/Heroes/Crunch/Skins/Teir_1/Military/Meshes/Crunch_Military.Crunch_Military'"));
+	if (TitanMesh.Succeeded()) {
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
 		GetMesh()->SetRelativeScale3D(FVector(1.5));
-		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
+		GetMesh()->SetSkeletalMesh(TitanMesh.Object);
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->GetOwner()->Tags.Add("Titan");
 	}
