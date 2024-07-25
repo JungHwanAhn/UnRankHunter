@@ -52,19 +52,18 @@ void UACBaseTriggerModule::ExecuteTriggerEvent()
 {
 	if (OnFireNotified.IsBound())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Fire!"));
+		//UE_LOG(LogTemp, Log, TEXT("Fire!"));
 		OnFireNotified.Broadcast(TriggerValue);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("No Fire!"));
-	}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Log, TEXT("No Fire!"));
+	//}
 
 	//if(OnFireNotified__.ExecuteIfBound(TriggerValue))
 	//	UE_LOG(LogTemp, Log, TEXT("Fire!"));
 	//else
 	//	UE_LOG(LogTemp, Log, TEXT("Fire!"));
-
 }
 
 void UACBaseTriggerModule::OnTriggerBegin_Implementation()

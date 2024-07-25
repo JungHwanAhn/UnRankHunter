@@ -59,11 +59,11 @@ struct FShootingInfo
 
 	// Center location where the shot was fired.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector MuzzleLocation{};
+	FVector MuzzleLocation{ FVector::ZeroVector };
 
 	// Center direction where the shot was fired.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FRotator MuzzleRotator{};
+	FRotator MuzzleRotator{ FRotator::ZeroRotator };
 };
 
 

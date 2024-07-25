@@ -348,7 +348,7 @@ int32 ABaseWeapon::GetAmmoCapacity()
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
 {
 	OutRemainAmmo = RemainAmmoCount;
-	OutReduceAmmo = 0;
+	OutReduceAmmo = Cost;
 
 	if (bIsInfiniteAmmo)
 	{
@@ -357,25 +357,26 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 
 	int32 FinalAmmo = RemainAmmoCount - Cost;
 
-	if (FinalAmmo < 0)
-	{
-		if (bFailOnLess)
-		{
-			return false;
-		}
-
-		OutReduceAmmo = Cost + RemainAmmoCount;
-		RemainAmmoCount = 0;
-		OutRemainAmmo = 0;
-		return OutReduceAmmo > 0;	// Return ammo is decrease?
-	}
-	else
+	// Amount of remain ammo is bigger than cost.
+	if (FinalAmmo >= 0)
 	{
 		RemainAmmoCount = FinalAmmo;
 		OutRemainAmmo = RemainAmmoCount;
 		OutReduceAmmo = Cost;
 		return true;
 	}
+
+	// Ammo is lack, so fail this function.
+	if (bFailOnLess)
+	{
+		OutReduceAmmo = 0;
+		return false;
+	}
+
+	OutReduceAmmo = RemainAmmoCount;	// Consume all remains ammo.
+	RemainAmmoCount = 0;
+	OutRemainAmmo = 0;
+	return OutReduceAmmo > 0;	// Return ammo is decrease?
 }
 
 USceneComponent* ABaseWeapon::GetCameraPosition()
@@ -448,4 +449,10 @@ float ABaseWeapon::GetDamageAmount(EDamageEffectType DamageType, float Distance,
 
 	return FinalDamage;
 
+}
+
+const FWeaponPrimeStat& ABaseWeapon::CalculateStat()
+{
+	// Â÷ÈÄ 
+	return BaseStat;
 }
