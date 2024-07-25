@@ -33,7 +33,7 @@ IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
 	return EquippedWeapon;
 }
 
-bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd)
+bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd, bool bImmediatelyEquip)
 {
 	// Exception handling: Index out of range.
 	if (!WeaponArray.IsValidIndex(SlotIndex))
@@ -85,6 +85,11 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 	WeaponInst->ForceSetWeaponEnable(false);
 
 	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
+
+	if (bImmediatelyEquip)
+	{
+		SelectWeaponSlot(SlotIndex);
+	}
 
 	return true;
 }
@@ -155,15 +160,18 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
 		return;
 	}
-	
+
 	auto NewWeaponInst = WeaponArray[SlotIndex];
-	IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
+	if (NewWeaponInst)
+	{
+		IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
-	//UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
 
-	// Change controlled weapon.
-	EquippedSlot = SlotIndex;
-	EquippedWeapon = NewWeaponInst;
+		// Change controlled weapon.
+		EquippedSlot = SlotIndex;
+		EquippedWeapon = NewWeaponInst;
+	}
 }
 
 void UACWeaponManager::ForceEquipWeaponSlot(int32 SlotIndex)

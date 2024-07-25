@@ -12,7 +12,8 @@ enum class EWeaponAbortSelection : uint8
 	None = 0,
 	Fire = 1 << 0,
 	Reload = 1 << 1,
-	Zoom = 1 << 2
+	Zoom = 1 << 2,
+	All = 255U
 };
 
 // This class does not need to be modified.
