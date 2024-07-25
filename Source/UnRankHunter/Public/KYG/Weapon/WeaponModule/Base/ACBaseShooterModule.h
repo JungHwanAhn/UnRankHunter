@@ -76,29 +76,29 @@ class UNRANKHUNTER_API UACBaseShooterModule : public UACBaseWeaponModule
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Shooter Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Shooter Module")
 	void ShotBullet(float TriggerRate);
 
 public:
 	// Returns the muzzle firing position of the weapon.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Shooter Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Shooter Module")
 	FTransform GetMuzzlePosition();
 
 	// Returns the camera position.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Shooter Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Shooter Module")
 	FTransform GetCameraPosition();
 
 	// Returns the position of either the camera or the muzzle based on the WeaponShooterOrigin setting.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Shooter Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Shooter Module")
 	FTransform GetSettingPosition();
 
 
 protected:
 	// Sets the firing point of the weapon to either the camera or the muzzle.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modules|Shooter Module")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Module|Shooter Module")
 	EWeaponShooterOrigin WeaponShooterOrigin;
 
 public:
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Module|Shooter Module")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Weapon Module|Shooter Module")
 	FOnShooterExecutedEvent OnShooterExecutedEvent;
 };
