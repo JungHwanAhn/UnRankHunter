@@ -53,36 +53,37 @@ struct FWeaponPrimeStat
 {
 	GENERATED_BODY()
 
-	// 기본 피해량.
+	// Basic damage.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage{ 0.0f };
 
-	// 최대 장탄량.
+	// Maximum ammo capacity.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 AmmoCapacity{ 0 };
 
-	// 속성 누적치 배율.
+	// Elemental strength multiplier.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ElementalStrength{ 0.0f };
 
-	// 재장전 속도.
+	// Reload speed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ReloadRate{ 0.0f };
 
-	// 무기의 공격 속도.
-	// 차지 무기는 이 수치에 비례해 차지 속도가 증가한다.
+	// Weapon attack speed.
+	// For charge weapons, the charging speed increases proportionally to this value.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RapidRate{ 0.0f };
 
-	// 공격의 확장 범위.
-	// 일부 히트스캔의 범위, 발사체 오브젝트의 스케일, 폭발 범위 등에 영향을 준다.
+	// Expansion range of the attack.
+	// Affects the range of some hitscan, projectile object scale, explosion range, etc.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ImpactArea{ 0.0f };
 
-	// 발사체의 유효범위 확장 배율.
-	// 대상이 발사체 오브젝트라면 발사 속도에 영향을 준다.
+	// Effective range expansion multiplier.
+	// If the target is a projectile object, it affects the projectile speed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float EffectiveRange{ 0.0f };
+
 };
 
 
@@ -228,11 +229,11 @@ private:
 
 #pragma region [ WeaponStat ] 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data/Stat")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
 	const FWeaponPrimeStat& CalculateStat();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data/Stat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
 	FWeaponPrimeStat BaseStat{};
 #pragma endregion
 

@@ -45,6 +45,8 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	void OnModuleEnableChanged(bool bNewEnabled);
 
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
+	//const FWeaponPrimeStat& GetWeaponStat();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module")
