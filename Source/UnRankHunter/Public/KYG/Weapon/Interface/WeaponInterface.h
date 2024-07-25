@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Weapon/Interface/WeaponDataInterface.h"
 #include "WeaponInterface.generated.h"
 
 UENUM(BlueprintType, meta = (Bitflags))
@@ -26,7 +25,7 @@ class UWeaponInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IWeaponInterface : public IWeaponDataInterface
+class UNRANKHUNTER_API IWeaponInterface
 {
 	GENERATED_BODY()
 

@@ -188,12 +188,6 @@ public:
 	USceneComponent* GetMuzzlePosition();
 
 protected:
-	UFUNCTION(meta = (DeprecatedFunction))
-	int32 GetMaxAmmoCapacity();
-
-	float GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical);
-
-protected:
 	// Assign On Begin Play
 	UACBaseTriggerModule* TriggerModule{};
 	UACBaseShooterModule* ShooterModule{};

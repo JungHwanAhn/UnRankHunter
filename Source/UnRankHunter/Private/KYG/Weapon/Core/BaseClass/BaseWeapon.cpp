@@ -389,68 +389,6 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition()
 	return MuzzlePositionComponent;
 }
 
-
-int32 ABaseWeapon::GetMaxAmmoCapacity()
-{
-	return AmmoCapacity;
-
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
-
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
-
-	int Result = Param.AmmoCapacity * FinStat.AmmoCapacityMultiplier + FinStat.AmmoCapacityAdditive;
-
-	return Result;
-}
-
-float ABaseWeapon::GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical)
-{
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
-
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
-
-	// Base Damage = Default Damage * Multiplier
-	float BaseDamage = Param.BaseDamage *
-		(DamageType == EDamageEffectType::Explosion ? Param.ExplosionDamageMultiplier :
-			DamageType == EDamageEffectType::Bullet ? Param.BulletDamageMultiplier :
-			DamageType == EDamageEffectType::Special ? Param.DamageMultiplier0 :
-			Param.DamageMultiplier1);
-
-	float BonusByDamageType =
-		DamageType == EDamageEffectType::Explosion ? FinStat.ExplosionDamage :
-		DamageType == EDamageEffectType::Bullet ? FinStat.ProjectileDamage :
-		DamageType == EDamageEffectType::Special ? FinStat.SpecialDamage :
-		0.0f;
-
-	float BonusByElementalType =
-		Type == EDamageElementalType::Basic ? FinStat.BasicDamage :
-		Type == EDamageElementalType::Bleeding ? FinStat.BleedingElementalDamage :
-		Type == EDamageElementalType::Frozen ? FinStat.FrozenElementalDamage :
-		Type == EDamageElementalType::Lightning ? FinStat.LightningElementalDamage :
-		0.0f;
-
-	float BonusByHitTarget =
-		HitTag == "Common" ? FinStat.CommonDamage :
-		HitTag == "Elite" ? FinStat.EliteDamage :
-		HitTag == "Boss" ? FinStat.BossDamage :
-		0.0f;
-
-	// Sum all bonus damages.
-	float AllBonus = FinStat.AllDamage + BonusByDamageType + BonusByElementalType + BonusByHitTarget;
-
-	// Calculate critical damage.
-	float CritDamage = bIsCritical ? FinStat.CritDamage : 1.0f;
-
-	float FinalDamage = BaseDamage * (1.0f + AllBonus) * CritDamage;
-
-	return FinalDamage;
-
-}
-
 const FWeaponPrimeStat& ABaseWeapon::CalculateStat()
 {
 	// Â÷ÈÄ 
