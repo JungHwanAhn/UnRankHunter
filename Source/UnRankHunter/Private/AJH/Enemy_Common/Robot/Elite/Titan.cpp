@@ -139,6 +139,7 @@ void ATitan::OnSpawnFromPool_Implementation()
 void ATitan::OnReturnToPool_Implementation()
 {
 	Super::OnReturnToPool_Implementation();
+	titanHP = 200.0f;
 }
 
 void ATitan::OnCollisionStart_Implementation()

@@ -27,6 +27,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon");
 	class UStaticMeshComponent* AndroidWeapon;
-
-	float androidHP = 100;
 };

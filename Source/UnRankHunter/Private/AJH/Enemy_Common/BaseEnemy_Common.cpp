@@ -99,5 +99,6 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 {
 	bIsEnemyDie = false;
 	bIsActive = false;
+	enemyHP = 100.0f;
 }
 

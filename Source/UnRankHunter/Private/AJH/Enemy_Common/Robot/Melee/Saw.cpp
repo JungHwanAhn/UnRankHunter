@@ -62,8 +62,8 @@ float ASaw::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, ACon
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		sawHP -= actualDamage;
-		if (sawHP <= 0.f) EnemyDie();
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }
