@@ -1,25 +1,28 @@
 #include "SkeletonWarrior.h"
 #include "SkeletonWarrior_Anim.h"
-#include "AIController_Common.h"
+#include "AIController_Skeleton.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ASkeletonWarrior::ASkeletonWarrior()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Common::StaticClass();
+	AIControllerClass = AAIController_Skeleton::StaticClass();
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
-	GetMesh()->SetRelativeScale3D(FVector(1.1));
+	GetMesh()->SetRelativeScale3D(FVector(1.5));
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightWeapon"));
 	RightSkeletonWeapon->SetupAttachment(GetMesh());
+	RightSkeletonWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightSkeletonWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 
 	LeftSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftWeapon"));
 	LeftSkeletonWeapon->SetupAttachment(GetMesh());
+	LeftSkeletonWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	LeftSkeletonWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -32,6 +35,8 @@ ASkeletonWarrior::ASkeletonWarrior()
 	RHCollision->SetRelativeLocation(FVector(0, 0, 35));
 	LHCollision->SetBoxExtent(FVector(20, 20, 45));
 	LHCollision->SetRelativeLocation(FVector(0, 0, 40));
+
+	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
 }
 
@@ -75,8 +80,8 @@ float ASkeletonWarrior::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		skeletonHP -= actualDamage;
-		if (skeletonHP <= 0.f) EnemyDie();
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }

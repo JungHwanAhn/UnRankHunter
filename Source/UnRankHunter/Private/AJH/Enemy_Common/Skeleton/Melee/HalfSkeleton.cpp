@@ -1,21 +1,23 @@
 #include "HalfSkeleton.h"
 #include "HalfSkeleton_Anim.h"
-#include "AIController_Common.h"
+#include "AIController_Skeleton.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AHalfSkeleton::AHalfSkeleton()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Common::StaticClass();
+	AIControllerClass = AAIController_Skeleton::StaticClass();
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
-	GetMesh()->SetRelativeScale3D(FVector(1.1));
+	GetMesh()->SetRelativeScale3D(FVector(1.5));
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	SkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SkeletonWeapon"));
 	SkeletonWeapon->SetupAttachment(GetMesh());
+	SkeletonWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SkeletonWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -27,6 +29,7 @@ AHalfSkeleton::AHalfSkeleton()
 	RHCollision->SetBoxExtent(FVector(20, 20, 80));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 75));
 
+	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
 }
 
@@ -70,8 +73,8 @@ float AHalfSkeleton::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		halfSkeletonHP -= actualDamage;
-		if (halfSkeletonHP <= 0.f) EnemyDie();
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }

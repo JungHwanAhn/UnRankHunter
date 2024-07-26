@@ -1,35 +1,40 @@
 #include "ShieldSkeleton.h"
-#include "HalfSkeleton_Anim.h"
-#include "AIController_Common.h"
+#include "ShieldSkeleton_Anim.h"
+#include "AIController_Skeleton.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AShieldSkeleton::AShieldSkeleton()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Common::StaticClass();
+	AIControllerClass = AAIController_Skeleton::StaticClass();
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
-	GetMesh()->SetRelativeScale3D(FVector(1.1));
+	GetMesh()->SetRelativeScale3D(FVector(1.5));
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightWeapon"));
 	RightSkeletonWeapon->SetupAttachment(GetMesh());
+	RightSkeletonWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightSkeletonWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 
 	LeftSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shield"));
 	LeftSkeletonWeapon->SetupAttachment(GetMesh());
+	LeftSkeletonWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	LeftSkeletonWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
-		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Skeleton/Melee/AJH_ABP_HalfSkeleton.AJH_ABP_HalfSkeleton_C"));
+		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Skeleton/Melee/AJH_ABP_ShieldSkeleton.AJH_ABP_ShieldSkeleton_C"));
 	if (AnimInstance.Succeeded()) {
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
 	RHCollision->SetBoxExtent(FVector(20, 20, 65));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 50));
+
+	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
 }
 
@@ -41,7 +46,7 @@ void AShieldSkeleton::Attack()
 		damage = 20.0f;
 		randomPattern = FMath::RandRange(1, 9);
 
-		UHalfSkeleton_Anim* ShieldSkeletonAnim = Cast<UHalfSkeleton_Anim>(GetMesh()->GetAnimInstance());
+		UShieldSkeleton_Anim* ShieldSkeletonAnim = Cast<UShieldSkeleton_Anim>(GetMesh()->GetAnimInstance());
 		if (ShieldSkeletonAnim == nullptr) return;
 
 		if (randomPattern <= 3) {
@@ -73,8 +78,10 @@ float AShieldSkeleton::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		shieldSkeletonHP -= actualDamage;
-		if (shieldSkeletonHP <= 0.f) EnemyDie();
+		UE_LOG(LogTemp, Warning, TEXT("%f"), actualDamage);
+		UE_LOG(LogTemp, Warning, TEXT("%f"), enemyHP);
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }
@@ -83,7 +90,7 @@ void AShieldSkeleton::EnemyDie()
 {
 	bIsEnemyDie = true;
 
-	UHalfSkeleton_Anim* ShieldSkeletonAnim = Cast<UHalfSkeleton_Anim>(GetMesh()->GetAnimInstance());
+	UShieldSkeleton_Anim* ShieldSkeletonAnim = Cast<UShieldSkeleton_Anim>(GetMesh()->GetAnimInstance());
 	if (ShieldSkeletonAnim == nullptr) return;
 
 	ShieldSkeletonAnim->Die();
