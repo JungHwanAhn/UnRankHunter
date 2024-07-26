@@ -27,6 +27,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon");
 	class UStaticMeshComponent* SkeletonWeapon;
-
-	float halfSkeletonHP = 100;
 };

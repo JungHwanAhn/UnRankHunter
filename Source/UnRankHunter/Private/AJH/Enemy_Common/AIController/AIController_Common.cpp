@@ -2,12 +2,6 @@
 #include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
 
-void AAIController_Common::BeginPlay()
-{
-	Super::BeginPlay();
-
-}
-
 void AAIController_Common::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

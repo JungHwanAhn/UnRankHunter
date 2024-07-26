@@ -30,6 +30,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon");
 	class UStaticMeshComponent* LeftSkeletonWeapon;
-
-	float shieldSkeletonHP = 100;
 };

@@ -1,6 +1,5 @@
 #include "SkeletonWarrior_Anim.h"
 #include "SkeletonWarrior.h"
-#include "KismetAnimationLibrary.h"
 
 USkeletonWarrior_Anim::USkeletonWarrior_Anim()
 {

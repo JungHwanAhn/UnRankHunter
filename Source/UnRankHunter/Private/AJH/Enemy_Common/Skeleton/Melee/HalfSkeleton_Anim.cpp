@@ -1,6 +1,5 @@
 #include "HalfSkeleton_Anim.h"
 #include "HalfSkeleton.h"
-#include "KismetAnimationLibrary.h"
 
 UHalfSkeleton_Anim::UHalfSkeleton_Anim()
 {
