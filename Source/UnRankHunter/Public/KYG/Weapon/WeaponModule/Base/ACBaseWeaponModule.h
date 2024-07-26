@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Weapon/Structure/WeaponStructure.h"
 #include "ACBaseWeaponModule.generated.h"
 
 
@@ -45,6 +46,8 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	void OnModuleEnableChanged(bool bNewEnabled);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
+	const FWeaponPrimeStat& GetWeaponStat();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module")

@@ -10,6 +10,7 @@
 #include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Elemental/Enum/ElementalEnums.h"
+#include "Weapon/Structure/WeaponStructure.h"
 #include "BaseWeapon.generated.h"
 
 UENUM(BlueprintType)
@@ -24,7 +25,7 @@ enum class EBulletType
 USTRUCT(BlueprintType)
 struct FWeaponFireInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 	FWeaponFireInfo() {}
 	FWeaponFireInfo(EBulletType BulletType, TArray<AActor*> Bullets, TArray<FHitResult> HitResults, int32 BulletCount)
@@ -47,6 +48,7 @@ struct FWeaponFireInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BulletCount{};
 };
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
 
@@ -150,12 +152,6 @@ public:
 	USceneComponent* GetMuzzlePosition();
 
 protected:
-	UFUNCTION(meta = (DeprecatedFunction))
-	int32 GetMaxAmmoCapacity();
-
-	float GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical);
-
-protected:
 	// Assign On Begin Play
 	UACBaseTriggerModule* TriggerModule{};
 	UACBaseShooterModule* ShooterModule{};
@@ -193,6 +189,16 @@ protected:
 private:
 	bool bWeaponEnabled{ true };
 
+
+#pragma region [ WeaponStat ] 
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponPrimeStat& GetFinalStat();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
+	FWeaponPrimeStat BaseStat{};
+#pragma endregion
 
 	// Events
 public:
