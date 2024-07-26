@@ -287,7 +287,12 @@ void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 FName ABaseWeapon::GetWeaponID_Implementation()
 {
 	// Implementation logic here
-	return FName();  // Placeholder return value
+	return WeaponID;
+}
+
+EWeaponType ABaseWeapon::GetWeaponType_Implementation()
+{
+	return WeaponType;
 }
 
 int32 ABaseWeapon::GetRemainAmmoCount_Implementation()

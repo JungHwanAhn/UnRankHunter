@@ -124,6 +124,8 @@ private:
 
 	virtual FName GetWeaponID_Implementation() override;
 
+	virtual EWeaponType GetWeaponType_Implementation() override;
+
 	virtual int32 GetRemainAmmoCount_Implementation() override;
 
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;
@@ -176,6 +178,16 @@ protected:
 	FName WeaponSocket{};
 
 protected:
+	// [Weapon Datas]
+
+	// Weapon ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	FName WeaponID;
+
+	// Weapon Type
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	EWeaponType WeaponType;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
 	int32 RemainAmmoCount{ 0 };
 

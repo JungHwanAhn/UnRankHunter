@@ -292,6 +292,11 @@ FName UACWeaponManager::GetWeaponID_Implementation()
 	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponID(EquippedWeapon->_getUObject()) : FName("Invalid");
 }
 
+EWeaponType UACWeaponManager::GetWeaponType_Implementation()
+{
+	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponType(EquippedWeapon->_getUObject()) : EWeaponType::None;
+}
+
 int32 UACWeaponManager::GetRemainAmmoCount_Implementation()
 {
 	return EquippedWeapon ? IWeaponInterface::Execute_GetRemainAmmoCount(EquippedWeapon->_getUObject()) : 0;
