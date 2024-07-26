@@ -58,16 +58,19 @@ protected:
 #pragma region [Implementation Method]
 protected:
 	// A event on trigger input started.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerBegin();
 
 	// A event on trigger input ended.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerEnd();
 
 	// A event on tick while input stay.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
+	// This method is not nessessory. It's old code.
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerTick(float DeltaTime);
+
+
 #pragma endregion
 
 public:
