@@ -11,7 +11,6 @@ ARambo::ARambo()
 		RamboMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkMech2837/Mesh/SK_SteamPunkMech_2837_Gun.SK_SteamPunkMech_2837_Gun'"));
 	if (RamboMesh.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(RamboMesh.Object);
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -260), FRotator(0, -180, 0));
 		GetMesh()->SetRelativeScale3D(FVector(1.8));
 		GetMesh()->GetOwner()->Tags.Add("Rambo");

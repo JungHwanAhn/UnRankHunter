@@ -16,7 +16,6 @@ ASteelGroot::ASteelGroot()
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -110));
 		GetMesh()->SetRelativeScale3D(FVector(1.1));
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -27,7 +26,6 @@ ASteelGroot::ASteelGroot()
 
 	RHCollision->SetBoxExtent(FVector(50, 40, 40));
 	RHCollision->SetRelativeLocation(FVector(-20, 0, 0));
-
 	LHCollision->SetBoxExtent(FVector(50, 40, 40));
 	LHCollision->SetRelativeLocation(FVector(20, 0, 0));
 
