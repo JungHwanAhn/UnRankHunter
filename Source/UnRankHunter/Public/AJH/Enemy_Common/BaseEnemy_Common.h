@@ -58,6 +58,7 @@ public:
 	class UBoxComponent* RHCollision;
 
 	bool bIsActive = false;
+	bool bIsNear = false;
 private:
 	
 };

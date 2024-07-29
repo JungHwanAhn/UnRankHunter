@@ -1,6 +1,8 @@
 #include "AIController_Common.h"
 #include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AAIController_Common::Tick(float DeltaSeconds)
 {
@@ -10,11 +12,22 @@ void AAIController_Common::Tick(float DeltaSeconds)
 		if (ControlledPawn->bIsActive && !ControlledPawn->bIsEnemyDie) {
             SetFocus(PlayerPawn);
             lastEnemyScan += DeltaSeconds;
+            ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
+            float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+
+            if (!ControlledPawn->bIsNear) {
+                if (distance > 3500.0f) {
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+                }
+                else {
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+                    ControlledPawn->bIsNear = true;
+                }
+            }
 
 			if (!bIsAttack) {
                 FVector Destination = PlayerPawn->GetActorLocation();
                 FVector CurrentLocation = ControlledPawn->GetActorLocation();
-
                 if (lastEnemyScan >= enemyScanInterval)
                 {
                     EnemyScan();
@@ -22,10 +35,7 @@ void AAIController_Common::Tick(float DeltaSeconds)
                 }
 
                 FVector AdjustedDestination = Destination + AvoidanceVector;
-
                 MoveToLocation(AdjustedDestination, acceptanceRadius);
-
-                float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
                 if (distance < 250.0f)
                 {
                     bIsAttack = true;

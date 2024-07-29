@@ -1,11 +1,7 @@
 #include "AIController_Bomb.h"
 #include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
-
-void AAIController_Bomb::BeginPlay()
-{
-	Super::BeginPlay();
-}
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AAIController_Bomb::Tick(float DeltaSeconds)
 {
@@ -14,11 +10,19 @@ void AAIController_Bomb::Tick(float DeltaSeconds)
     if (PlayerPawn) {
         if (ControlledPawn->bIsActive && !ControlledPawn->bIsEnemyDie) {
             SetFocus(PlayerPawn);
+            float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+            if (!ControlledPawn->bIsNear) {
+                if (distance > 3500.0f) {
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+                }
+                else {
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+                    ControlledPawn->bIsNear = true;
+                }
+            }
 
             if (!bIsAttack) {
                 MoveToActor(PlayerPawn, 100);
-
-                float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
                 if (distance < 200.0f)
                 {
                     bIsAttack = true;

@@ -1,11 +1,8 @@
 #include "AIController_Elite.h"
 #include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
-
-void AAIController_Elite::BeginPlay()
-{
-	Super::BeginPlay();
-}
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AAIController_Elite::Tick(float DeltaSeconds)
 {
@@ -14,10 +11,20 @@ void AAIController_Elite::Tick(float DeltaSeconds)
 	if (PlayerPawn) {
 		if (ControlledPawn->bIsActive && !ControlledPawn->bIsEnemyDie) {
 			SetFocus(PlayerPawn);
+			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
+			float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+
+			if (!ControlledPawn->bIsNear) {
+				if (distance > 4000.0f) {
+					ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+				}
+				else {
+					ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+					ControlledPawn->bIsNear = true;
+				}
+			}
 
 			if (!bIsAttack) {
-				float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-
 				if (!bIsDash) {
 					MoveToActor(PlayerPawn, 1500);
 					if (distance < 1700.0f) {
