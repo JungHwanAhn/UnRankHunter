@@ -11,9 +11,8 @@ ASkeletonWarrior::ASkeletonWarrior()
 
 	AIControllerClass = AAIController_Skeleton::StaticClass();
 
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -130));
 	GetMesh()->SetRelativeScale3D(FVector(1.5));
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightWeapon"));
 	RightSkeletonWeapon->SetupAttachment(GetMesh());
@@ -36,8 +35,7 @@ ASkeletonWarrior::ASkeletonWarrior()
 	LHCollision->SetBoxExtent(FVector(20, 20, 45));
 	LHCollision->SetRelativeLocation(FVector(0, 0, 40));
 
-	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
-	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
+	GetCapsuleComponent()->InitCapsuleSize(30.0f, 125.0f);
 }
 
 void ASkeletonWarrior::Attack()

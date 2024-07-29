@@ -11,9 +11,8 @@ AShieldSkeleton::AShieldSkeleton()
 
 	AIControllerClass = AAIController_Skeleton::StaticClass();
 
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -130));
 	GetMesh()->SetRelativeScale3D(FVector(1.5));
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RightSkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightWeapon"));
 	RightSkeletonWeapon->SetupAttachment(GetMesh());
@@ -34,8 +33,7 @@ AShieldSkeleton::AShieldSkeleton()
 	RHCollision->SetBoxExtent(FVector(20, 20, 65));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 50));
 
-	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
-	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
+	GetCapsuleComponent()->InitCapsuleSize(30.0f, 125.0f);
 }
 
 void AShieldSkeleton::Attack()
