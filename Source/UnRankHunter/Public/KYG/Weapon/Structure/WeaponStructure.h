@@ -41,6 +41,9 @@ struct FWeaponPrimeStat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float EffectiveDistance{ 0.0f };
 
+	// The higher this value, the greater the weapon's accuracy.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AccuracyRatio{ 0.0f };
 };
 
 class UNRANKHUNTER_API WeaponStructure

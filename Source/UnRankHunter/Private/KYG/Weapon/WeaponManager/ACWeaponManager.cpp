@@ -199,6 +199,9 @@ UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 
 	auto Row = WeaponTable->FindRow<FWeaponDataTableRow>(WeaponID, TEXT(""));
 
+	if (Row == nullptr)
+		return nullptr;
+
 	return Row->WeaponClass;
 }
 
