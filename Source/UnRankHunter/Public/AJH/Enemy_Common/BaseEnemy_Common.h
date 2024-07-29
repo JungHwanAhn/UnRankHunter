@@ -36,6 +36,8 @@ protected:
 	float randomPattern = 0.0f;
 	float damage = 0.0f;
 	float dieDelay = 3.0f;
+	float enemyHP = 100.0f;
+
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

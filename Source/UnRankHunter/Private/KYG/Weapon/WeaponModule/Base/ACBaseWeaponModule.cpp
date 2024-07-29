@@ -55,3 +55,9 @@ void UACBaseWeaponModule::CancelModuleAction()
 void UACBaseWeaponModule::OnModuleActionCancelled()
 {
 }
+
+const FWeaponPrimeStat& UACBaseWeaponModule::GetWeaponStat()
+{
+	auto EmptyStat = FWeaponPrimeStat{};
+	return OwnerWeapon ? OwnerWeapon->GetFinalStat() : EmptyStat;
+}

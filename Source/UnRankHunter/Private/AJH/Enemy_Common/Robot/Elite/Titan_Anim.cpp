@@ -1,6 +1,5 @@
 #include "Titan_Anim.h"
 #include "Titan.h"
-#include "KismetAnimationLibrary.h"
 
 UTitan_Anim::UTitan_Anim()
 {

@@ -39,6 +39,8 @@ void ABaseWeapon::BeginPlay()
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
+
+	RemainAmmoCount = GetAmmoCapacity();
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -342,13 +344,13 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 
 int32 ABaseWeapon::GetAmmoCapacity()
 {
-	return AmmoCapacity;
+	return GetFinalStat().AmmoCapacity;
 }
 
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
 {
 	OutRemainAmmo = RemainAmmoCount;
-	OutReduceAmmo = 0;
+	OutReduceAmmo = Cost;
 
 	if (bIsInfiniteAmmo)
 	{
@@ -357,25 +359,26 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 
 	int32 FinalAmmo = RemainAmmoCount - Cost;
 
-	if (FinalAmmo < 0)
-	{
-		if (bFailOnLess)
-		{
-			return false;
-		}
-
-		OutReduceAmmo = Cost + RemainAmmoCount;
-		RemainAmmoCount = 0;
-		OutRemainAmmo = 0;
-		return OutReduceAmmo > 0;	// Return ammo is decrease?
-	}
-	else
+	// Amount of remain ammo is bigger than cost.
+	if (FinalAmmo >= 0)
 	{
 		RemainAmmoCount = FinalAmmo;
 		OutRemainAmmo = RemainAmmoCount;
 		OutReduceAmmo = Cost;
 		return true;
 	}
+
+	// Ammo is lack, so fail this function.
+	if (bFailOnLess)
+	{
+		OutReduceAmmo = 0;
+		return false;
+	}
+
+	OutReduceAmmo = RemainAmmoCount;	// Consume all remains ammo.
+	RemainAmmoCount = 0;
+	OutRemainAmmo = 0;
+	return OutReduceAmmo > 0;	// Return ammo is decrease?
 }
 
 USceneComponent* ABaseWeapon::GetCameraPosition()
@@ -388,64 +391,8 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition()
 	return MuzzlePositionComponent;
 }
 
-
-int32 ABaseWeapon::GetMaxAmmoCapacity()
+const FWeaponPrimeStat& ABaseWeapon::GetFinalStat()
 {
-	return AmmoCapacity;
-
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
-
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
-
-	int Result = Param.AmmoCapacity * FinStat.AmmoCapacityMultiplier + FinStat.AmmoCapacityAdditive;
-
-	return Result;
-}
-
-float ABaseWeapon::GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical)
-{
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
-
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
-
-	// Base Damage = Default Damage * Multiplier
-	float BaseDamage = Param.BaseDamage *
-		(DamageType == EDamageEffectType::Explosion ? Param.ExplosionDamageMultiplier :
-			DamageType == EDamageEffectType::Bullet ? Param.BulletDamageMultiplier :
-			DamageType == EDamageEffectType::Special ? Param.DamageMultiplier0 :
-			Param.DamageMultiplier1);
-
-	float BonusByDamageType =
-		DamageType == EDamageEffectType::Explosion ? FinStat.ExplosionDamage :
-		DamageType == EDamageEffectType::Bullet ? FinStat.ProjectileDamage :
-		DamageType == EDamageEffectType::Special ? FinStat.SpecialDamage :
-		0.0f;
-
-	float BonusByElementalType =
-		Type == EDamageElementalType::Basic ? FinStat.BasicDamage :
-		Type == EDamageElementalType::Bleeding ? FinStat.BleedingElementalDamage :
-		Type == EDamageElementalType::Frozen ? FinStat.FrozenElementalDamage :
-		Type == EDamageElementalType::Lightning ? FinStat.LightningElementalDamage :
-		0.0f;
-
-	float BonusByHitTarget =
-		HitTag == "Common" ? FinStat.CommonDamage :
-		HitTag == "Elite" ? FinStat.EliteDamage :
-		HitTag == "Boss" ? FinStat.BossDamage :
-		0.0f;
-
-	// Sum all bonus damages.
-	float AllBonus = FinStat.AllDamage + BonusByDamageType + BonusByElementalType + BonusByHitTarget;
-
-	// Calculate critical damage.
-	float CritDamage = bIsCritical ? FinStat.CritDamage : 1.0f;
-
-	float FinalDamage = BaseDamage * (1.0f + AllBonus) * CritDamage;
-
-	return FinalDamage;
-
+	// Â÷ÈÄ 
+	return BaseStat;
 }
