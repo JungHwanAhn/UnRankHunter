@@ -349,7 +349,10 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 
 int32 ABaseWeapon::GetAmmoCapacity()
 {
-	return GetFinalStat().AmmoCapacity;
+	// (FinalAmmoCapacity) = (Base) * (1 + (Bonus%)) + (Bonus+)
+	int32 ApplyMultiple = FMath::FloorToInt32(GetFinalStat().AmmoCapacity * (1.0f + GetFinalBonusStat().AddAmmoMultiple));
+	int32 FinalAmmo = ApplyMultiple + GetFinalBonusStat().AddAmmoCount;
+	return FinalAmmo;
 }
 
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
@@ -386,18 +389,65 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 	return OutReduceAmmo > 0;	// Return ammo is decrease?
 }
 
-USceneComponent* ABaseWeapon::GetCameraPosition()
+USceneComponent* ABaseWeapon::GetCameraPosition() const
 {
 	return CameraPositionComponent;
 }
 
-USceneComponent* ABaseWeapon::GetMuzzlePosition()
+USceneComponent* ABaseWeapon::GetMuzzlePosition() const
 {
 	return MuzzlePositionComponent;
 }
 
-const FWeaponPrimeStat& ABaseWeapon::GetFinalStat()
+const FWeaponPrimeStat& ABaseWeapon::GetFinalStat() const
 {
-	// Â÷ÈÄ 
+	FWeaponPrimeStat FinalStat = BaseStat;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
+
+	FinalStat.AmmoCapacity = FinalStat.AmmoCapacity * Bonus.AddAmmoMultiple * Bonus.AddAmmoCount;
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+}
+
+const FWeaponPrimeStat& ABaseWeapon::GetBaseStat() const
+{
 	return BaseStat;
+}
+
+const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
+{
+	return BonusStat;
+}
+
+const float ABaseWeapon::CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context)
+{
+	const FWeaponPrimeStat& BaseStat = Weapon->GetFinalStat();
+	const FWeaponBonusStat& BonusStat = Weapon->GetFinalBonusStat();
+
+	float BonusByTargetType{ 0.0f };
+	if (Target->ActorHasTag("Boss"))
+	{
+		BonusByTargetType = BonusStat.BossDamageUp;
+	}
+	else if (Target->ActorHasTag("Elite"))
+	{
+		BonusByTargetType = BonusStat.EliteDamageUp;
+	}
+	else if (Target->ActorHasTag("Common"))
+	{
+		BonusByTargetType = BonusStat.CommonEnemyDamageUp;
+	}
+
+	float AllBonus = BonusStat.AllDamageUp + BonusByTargetType;
+
+	float FinalDamage = Context.Damage * (1.0f + AllBonus);
+
+	if (Context.bIsCrit)
+	{
+		float CritMultiple = BaseStat.CritDamage + BonusStat.CritDamageUp;
+
+		FinalDamage *= CritMultiple;
+	}
+
+	// (FinalDamage) = (BaseStat) * (1 + (TotalDamageBonus)) * (BaseCritMultiple + BonusCritMultiple)
+	return FinalDamage;
 }

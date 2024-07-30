@@ -44,6 +44,78 @@ struct FWeaponPrimeStat
 	// The higher this value, the greater the weapon's accuracy.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AccuracyRatio{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CritDamage{ 1.5f };
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponBonusStat
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AllDamageUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BossDamageUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float EliteDamageUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CommonEnemyDamageUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CritDamageUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AddAmmoCount{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AddAmmoMultiple{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FireSpeedUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ReloadSpeedUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackRange{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float EffecientDistanceUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AccuracyUp{ 0.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ElementalStrengthUp{ 0.0f };
+
+	FWeaponBonusStat operator+(const FWeaponBonusStat& Other);
+
+	FWeaponBonusStat operator-(const FWeaponBonusStat& Other);
+};
+
+UENUM(BlueprintType)
+enum class EElementalType
+{
+	None = 0,
+	Lightning,
+	Bleeding,
+	Frozen
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponDamageContext
+{
+	GENERATED_BODY()
+
+	AActor* DamagedActor{};
+	AActor* DamageCause{};
+	float Damage{};
+	bool bIsCrit{};
 };
 
 class UNRANKHUNTER_API WeaponStructure

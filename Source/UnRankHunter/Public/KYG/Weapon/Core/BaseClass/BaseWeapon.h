@@ -148,10 +148,10 @@ public:
 
 public:
 	UFUNCTION()
-	USceneComponent* GetCameraPosition();
+	USceneComponent* GetCameraPosition() const;
 
 	UFUNCTION()
-	USceneComponent* GetMuzzlePosition();
+	USceneComponent* GetMuzzlePosition() const;
 
 protected:
 	// Assign On Begin Play
@@ -205,15 +205,29 @@ private:
 #pragma region [ WeaponStat ] 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponPrimeStat& GetFinalStat();
+	const FWeaponPrimeStat& GetFinalStat() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponPrimeStat& GetBaseStat() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponBonusStat& GetFinalBonusStat() const;
+
+
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
 	FWeaponPrimeStat BaseStat{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
+	FWeaponBonusStat BonusStat{};
 #pragma endregion
 
 	// Events
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
 	FWeaponFireEvent OnWeaponFireEvent{};
+
+public:
+	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context);
 };
