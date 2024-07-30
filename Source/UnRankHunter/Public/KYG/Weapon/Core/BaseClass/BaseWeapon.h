@@ -5,10 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Weapon/Interface/WeaponInterface.h"
-#include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Elemental/Enum/ElementalEnums.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "BaseWeapon.generated.h"
@@ -155,10 +151,10 @@ public:
 
 protected:
 	// Assign On Begin Play
-	UACBaseTriggerModule* TriggerModule{};
-	UACBaseShooterModule* ShooterModule{};
-	UACBaseReloadModule* ReloadModule{};
-	UACBaseScopeModule* ScopeModule{};
+	class UACBaseTriggerModule* TriggerModule{};
+	class UACBaseShooterModule* ShooterModule{};
+	class UACBaseReloadModule* ReloadModule{};
+	class UACBaseScopeModule* ScopeModule{};
 
 protected:
 	UPROPERTY()

@@ -5,7 +5,9 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "Engine/DataTable.h"
 
