@@ -1,6 +1,5 @@
 #include "Android_Anim.h"
 #include "Android.h"
-#include "KismetAnimationLibrary.h"
 
 UAndroid_Anim::UAndroid_Anim()
 {
