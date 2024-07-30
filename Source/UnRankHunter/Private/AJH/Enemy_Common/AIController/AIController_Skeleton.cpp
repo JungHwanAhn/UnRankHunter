@@ -14,15 +14,9 @@ void AAIController_Skeleton::Tick(float DeltaSeconds)
             lastEnemyScan += DeltaSeconds;
             ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
             float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-
-            if (!ControlledPawn->bIsNear) {
-                if (distance > 3500.0f) {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-                }
-                else {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
-                    ControlledPawn->bIsNear = true;
-                }
+            if (!ControlledPawn->bIsNear && distance < 3500.0f) {
+                ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+                ControlledPawn->bIsNear = true;
             }
 
             if (!bIsAttack) {
@@ -35,7 +29,16 @@ void AAIController_Skeleton::Tick(float DeltaSeconds)
                 }
 
                 FVector AdjustedDestination = Destination + AvoidanceVector;
-                MoveToLocation(AdjustedDestination, acceptanceRadius);
+                EPathFollowingRequestResult::Type MoveResult = MoveToLocation(AdjustedDestination, acceptanceRadius);
+                if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid)
+                {
+                    MoveResult = MoveToLocation(PlayerPawn->GetActorLocation(), acceptanceRadius);
+                    if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid) {
+                        UE_LOG(LogTemp, Warning, TEXT("Failed to move to NewDestination: %s"), *PlayerPawn->GetActorLocation().ToString());
+                    }
+                }
+                
+                //MoveToLocation(AdjustedDestination, acceptanceRadius);
                 if (distance < 250.0f)
                 {
                     bIsAttack = true;
@@ -81,7 +84,6 @@ void AAIController_Skeleton::EnemyScan()
             {
                 FVector ToOther = CurrentLocation - Actor->GetActorLocation();
                 float DistanceToOther = ToOther.Size();
-
                 if (DistanceToOther < avoidanceRadius)
                 {
                     AvoidanceVector += ToOther.GetSafeNormal() * (avoidanceRadius - DistanceToOther) * avoidanceStrength;
