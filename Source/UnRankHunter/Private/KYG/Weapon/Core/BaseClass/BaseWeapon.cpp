@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
+#include "Weapon/Structure/WeaponStructure.h"
+#include "Engine/DataTable.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -26,6 +28,31 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Load parameter data.
+	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
+	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
+	if (ParamTable != nullptr)
+	{
+		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
+
+		if (ParamRow != nullptr)
+		{
+			WeaponParameter = *ParamRow;
+
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), ParamRow->Damage);
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), WeaponParameter.Damage);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
+	}
+
+	// Find module components.
 	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
 	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
 	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
@@ -33,6 +60,8 @@ void ABaseWeapon::BeginPlay()
 
 	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
 
+
+	// Initialize weapon variables.
 	auto AttachParent = GetAttachParentActor();
 
 	if (AttachParent)
@@ -40,7 +69,7 @@ void ABaseWeapon::BeginPlay()
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
 
-	RemainAmmoCount = GetAmmoCapacity();
+	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -70,10 +99,6 @@ void ABaseWeapon::ReceiveFireNotify(float Value)
 	FWeaponFireInfo Info{};
 	OnWeaponFireEvent.Broadcast(this, Info);
 }
-
-
-
-
 
 #pragma region [Weapon Interface Implementation]
 // 'IWeaponInterface' U인터페이스 구현부.
@@ -399,18 +424,49 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition() const
 	return MuzzlePositionComponent;
 }
 
-const FWeaponPrimeStat& ABaseWeapon::GetFinalStat() const
+const FWeaponParameter ABaseWeapon::GetFinalStat() const
 {
-	FWeaponPrimeStat FinalStat = BaseStat;
+	FWeaponParameter FinalStat = WeaponParameter;
 	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
 
-	FinalStat.AmmoCapacity = FinalStat.AmmoCapacity * Bonus.AddAmmoMultiple * Bonus.AddAmmoCount;
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
+
+	FinalStat.AmmoCapacity = FMath::FloorToInt32(FinalStat.AmmoCapacity * (1.0f + Bonus.AddAmmoMultiple)) + Bonus.AddAmmoCount;
+
 	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
+
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
+
+	return FinalStat;
 }
 
-const FWeaponPrimeStat& ABaseWeapon::GetBaseStat() const
+void ABaseWeapon::UpdateFinalStat()
 {
-	return BaseStat;
+	FWeaponParameter FinalStat = WeaponParameter;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
+
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
+
+	FinalStat.AmmoCapacity = FinalStat.AmmoCapacity * Bonus.AddAmmoMultiple * Bonus.AddAmmoCount;
+
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
+
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
+}
+
+const FWeaponParameter& ABaseWeapon::GetBaseStat() const
+{
+	return WeaponParameter;
 }
 
 const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
@@ -420,7 +476,7 @@ const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
 
 const float ABaseWeapon::CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context)
 {
-	const FWeaponPrimeStat& BaseStat = Weapon->GetFinalStat();
+	const FWeaponParameter& BaseStat = Weapon->GetFinalStat();
 	const FWeaponBonusStat& BonusStat = Weapon->GetFinalBonusStat();
 
 	float BonusByTargetType{ 0.0f };

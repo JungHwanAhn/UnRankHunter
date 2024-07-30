@@ -3,12 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "WeaponStructure.generated.h"
 
 USTRUCT(BlueprintType)
-struct FWeaponPrimeStat
+struct FWeaponParameter : public FTableRowBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName WeaponID{};
 
 	// Basic damage.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -34,7 +38,7 @@ struct FWeaponPrimeStat
 	// Expansion range of the attack.
 	// Affects the range of some hitscan, projectile object scale, explosion range, etc.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ImpactArea{ 0.0f };
+	float BulletSize{ 0.0f };
 
 	// Effective range expansion multiplier.
 	// If the target is a projectile object, it affects the projectile speed.
@@ -53,6 +57,9 @@ USTRUCT(BlueprintType)
 struct FWeaponBonusStat
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float WeaponStatUp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AllDamageUp{ 0.0f };

@@ -10,7 +10,7 @@ UACWeaponManager::UACWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
 	if (DT_WepTb.Succeeded())
 	{
 		WeaponTable = DT_WepTb.Object;

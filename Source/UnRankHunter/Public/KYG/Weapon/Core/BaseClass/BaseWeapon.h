@@ -205,19 +205,19 @@ private:
 #pragma region [ WeaponStat ] 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponPrimeStat& GetFinalStat() const;
+	const FWeaponParameter GetFinalStat() const;
+
+	void UpdateFinalStat();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponPrimeStat& GetBaseStat() const;
+	const FWeaponParameter& GetBaseStat() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
 	const FWeaponBonusStat& GetFinalBonusStat() const;
 
-
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	FWeaponPrimeStat BaseStat{};
+	FWeaponParameter WeaponParameter{};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
 	FWeaponBonusStat BonusStat{};
@@ -229,5 +229,6 @@ public:
 	FWeaponFireEvent OnWeaponFireEvent{};
 
 public:
-	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 };

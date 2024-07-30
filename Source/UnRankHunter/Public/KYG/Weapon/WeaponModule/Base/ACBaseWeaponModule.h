@@ -47,7 +47,7 @@ protected:
 	void OnModuleEnableChanged(bool bNewEnabled);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
-	const FWeaponPrimeStat& GetWeaponStat();
+	const FWeaponParameter GetWeaponStat();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Module")
