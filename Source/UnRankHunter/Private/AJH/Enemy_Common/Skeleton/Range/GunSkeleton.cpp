@@ -2,8 +2,6 @@
 #include "GunSkeleton_Anim.h"
 #include "AIController_Range.h"
 #include "Components/CapsuleComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 
 AGunSkeleton::AGunSkeleton()
 {

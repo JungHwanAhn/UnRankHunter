@@ -1,6 +1,7 @@
 #include "AIController_Range.h"
 #include "BaseEnemy_Common.h"
 #include "Rambo.h"
+#include "DynamiteSkeleton.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -14,18 +15,12 @@ void AAIController_Range::Tick(float DeltaSeconds)
 			SetFocus(PlayerPawn);
 			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
 			float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-
-			if (!ControlledPawn->bIsNear) {
-				if (distance > 3500.0f) {
-					ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-				}
-				else {
-					ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
-					ControlledPawn->bIsNear = true;
-				}
+			if (!ControlledPawn->bIsNear && distance < 3500.0f) {
+				ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+				ControlledPawn->bIsNear = true;
 			}
-			MoveToActor(PlayerPawn, moveRange);
 
+			MoveToActor(PlayerPawn, moveRange);
 			if (distance < 1700.0f) {
 				FVector StartLocation = ControlledPawn->GetActorLocation();
 				FVector EndLocation = PlayerPawn->GetActorLocation();
@@ -33,9 +28,9 @@ void AAIController_Range::Tick(float DeltaSeconds)
 				FCollisionQueryParams CollisionParams;
 				CollisionParams.AddIgnoredActor(ControlledPawn);
 
-				bool bPlayerInSight = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+				bool bIsPlayerInSight = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
 
-				if (bPlayerInSight && HitResult.GetActor() == PlayerPawn) {
+				if (bIsPlayerInSight && HitResult.GetActor() == PlayerPawn) {
 					moveRange = 1500.0f;
 					if (!bIsAttack) {
 						bIsAttack = true;
@@ -68,6 +63,9 @@ void AAIController_Range::OnPossess(APawn* InPawn)
 		ControlledPawn = Cast<ABaseEnemy_Common>(InPawn);
 		if (ControlledPawn->IsA(ARambo::StaticClass())) {
 			attackDelay = 2.5f;
+		}
+		if (ControlledPawn->IsA(ADynamiteSkeleton::StaticClass())) {
+			attackDelay = 4.0f;
 		}
 		else {
 			attackDelay = 1.0f;

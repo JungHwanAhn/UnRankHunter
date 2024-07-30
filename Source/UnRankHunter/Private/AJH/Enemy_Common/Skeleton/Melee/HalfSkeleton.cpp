@@ -3,7 +3,6 @@
 #include "AIController_Skeleton.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 AHalfSkeleton::AHalfSkeleton()
 {

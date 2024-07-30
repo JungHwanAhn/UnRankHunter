@@ -14,15 +14,9 @@ void AAIController_Common::Tick(float DeltaSeconds)
             lastEnemyScan += DeltaSeconds;
             ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
             float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
-
-            if (!ControlledPawn->bIsNear) {
-                if (distance > 3500.0f) {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-                }
-                else {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
-                    ControlledPawn->bIsNear = true;
-                }
+            if (!ControlledPawn->bIsNear && distance < 3500.0f) {
+                ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+                ControlledPawn->bIsNear = true;
             }
 
 			if (!bIsAttack) {
@@ -35,7 +29,12 @@ void AAIController_Common::Tick(float DeltaSeconds)
                 }
 
                 FVector AdjustedDestination = Destination + AvoidanceVector;
-                MoveToLocation(AdjustedDestination, acceptanceRadius);
+                EPathFollowingRequestResult::Type MoveResult = MoveToLocation(AdjustedDestination, acceptanceRadius);
+                if (MoveResult == EPathFollowingRequestResult::Failed)
+                {
+                    MoveToActor(PlayerPawn, 130.0f);
+                }
+
                 if (distance < 250.0f)
                 {
                     bIsAttack = true;

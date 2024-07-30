@@ -4,7 +4,7 @@
 UGunSkeleton_Anim::UGunSkeleton_Anim()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		Attack_Montage(TEXT("/Script/Engine.AnimMontage'/Game/01_Core/AJH/Enemy/Skeleton/Range/Montage/AJH_AM_GunSkeleton_Attack.AJH_AM_GunSkeleton_Attack'"));
+		Attack_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Skeleton/Range/Montage/AJH_AM_GunSkeleton_Attack.AJH_AM_GunSkeleton_Attack'"));
 	if (Attack_Montage.Succeeded()) {
 		AttackMontage = Attack_Montage.Object;
 	}

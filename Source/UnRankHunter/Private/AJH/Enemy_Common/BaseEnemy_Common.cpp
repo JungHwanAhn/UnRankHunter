@@ -103,5 +103,7 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 	bIsActive = false;
 	bIsNear = false;
 	enemyHP = 100.0f;
+
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
