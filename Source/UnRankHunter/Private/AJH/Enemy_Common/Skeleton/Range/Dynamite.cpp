@@ -8,7 +8,7 @@
 
 ADynamite::ADynamite()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
@@ -17,16 +17,19 @@ ADynamite::ADynamite()
 	DynamiteCollision->SetBoxExtent(FVector(6, 17, 5));
 	DynamiteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DynamiteCollision->SetCollisionObjectType(ECC_WorldDynamic);
+	DynamiteCollision->SetCollisionResponseToAllChannels(ECR_Block);
 	DynamiteCollision->SetCollisionResponseToChannel(ECC_Enemy, ECR_Ignore);
 	DynamiteCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	DynamiteCollision->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
 
 	Dynamite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Dynamite"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>
-		DynamiteMesh(TEXT("/Script/Engine.StaticMesh'/Game/02_Asset/dynamite/source/Dynamite/Dynamite.Dynamite'"));
+		DynamiteMesh(TEXT("StaticMesh'/Game/02_Asset/dynamite/source/Dynamite/Dynamite.Dynamite'"));
 	if (DynamiteMesh.Succeeded()) {
 		Dynamite->SetStaticMesh(DynamiteMesh.Object);
 		Dynamite->SetRelativeLocation(FVector(0, -3, -5));
 		Dynamite->SetupAttachment(DynamiteCollision);
+		Dynamite->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile"));
@@ -57,7 +60,7 @@ void ADynamite::LaunchTowardsPlayer()
 		float launchSpeed = CalculateLaunchSpeed(distance);
 
 		FVector LaunchVelocity = LaunchDirection * launchSpeed;
-		LaunchVelocity.Z = CalculateLaunchZVelocity(distance, launchSpeed);
+		LaunchVelocity.Z = CalculateLaunchZVelocity(launchSpeed);
 
 		ProjectileMovement->Velocity = LaunchVelocity;
 	}
@@ -65,15 +68,14 @@ void ADynamite::LaunchTowardsPlayer()
 
 float ADynamite::CalculateLaunchSpeed(float distance)
 {
-	const float MinSpeed = 300.0f;
-	const float MaxSpeed = 700.0f;
-	return FMath::Clamp(distance * 10.0f, MinSpeed, MaxSpeed);
+	const float MinSpeed = 500.0f;
+	const float MaxSpeed = 1000.0f;
+	return FMath::Clamp(distance * 0.6f, MinSpeed, MaxSpeed);
 }
 
-float ADynamite::CalculateLaunchZVelocity(float distance, float launchSpeed)
+float ADynamite::CalculateLaunchZVelocity(float launchSpeed)
 {
-	const float Gravity = GetWorld()->GetGravityZ();
 	const float Angle = 45.0f;
-	return launchSpeed * FMath::Tan(FMath::DegreesToRadians(Angle));
+	return launchSpeed * FMath::Sin(FMath::DegreesToRadians(Angle));
 }
 

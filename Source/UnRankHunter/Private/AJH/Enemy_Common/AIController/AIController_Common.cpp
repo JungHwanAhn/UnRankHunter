@@ -30,9 +30,9 @@ void AAIController_Common::Tick(float DeltaSeconds)
 
                 FVector AdjustedDestination = Destination + AvoidanceVector;
                 EPathFollowingRequestResult::Type MoveResult = MoveToLocation(AdjustedDestination, acceptanceRadius);
-                if (MoveResult == EPathFollowingRequestResult::Failed)
+                if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid)
                 {
-                    MoveToActor(PlayerPawn, 130.0f);
+                    MoveResult = MoveToLocation(PlayerPawn->GetActorLocation(), acceptanceRadius);
                 }
 
                 if (distance < 250.0f)

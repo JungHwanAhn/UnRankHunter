@@ -33,12 +33,8 @@ void AAIController_Skeleton::Tick(float DeltaSeconds)
                 if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid)
                 {
                     MoveResult = MoveToLocation(PlayerPawn->GetActorLocation(), acceptanceRadius);
-                    if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid) {
-                        UE_LOG(LogTemp, Warning, TEXT("Failed to move to NewDestination: %s"), *PlayerPawn->GetActorLocation().ToString());
-                    }
                 }
                 
-                //MoveToLocation(AdjustedDestination, acceptanceRadius);
                 if (distance < 250.0f)
                 {
                     bIsAttack = true;
