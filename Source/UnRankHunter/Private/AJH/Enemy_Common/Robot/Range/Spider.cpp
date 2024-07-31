@@ -15,7 +15,6 @@ ASpider::ASpider()
 		GetMesh()->SetSkeletalMesh(SpiderMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
 		GetMesh()->SetRelativeScale3D(FVector(1.9));
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->GetOwner()->Tags.Add("Spider");
 	}
 

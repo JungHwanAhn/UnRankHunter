@@ -10,8 +10,6 @@ class UNRANKHUNTER_API AAIController_Range : public AAIController
 	GENERATED_BODY()
 	
 public:
-	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void OnPossess(APawn* InPawn) override;
@@ -21,4 +19,5 @@ private:
 
 	bool bIsAttack = false;
 	float attackDelay = 2.5;
+	float moveRange = 1500.0f;
 };
