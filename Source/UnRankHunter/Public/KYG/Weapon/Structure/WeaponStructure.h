@@ -100,9 +100,9 @@ struct FWeaponBonusStat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ElementalStrengthUp{ 0.0f };
 
-	FWeaponBonusStat operator+(const FWeaponBonusStat& Other);
+	FWeaponBonusStat operator+(const FWeaponBonusStat& Other) const;
 
-	FWeaponBonusStat operator-(const FWeaponBonusStat& Other);
+	FWeaponBonusStat operator-(const FWeaponBonusStat& Other) const;
 };
 
 UENUM(BlueprintType)

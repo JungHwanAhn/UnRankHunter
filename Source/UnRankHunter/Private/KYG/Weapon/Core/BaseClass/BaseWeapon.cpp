@@ -511,12 +511,12 @@ const FWeaponParameter& ABaseWeapon::GetBaseStat() const
 	return WeaponParameter;
 }
 
-const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
+const FWeaponBonusStat ABaseWeapon::GetFinalBonusStat() const
 {
-	return BonusStat;
+	return (BonusStat + AttributeTotalStat);
 }
 
-FWeaponBonusStat ABaseWeapon::CalculateAttributeStat()
+void ABaseWeapon::UpdateAttributeStat()
 {
 	FWeaponBonusStat Result{};
 
@@ -528,7 +528,7 @@ FWeaponBonusStat ABaseWeapon::CalculateAttributeStat()
 		Attribute->ApplyBonusStat(Result);
 	}
 
-	return Result;
+	AttributeTotalStat = Result;
 }
 
 // Instantiate new attribute class.

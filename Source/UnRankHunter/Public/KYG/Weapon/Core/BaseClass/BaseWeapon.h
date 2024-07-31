@@ -226,7 +226,7 @@ public:
 	const FWeaponParameter& GetBaseStat() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponBonusStat& GetFinalBonusStat() const;
+	const FWeaponBonusStat GetFinalBonusStat() const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
@@ -245,8 +245,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
-
-
 #pragma region [Attribute System]
 #pragma region [Field]
 protected:
@@ -263,7 +261,18 @@ private:
 #pragma region [Method]
 public:
 	// Returns the stat sum up attribute array.
-	FWeaponBonusStat CalculateAttributeStat();
+	void UpdateAttributeStat();
+
+	const FWeaponBonusStat& GetAttributeTotalStat()
+	{
+		if (bHasCalcAttributeStat == false)
+		{
+			UpdateAttributeStat();
+			bHasCalcAttributeStat = true;
+		}
+
+		return AttributeTotalStat;
+	}
 
 protected:
 	// Add process of new attribute.
