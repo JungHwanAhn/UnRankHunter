@@ -3,3 +3,7 @@
 
 #include "KYG/Attribute/AttributeClass/BaseWeaponAttribute.h"
 
+void UBaseWeaponAttribute::ApplyBonusStat(UPARAM(ref) FWeaponBonusStat& InWeapon) const
+{
+	InWeapon = InWeapon + BonusStat;
+}

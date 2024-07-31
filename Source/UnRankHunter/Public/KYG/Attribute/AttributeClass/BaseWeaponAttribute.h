@@ -8,26 +8,27 @@
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "BaseWeaponAttribute.generated.h"
 
-USTRUCT()
-struct FWeaponAttributeStat 
-{
-	GENERATED_BODY()
-};
 
 /**
- * 
+ *
  */
-UCLASS()
+UCLASS(Abstract)
 class UNRANKHUNTER_API UBaseWeaponAttribute : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
-	//virtual void OnAttributeAttached(ABaseWeapon* ParentWeapon) = 0;
-	//virtual void OnAttributeDetached(ABaseWeapon* ParentWeapon) = 0;
+	virtual void OnAttributeAttached(ABaseWeapon* ParentWeapon) PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeAttached, ;);
+	virtual void OnAttributeDetached(ABaseWeapon* ParentWeapon) PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeDetached, ;);
 
-	//virtual void OnAttributeEnabled() = 0;
-	//virtual void OnAttributeDisabled() = 0;
+	virtual void OnAttributeEnabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeEnabled, ;);
+	virtual void OnAttributeDisabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeDisabled, ;);
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
+	virtual void ApplyBonusStat(FWeaponBonusStat& InWeapon) const;
 
+protected:
+	FName AttributeID;
+
+	FWeaponBonusStat BonusStat;
 };
