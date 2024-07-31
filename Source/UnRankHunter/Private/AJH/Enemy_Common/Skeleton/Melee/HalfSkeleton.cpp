@@ -3,7 +3,6 @@
 #include "AIController_Skeleton.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 AHalfSkeleton::AHalfSkeleton()
 {
@@ -11,9 +10,8 @@ AHalfSkeleton::AHalfSkeleton()
 
 	AIControllerClass = AAIController_Skeleton::StaticClass();
 
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -100));
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -130));
 	GetMesh()->SetRelativeScale3D(FVector(1.5));
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	SkeletonWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SkeletonWeapon"));
 	SkeletonWeapon->SetupAttachment(GetMesh());
@@ -29,8 +27,7 @@ AHalfSkeleton::AHalfSkeleton()
 	RHCollision->SetBoxExtent(FVector(20, 20, 80));
 	RHCollision->SetRelativeLocation(FVector(0, 0, 75));
 
-	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
-	GetCapsuleComponent()->InitCapsuleSize(20.0f, 90.0f);
+	GetCapsuleComponent()->InitCapsuleSize(30.0f, 125.0f);
 }
 
 void AHalfSkeleton::Attack()

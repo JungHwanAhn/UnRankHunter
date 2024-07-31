@@ -14,6 +14,8 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	GetMesh()->GetOwner()->Tags.Add("Enemy");
+	GetMesh()->GetOwner()->Tags.Add("Common");
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
 
 	RHCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RightHand"));
@@ -29,7 +31,7 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	LHCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("LeftHand"));
 
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Enemy);
-	GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
 void ABaseEnemy_Common::BeginPlay()
@@ -99,6 +101,9 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 {
 	bIsEnemyDie = false;
 	bIsActive = false;
+	bIsNear = false;
 	enemyHP = 100.0f;
+
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 

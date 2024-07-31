@@ -16,7 +16,6 @@ ASaw::ASaw()
 		GetMesh()->SetSkeletalMesh(GrootMesh.Object);
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -160), FRotator(0, -180, 0));
 		GetMesh()->SetRelativeScale3D(FVector(1.2));
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>
