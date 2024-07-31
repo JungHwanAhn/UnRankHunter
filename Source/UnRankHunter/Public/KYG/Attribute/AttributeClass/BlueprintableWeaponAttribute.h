@@ -19,9 +19,9 @@ protected:
 	virtual void OnAttributeDisabled() override;
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Attribute")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Attribute", meta = (DisplayName = "OnAttributeEnabled"))
 	void OnAttributeEnabled_Blueprint();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Attribute")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Attribute", meta = (DisplayName = "OnAttributeDisabled"))
 	void OnAttributeDisabled_Blueprint();
 };
