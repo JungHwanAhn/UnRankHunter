@@ -24,7 +24,7 @@ public:
 private:
 	void LaunchTowardsPlayer();
 	float CalculateLaunchSpeed(float distance);
-	float CalculateLaunchZVelocity(float distance, float launchSpeed);
+	float CalculateLaunchZVelocity(float launchSpeed);
 
 	UPROPERTY(VisibleAnywhere)
 	class UProjectileMovementComponent* ProjectileMovement;
