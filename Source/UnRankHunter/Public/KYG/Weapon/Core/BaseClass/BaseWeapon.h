@@ -60,7 +60,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void GenerateBasicModule();
+	// Initialize function. Find or create weapon modules.
+	void SetupModule();
+
+	// Initialize function. Load weapon data table and apply parameter.
+	void LoadParameter();
+
+	// Initialize function. Set up properties that need to be initialized upon creation. (ex. ammo count)
+	void SetupWeaponProperties();
 
 
 private:
@@ -239,12 +246,29 @@ public:
 	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
 
+
+#pragma region [Attribute System]
+#pragma region [Field]
 protected:
 	TArray<class UBaseWeaponAttribute*> AttributeArray{};
 
 	int32 AttributeSlotCapacity{};
 
+private:
+	FWeaponBonusStat AttributeTotalStat{};
+
+	bool bHasCalcAttributeStat{ false };
+#pragma endregion
+
+#pragma region [Method]
+public:
+	// Returns the stat sum up attribute array.
 	FWeaponBonusStat CalculateAttributeStat();
 
-	void AttachNewAttribute(TSubclassOf<class UBaseWeaponAttribute> NewAttributeClass);
+protected:
+	// Add process of new attribute.
+	void AddNewAttribute(TSubclassOf<class UBaseWeaponAttribute> NewAttributeClass);
+#pragma endregion
+#pragma endregion
+
 };

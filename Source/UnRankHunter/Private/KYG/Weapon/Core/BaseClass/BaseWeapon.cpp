@@ -34,37 +34,9 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Load parameter data.
-	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
-	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
-	if (ParamTable != nullptr)
-	{
-		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
-
-		if (ParamRow != nullptr)
-		{
-			WeaponParameter = *ParamRow;
-
-			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), ParamRow->Damage);
-			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), WeaponParameter.Damage);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
-	}
-
-	// Find module components.
-	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
-	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
-	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
-	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
-
-	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+	SetupModule();
+	LoadParameter();
+	SetupWeaponProperties();
 
 
 	// Initialize weapon variables.
@@ -74,12 +46,17 @@ void ABaseWeapon::BeginPlay()
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
-
-	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
-void ABaseWeapon::GenerateBasicModule()
+void ABaseWeapon::SetupModule()
 {
+	// Find module components.
+	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
+	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
+	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
+	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
+
+	// Generate base module. (not implemented)
 	if (TriggerModule != nullptr)
 	{
 		// Create Basic Trigger Module.
@@ -96,6 +73,39 @@ void ABaseWeapon::GenerateBasicModule()
 	{
 		// Create Basic Scope Module.
 	}
+
+	// Setup.
+	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+}
+
+void ABaseWeapon::LoadParameter()
+{
+	// Load parameter data.
+	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
+	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
+	if (ParamTable != nullptr)
+	{
+		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
+
+		if (ParamRow != nullptr)
+		{
+			WeaponParameter = *ParamRow;
+			UE_LOG(LogTemp, Log, TEXT("[BaseWeapon] Load weapon parameter process is SUCCESS"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
+	}
+}
+
+void ABaseWeapon::SetupWeaponProperties()
+{
+	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
 void ABaseWeapon::ReceiveFireNotify(float Value)
@@ -522,7 +532,7 @@ FWeaponBonusStat ABaseWeapon::CalculateAttributeStat()
 }
 
 // Instantiate new attribute class.
-void ABaseWeapon::AttachNewAttribute(TSubclassOf<UBaseWeaponAttribute> NewAttributeClass)
+void ABaseWeapon::AddNewAttribute(TSubclassOf<UBaseWeaponAttribute> NewAttributeClass)
 {
 	if (NewAttributeClass)
 	{
