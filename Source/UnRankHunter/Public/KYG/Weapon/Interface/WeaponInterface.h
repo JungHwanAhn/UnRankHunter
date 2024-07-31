@@ -16,6 +16,16 @@ enum class EWeaponAbortSelection : uint8
 	All = 255U
 };
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	None,
+	Rifle_0,
+	Sniper_0,
+	MachineGun_0,
+	Pistol_0,
+};
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UWeaponInterface : public UInterface
@@ -98,6 +108,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	FName GetWeaponID();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
+	EWeaponType GetWeaponType();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
 	int32 GetRemainAmmoCount();

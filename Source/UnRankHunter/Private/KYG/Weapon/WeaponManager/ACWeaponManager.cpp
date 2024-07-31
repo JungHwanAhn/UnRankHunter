@@ -10,7 +10,7 @@ UACWeaponManager::UACWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_WepTb(TEXT("DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponTable.KYG_DT_WeaponTable'"));
 	if (DT_WepTb.Succeeded())
 	{
 		WeaponTable = DT_WepTb.Object;
@@ -199,6 +199,9 @@ UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 
 	auto Row = WeaponTable->FindRow<FWeaponDataTableRow>(WeaponID, TEXT(""));
 
+	if (Row == nullptr)
+		return nullptr;
+
 	return Row->WeaponClass;
 }
 
@@ -290,6 +293,11 @@ void UACWeaponManager::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 FName UACWeaponManager::GetWeaponID_Implementation()
 {
 	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponID(EquippedWeapon->_getUObject()) : FName("Invalid");
+}
+
+EWeaponType UACWeaponManager::GetWeaponType_Implementation()
+{
+	return EquippedWeapon ? IWeaponInterface::Execute_GetWeaponType(EquippedWeapon->_getUObject()) : EWeaponType::None;
 }
 
 int32 UACWeaponManager::GetRemainAmmoCount_Implementation()

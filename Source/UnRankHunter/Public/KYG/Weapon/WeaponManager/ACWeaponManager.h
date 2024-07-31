@@ -129,6 +129,8 @@ private:
 
 	virtual FName GetWeaponID_Implementation() override;
 
+	virtual EWeaponType GetWeaponType_Implementation() override;
+
 	virtual int32 GetRemainAmmoCount_Implementation() override;
 
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;

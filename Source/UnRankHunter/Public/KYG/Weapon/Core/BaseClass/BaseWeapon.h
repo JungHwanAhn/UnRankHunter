@@ -5,10 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Weapon/Interface/WeaponInterface.h"
-#include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Elemental/Enum/ElementalEnums.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "BaseWeapon.generated.h"
@@ -124,6 +120,8 @@ private:
 
 	virtual FName GetWeaponID_Implementation() override;
 
+	virtual EWeaponType GetWeaponType_Implementation() override;
+
 	virtual int32 GetRemainAmmoCount_Implementation() override;
 
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;
@@ -146,17 +144,17 @@ public:
 
 public:
 	UFUNCTION()
-	USceneComponent* GetCameraPosition();
+	USceneComponent* GetCameraPosition() const;
 
 	UFUNCTION()
-	USceneComponent* GetMuzzlePosition();
+	USceneComponent* GetMuzzlePosition() const;
 
 protected:
 	// Assign On Begin Play
-	UACBaseTriggerModule* TriggerModule{};
-	UACBaseShooterModule* ShooterModule{};
-	UACBaseReloadModule* ReloadModule{};
-	UACBaseScopeModule* ScopeModule{};
+	class UACBaseTriggerModule* TriggerModule{};
+	class UACBaseShooterModule* ShooterModule{};
+	class UACBaseReloadModule* ReloadModule{};
+	class UACBaseScopeModule* ScopeModule{};
 
 protected:
 	UPROPERTY()
@@ -176,6 +174,16 @@ protected:
 	FName WeaponSocket{};
 
 protected:
+	// [Weapon Datas]
+
+	// Weapon ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	FName WeaponID;
+
+	// Weapon Type
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	EWeaponType WeaponType;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data|Ammo")
 	int32 RemainAmmoCount{ 0 };
 
@@ -193,15 +201,30 @@ private:
 #pragma region [ WeaponStat ] 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponPrimeStat& GetFinalStat();
+	const FWeaponParameter GetFinalStat() const;
+
+	void UpdateFinalStat();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponParameter& GetBaseStat() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponBonusStat& GetFinalBonusStat() const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	FWeaponPrimeStat BaseStat{};
+	FWeaponParameter WeaponParameter{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
+	FWeaponBonusStat BonusStat{};
 #pragma endregion
 
 	// Events
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
 	FWeaponFireEvent OnWeaponFireEvent{};
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 };
