@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Weapon/Interface/WeaponDataInterface.h"
 #include "WeaponInterface.generated.h"
 
 UENUM(BlueprintType, meta = (Bitflags))
@@ -13,7 +12,18 @@ enum class EWeaponAbortSelection : uint8
 	None = 0,
 	Fire = 1 << 0,
 	Reload = 1 << 1,
-	Zoom = 1 << 2
+	Zoom = 1 << 2,
+	All = 255U
+};
+
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	None,
+	Rifle_0,
+	Sniper_0,
+	MachineGun_0,
+	Pistol_0,
 };
 
 // This class does not need to be modified.
@@ -26,7 +36,7 @@ class UWeaponInterface : public UInterface
 /**
  * 
  */
-class UNRANKHUNTER_API IWeaponInterface : public IWeaponDataInterface
+class UNRANKHUNTER_API IWeaponInterface
 {
 	GENERATED_BODY()
 
@@ -98,6 +108,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
 	FName GetWeaponID();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon", meta = (ForceAsFunction))
+	EWeaponType GetWeaponType();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
 	int32 GetRemainAmmoCount();

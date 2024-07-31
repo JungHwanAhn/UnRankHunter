@@ -25,25 +25,25 @@ public:
 #pragma region [Weapon Control Method]
 public:
 	// Do fire.
-	UFUNCTION(BlueprintCallable, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Trigger Module")
 	bool SetTriggerInput(bool bInput);
 
 	// Return this weapon can fire now.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Trigger Module")
 	bool CanTrigger()
 	{
 		return bCanTrigger && !bIsTrigger;
 	}
 
 	// Return this weapon is firing.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Trigger Module")
 	bool IsTrigger()
 	{
 		return bIsTrigger;
 	}
 
 	// Return trigger value; charge energy, rapid count, etc.
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Trigger Module")
 	float GetTriggerValue()
 	{
 		return TriggerValue;
@@ -52,42 +52,45 @@ public:
 
 protected:
 	// Notify weapon fire event.
-	UFUNCTION(BlueprintCallable, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Trigger Module")
 	void ExecuteTriggerEvent();
 
 #pragma region [Implementation Method]
 protected:
 	// A event on trigger input started.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerBegin();
 
 	// A event on trigger input ended.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Trigger Module")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerEnd();
 
 	// A event on tick while input stay.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Trigger Module")
+	// This method is not nessessory. It's old code.
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon Module|Trigger Module")
 	void OnTriggerTick(float DeltaTime);
+
+
 #pragma endregion
 
 public:
-	UPROPERTY(BlueprintAssignable, Category = "Modules|Trigger Module")
+	UPROPERTY(BlueprintAssignable, Category = "Weapon Module|Trigger Module")
 	FTriggerModuleCallback OnFireNotified{};
 
 	//UPROPERTY()
 	//FTriggerModuleCallback__ OnFireNotified__{};
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modules|Trigger Module")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Module|Trigger Module")
 	float TriggerValue{ 0 };
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Modules|Trigger Module")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Module|Trigger Module")
 	bool bInputState{ false };
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Modules|Trigger Module")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Module|Trigger Module")
 	bool bIsTrigger{ false };
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Modules|Trigger Module")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon Module|Trigger Module")
 	bool bCanTrigger{ true };
 };

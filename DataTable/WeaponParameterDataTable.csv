@@ -1,0 +1,5 @@
+---,WeaponID,Damage,AmmoCapacity,ElementalStrength,ReloadRate,RapidRate,BulletSize,EffectiveDistance,AccuracyRatio,CritDamage
+001,001,80,24,1,1,1,32,8000,0,1.5
+002,002,24,30,1,1,1,30,8000,5,1.5
+003,003,10,120,1,1,1,1,1200,30,1
+004,004,2,300,1,1,1,0,1200,0,1.1

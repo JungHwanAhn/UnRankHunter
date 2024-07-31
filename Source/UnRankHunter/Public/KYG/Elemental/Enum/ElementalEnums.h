@@ -14,7 +14,7 @@ public:
 	~ElementalEnums();
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EDamageElementalType
 {
 	None = 0,

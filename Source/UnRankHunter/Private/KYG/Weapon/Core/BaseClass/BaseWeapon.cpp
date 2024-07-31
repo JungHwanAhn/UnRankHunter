@@ -5,7 +5,11 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Character.h"
 #include "Weapon/WeaponModule/Base/ACBaseTriggerModule.h"
-#include "Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseShooterModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
+#include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
+#include "Weapon/Structure/WeaponStructure.h"
+#include "Engine/DataTable.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -26,6 +30,31 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Load parameter data.
+	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
+	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
+	if (ParamTable != nullptr)
+	{
+		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
+
+		if (ParamRow != nullptr)
+		{
+			WeaponParameter = *ParamRow;
+
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), ParamRow->Damage);
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), WeaponParameter.Damage);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
+	}
+
+	// Find module components.
 	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
 	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
 	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
@@ -33,12 +62,16 @@ void ABaseWeapon::BeginPlay()
 
 	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
 
+
+	// Initialize weapon variables.
 	auto AttachParent = GetAttachParentActor();
 
 	if (AttachParent)
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
+
+	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
 void ABaseWeapon::GenerateBasicModule()
@@ -68,10 +101,6 @@ void ABaseWeapon::ReceiveFireNotify(float Value)
 	FWeaponFireInfo Info{};
 	OnWeaponFireEvent.Broadcast(this, Info);
 }
-
-
-
-
 
 #pragma region [Weapon Interface Implementation]
 // 'IWeaponInterface' U인터페이스 구현부.
@@ -285,7 +314,12 @@ void ABaseWeapon::SetupWeaponAttachment_Implementation(AActor* WeaponOwner)
 FName ABaseWeapon::GetWeaponID_Implementation()
 {
 	// Implementation logic here
-	return FName();  // Placeholder return value
+	return WeaponID;
+}
+
+EWeaponType ABaseWeapon::GetWeaponType_Implementation()
+{
+	return WeaponType;
 }
 
 int32 ABaseWeapon::GetRemainAmmoCount_Implementation()
@@ -342,13 +376,16 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 
 int32 ABaseWeapon::GetAmmoCapacity()
 {
-	return AmmoCapacity;
+	// (FinalAmmoCapacity) = (Base) * (1 + (Bonus%)) + (Bonus+)
+	int32 ApplyMultiple = FMath::FloorToInt32(GetFinalStat().AmmoCapacity * (1.0f + GetFinalBonusStat().AddAmmoMultiple));
+	int32 FinalAmmo = ApplyMultiple + GetFinalBonusStat().AddAmmoCount;
+	return FinalAmmo;
 }
 
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
 {
 	OutRemainAmmo = RemainAmmoCount;
-	OutReduceAmmo = 0;
+	OutReduceAmmo = Cost;
 
 	if (bIsInfiniteAmmo)
 	{
@@ -357,95 +394,118 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 
 	int32 FinalAmmo = RemainAmmoCount - Cost;
 
-	if (FinalAmmo < 0)
-	{
-		if (bFailOnLess)
-		{
-			return false;
-		}
-
-		OutReduceAmmo = Cost + RemainAmmoCount;
-		RemainAmmoCount = 0;
-		OutRemainAmmo = 0;
-		return OutReduceAmmo > 0;	// Return ammo is decrease?
-	}
-	else
+	// Amount of remain ammo is bigger than cost.
+	if (FinalAmmo >= 0)
 	{
 		RemainAmmoCount = FinalAmmo;
 		OutRemainAmmo = RemainAmmoCount;
 		OutReduceAmmo = Cost;
 		return true;
 	}
+
+	// Ammo is lack, so fail this function.
+	if (bFailOnLess)
+	{
+		OutReduceAmmo = 0;
+		return false;
+	}
+
+	OutReduceAmmo = RemainAmmoCount;	// Consume all remains ammo.
+	RemainAmmoCount = 0;
+	OutRemainAmmo = 0;
+	return OutReduceAmmo > 0;	// Return ammo is decrease?
 }
 
-USceneComponent* ABaseWeapon::GetCameraPosition()
+USceneComponent* ABaseWeapon::GetCameraPosition() const
 {
 	return CameraPositionComponent;
 }
 
-USceneComponent* ABaseWeapon::GetMuzzlePosition()
+USceneComponent* ABaseWeapon::GetMuzzlePosition() const
 {
 	return MuzzlePositionComponent;
 }
 
-
-int32 ABaseWeapon::GetMaxAmmoCapacity()
+const FWeaponParameter ABaseWeapon::GetFinalStat() const
 {
-	return AmmoCapacity;
+	FWeaponParameter FinalStat = WeaponParameter;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
 
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
 
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
+	FinalStat.AmmoCapacity = FMath::FloorToInt32(FinalStat.AmmoCapacity * (1.0f + Bonus.AddAmmoMultiple)) + Bonus.AddAmmoCount;
 
-	int Result = Param.AmmoCapacity * FinStat.AmmoCapacityMultiplier + FinStat.AmmoCapacityAdditive;
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
 
-	return Result;
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
+
+	return FinalStat;
 }
 
-float ABaseWeapon::GetDamageAmount(EDamageEffectType DamageType, float Distance, FName HitTag, EDamageElementalType Type, bool bIsCritical)
+void ABaseWeapon::UpdateFinalStat()
 {
-	FWeaponParameter Param;
-	FWeaponStat FinStat;
+	FWeaponParameter FinalStat = WeaponParameter;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
 
-	Execute_GetWeaonParameter(this, Param);
-	Execute_GetWeaponFinalStat(this, FinStat);
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
 
-	// Base Damage = Default Damage * Multiplier
-	float BaseDamage = Param.BaseDamage *
-		(DamageType == EDamageEffectType::Explosion ? Param.ExplosionDamageMultiplier :
-			DamageType == EDamageEffectType::Bullet ? Param.BulletDamageMultiplier :
-			DamageType == EDamageEffectType::Special ? Param.DamageMultiplier0 :
-			Param.DamageMultiplier1);
+	FinalStat.AmmoCapacity = FinalStat.AmmoCapacity * Bonus.AddAmmoMultiple * Bonus.AddAmmoCount;
 
-	float BonusByDamageType =
-		DamageType == EDamageEffectType::Explosion ? FinStat.ExplosionDamage :
-		DamageType == EDamageEffectType::Bullet ? FinStat.ProjectileDamage :
-		DamageType == EDamageEffectType::Special ? FinStat.SpecialDamage :
-		0.0f;
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
 
-	float BonusByElementalType =
-		Type == EDamageElementalType::Basic ? FinStat.BasicDamage :
-		Type == EDamageElementalType::Bleeding ? FinStat.BleedingElementalDamage :
-		Type == EDamageElementalType::Frozen ? FinStat.FrozenElementalDamage :
-		Type == EDamageElementalType::Lightning ? FinStat.LightningElementalDamage :
-		0.0f;
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
+}
 
-	float BonusByHitTarget =
-		HitTag == "Common" ? FinStat.CommonDamage :
-		HitTag == "Elite" ? FinStat.EliteDamage :
-		HitTag == "Boss" ? FinStat.BossDamage :
-		0.0f;
+const FWeaponParameter& ABaseWeapon::GetBaseStat() const
+{
+	return WeaponParameter;
+}
 
-	// Sum all bonus damages.
-	float AllBonus = FinStat.AllDamage + BonusByDamageType + BonusByElementalType + BonusByHitTarget;
+const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
+{
+	return BonusStat;
+}
 
-	// Calculate critical damage.
-	float CritDamage = bIsCritical ? FinStat.CritDamage : 1.0f;
+const float ABaseWeapon::CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context)
+{
+	const FWeaponParameter& BaseStat = Weapon->GetFinalStat();
+	const FWeaponBonusStat& BonusStat = Weapon->GetFinalBonusStat();
 
-	float FinalDamage = BaseDamage * (1.0f + AllBonus) * CritDamage;
+	float BonusByTargetType{ 0.0f };
+	if (Target->ActorHasTag("Boss"))
+	{
+		BonusByTargetType = BonusStat.BossDamageUp;
+	}
+	else if (Target->ActorHasTag("Elite"))
+	{
+		BonusByTargetType = BonusStat.EliteDamageUp;
+	}
+	else if (Target->ActorHasTag("Common"))
+	{
+		BonusByTargetType = BonusStat.CommonEnemyDamageUp;
+	}
 
+	float AllBonus = BonusStat.AllDamageUp + BonusByTargetType;
+
+	float FinalDamage = Context.Damage * (1.0f + AllBonus);
+
+	if (Context.bIsCrit)
+	{
+		float CritMultiple = BaseStat.CritDamage + BonusStat.CritDamageUp;
+
+		FinalDamage *= CritMultiple;
+	}
+
+	// (FinalDamage) = (BaseStat) * (1 + (TotalDamageBonus)) * (BaseCritMultiple + BonusCritMultiple)
 	return FinalDamage;
-
 }

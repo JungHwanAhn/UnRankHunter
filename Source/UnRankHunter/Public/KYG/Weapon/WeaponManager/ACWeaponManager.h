@@ -48,7 +48,7 @@ public:
 
 	// Create and add a weapon to the slot position.
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
-	bool AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd = false);
+	bool AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd = false, bool bImmediatelyEquip = false);
 
 	// Removes the weapon at the specified slot index and returns the result.
 	// Use the bDestroyInstance parameter to choose whether to completely destroy the instance or just remove it from the manager.
@@ -128,6 +128,8 @@ private:
 
 
 	virtual FName GetWeaponID_Implementation() override;
+
+	virtual EWeaponType GetWeaponType_Implementation() override;
 
 	virtual int32 GetRemainAmmoCount_Implementation() override;
 

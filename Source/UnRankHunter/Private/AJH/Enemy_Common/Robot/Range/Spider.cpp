@@ -59,8 +59,8 @@ float ASpider::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, A
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		spiderHP -= actualDamage;
-		if (spiderHP <= 0.f) EnemyDie();
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }

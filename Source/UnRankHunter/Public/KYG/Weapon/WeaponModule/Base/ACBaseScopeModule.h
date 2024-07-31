@@ -20,29 +20,29 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Scope Module")
 	bool CanZoom()
 	{
 		return bCanZoom;
 	}
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Scope Module")
 	bool IsZooming()
 	{
 		return bIsZooming;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Scope Module")
 	bool SetZoomInput(bool bInput);
 
 protected:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Scope Module")
 	void OnScopeBegin();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Scope Module")
 	void OnScopeEnd();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Modules|Scope Module")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Scope Module")
 	void OnScopeTick();
 
 protected:
