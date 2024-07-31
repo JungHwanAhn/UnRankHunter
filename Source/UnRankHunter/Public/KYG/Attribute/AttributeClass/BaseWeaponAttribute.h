@@ -12,23 +12,41 @@
 /**
  *
  */
-UCLASS(Abstract)
+UCLASS(Abstract, BlueprintType)
 class UNRANKHUNTER_API UBaseWeaponAttribute : public UObject
 {
 	GENERATED_BODY()
 
-public:
-	virtual void OnAttributeAttached(ABaseWeapon* ParentWeapon) PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeAttached, ;);
-	virtual void OnAttributeDetached(ABaseWeapon* ParentWeapon) PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeDetached, ;);
+protected:
+	virtual void OnAttributeEnabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeAttached, ;);
+	virtual void OnAttributeDisabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeDetached, ;);
 
-	virtual void OnAttributeEnabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeEnabled, ;);
-	virtual void OnAttributeDisabled() PURE_VIRTUAL(UBaseWeaponAttribute::OnAttributeDisabled, ;);
+public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
+	void InitializeOnCreated(class ABaseWeapon* BaseWeapon);
+	
+	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
+	void ApplyBonusStat(FWeaponBonusStat& InWeapon) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
-	virtual void ApplyBonusStat(FWeaponBonusStat& InWeapon) const;
+	void EnableAttribute(bool bUpdate = false);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
+	void DisableAttribute(bool bUpdate = false);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
+	FName GetAttributeID() const
+	{
+		return AttributeID;
+	}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Attribute")
 	FName AttributeID;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Attribute")
 	FWeaponBonusStat BonusStat;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon Attribute")
+	class ABaseWeapon* ParentWeapon;
 };

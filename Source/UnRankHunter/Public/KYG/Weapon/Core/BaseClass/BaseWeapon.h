@@ -149,6 +149,16 @@ public:
 	UFUNCTION()
 	USceneComponent* GetMuzzlePosition() const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	USkeletalMeshComponent* GetWeaponMesh() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	const bool GetWeaponSocket(FTransform& OutTransfrom, const FName SocketName) const;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UChildActorComponent* MeshActorComp{};
+
 protected:
 	// Assign On Begin Play
 	class UACBaseTriggerModule* TriggerModule{};
@@ -227,4 +237,14 @@ public:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
+
+
+protected:
+	TArray<class UBaseWeaponAttribute*> AttributeArray{};
+
+	int32 AttributeSlotCapacity{};
+
+	FWeaponBonusStat CalculateAttributeStat();
+
+	void AttachNewAttribute(TSubclassOf<class UBaseWeaponAttribute> NewAttributeClass);
 };
