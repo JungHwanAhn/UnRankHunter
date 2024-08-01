@@ -9,6 +9,7 @@
 #include "Weapon/WeaponModule/Base/ACBaseReloadModule.h"
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Weapon/Structure/WeaponStructure.h"
+#include "Attribute/AttributeClass/BaseWeaponAttribute.h"
 #include "Engine/DataTable.h"
 
 // Sets default values
@@ -23,6 +24,9 @@ ABaseWeapon::ABaseWeapon()
 
 	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
 	MuzzlePositionComponent->SetupAttachment(RootComponent);
+
+	MeshActorComp = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponMeshActor"));
+	MeshActorComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -426,6 +430,32 @@ USceneComponent* ABaseWeapon::GetMuzzlePosition() const
 	return MuzzlePositionComponent;
 }
 
+USkeletalMeshComponent* ABaseWeapon::GetWeaponMesh() const
+{
+	if (!MeshActorComp || !MeshActorComp->GetChildActor())
+		return nullptr;
+
+	USceneComponent* MeshRootComp = MeshActorComp->GetChildActor()->GetRootComponent();
+
+	USkeletalMeshComponent* MainSkeletal = Cast<USkeletalMeshComponent>(MeshRootComp);
+
+	return MainSkeletal;
+}
+
+const bool ABaseWeapon::GetWeaponSocket(FTransform& OutTransfrom, const FName SocketName) const
+{
+	auto WeaponMesh = GetWeaponMesh();
+
+	if (!WeaponMesh)
+	{
+		OutTransfrom = FTransform{};
+		return false;
+	}
+
+	OutTransfrom = WeaponMesh->GetSocketTransform(SocketName);
+	return true;
+}
+
 const FWeaponParameter ABaseWeapon::GetFinalStat() const
 {
 	FWeaponParameter FinalStat = WeaponParameter;
@@ -474,6 +504,36 @@ const FWeaponParameter& ABaseWeapon::GetBaseStat() const
 const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
 {
 	return BonusStat;
+}
+
+FWeaponBonusStat ABaseWeapon::CalculateAttributeStat()
+{
+	FWeaponBonusStat Result{};
+
+	for (UBaseWeaponAttribute* Attribute : AttributeArray)
+	{
+		if (Attribute == nullptr)
+			continue;
+
+		Attribute->ApplyBonusStat(Result);
+	}
+
+	return Result;
+}
+
+// Instantiate new attribute class.
+void ABaseWeapon::AttachNewAttribute(TSubclassOf<UBaseWeaponAttribute> NewAttributeClass)
+{
+	if (NewAttributeClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Attach attribute FAILURE. Attribute class is nullptr."));
+	}
+
+	UBaseWeaponAttribute* AttributeInstance = NewObject<UBaseWeaponAttribute>(nullptr, NewAttributeClass);
+
+	AttributeInstance->InitializeOnCreated(this);
+
+	AttributeArray.Add(AttributeInstance);
 }
 
 const float ABaseWeapon::CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context)
