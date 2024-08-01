@@ -16,7 +16,6 @@ AAndroid::AAndroid()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
 		GetMesh()->SetRelativeScale3D(FVector(1.4));
 		GetMesh()->SetSkeletalMesh(AndroidMesh.Object);
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	AndroidWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AndroidWeapon"));
@@ -25,6 +24,7 @@ AAndroid::AAndroid()
 		WeaponMesh(TEXT("StaticMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkAndroid/Mesh/Weapon/AndroidWeapon.AndroidWeapon'"));
 	if (WeaponMesh.Succeeded()) {
 		AndroidWeapon->SetStaticMesh(WeaponMesh.Object);
+		AndroidWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		AndroidWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 	}
 

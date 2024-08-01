@@ -1,6 +1,8 @@
 #include "AIController_Skeleton.h"
 #include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AAIController_Skeleton::Tick(float DeltaSeconds)
 {
@@ -10,11 +12,16 @@ void AAIController_Skeleton::Tick(float DeltaSeconds)
         if (ControlledPawn->bIsActive && !ControlledPawn->bIsEnemyDie) {
             SetFocus(PlayerPawn);
             lastEnemyScan += DeltaSeconds;
+            ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
+            float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+            if (!ControlledPawn->bIsNear && distance < 3500.0f) {
+                ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+                ControlledPawn->bIsNear = true;
+            }
 
             if (!bIsAttack) {
                 FVector Destination = PlayerPawn->GetActorLocation();
                 FVector CurrentLocation = ControlledPawn->GetActorLocation();
-
                 if (lastEnemyScan >= enemyScanInterval)
                 {
                     EnemyScan();
@@ -22,10 +29,12 @@ void AAIController_Skeleton::Tick(float DeltaSeconds)
                 }
 
                 FVector AdjustedDestination = Destination + AvoidanceVector;
-
-                MoveToLocation(AdjustedDestination, acceptanceRadius);
-
-                float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
+                EPathFollowingRequestResult::Type MoveResult = MoveToLocation(AdjustedDestination, acceptanceRadius);
+                if (MoveResult == EPathFollowingRequestResult::Failed || MoveResult == EPathFollowingResult::Invalid)
+                {
+                    MoveResult = MoveToLocation(PlayerPawn->GetActorLocation(), acceptanceRadius);
+                }
+                
                 if (distance < 250.0f)
                 {
                     bIsAttack = true;
@@ -71,7 +80,6 @@ void AAIController_Skeleton::EnemyScan()
             {
                 FVector ToOther = CurrentLocation - Actor->GetActorLocation();
                 float DistanceToOther = ToOther.Size();
-
                 if (DistanceToOther < avoidanceRadius)
                 {
                     AvoidanceVector += ToOther.GetSafeNormal() * (avoidanceRadius - DistanceToOther) * avoidanceStrength;

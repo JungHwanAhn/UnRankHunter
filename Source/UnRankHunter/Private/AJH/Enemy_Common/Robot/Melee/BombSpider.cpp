@@ -16,7 +16,6 @@ ABombSpider::ABombSpider()
 		GetMesh()->SetSkeletalMesh(BombSpiderMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -50));
 		GetMesh()->SetRelativeScale3D(FVector(0.5));
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetMesh()->GetOwner()->Tags.Add("Bomb");
 	}
 
