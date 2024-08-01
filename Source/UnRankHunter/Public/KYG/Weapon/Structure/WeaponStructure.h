@@ -59,9 +59,6 @@ struct FWeaponBonusStat
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float WeaponStatUp;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AllDamageUp{ 0.0f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -77,7 +74,7 @@ struct FWeaponBonusStat
 	float CritDamageUp{ 0.0f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AddAmmoCount{ 0.0f };
+	int32 AddAmmoCount{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AddAmmoMultiple{ 0.0f };
@@ -124,6 +121,32 @@ struct FWeaponDamageContext
 	float Damage{};
 	bool bIsCrit{};
 };
+
+
+USTRUCT(BlueprintType)
+struct FWeaponConstructParams
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName WeaponID{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FName> AttributeIDs{};
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponAttributeRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName AttributeID{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UBaseWeaponAttribute> AttributeClass{};
+};
+
 
 class UNRANKHUNTER_API WeaponStructure
 {

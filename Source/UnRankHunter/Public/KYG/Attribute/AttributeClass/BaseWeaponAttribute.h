@@ -29,10 +29,10 @@ public:
 	void ApplyBonusStat(FWeaponBonusStat& InWeapon) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
-	void EnableAttribute(bool bUpdate = false);
+	void EnableAttribute();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
-	void DisableAttribute(bool bUpdate = false);
+	void DisableAttribute();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Attribute")
 	FName GetAttributeID() const

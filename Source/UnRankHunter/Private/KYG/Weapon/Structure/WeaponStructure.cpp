@@ -2,6 +2,7 @@
 
 
 #include "KYG/Weapon/Structure/WeaponStructure.h"
+#include "Attribute/AttributeClass/BaseWeaponAttribute.h"
 
 WeaponStructure::WeaponStructure()
 {
