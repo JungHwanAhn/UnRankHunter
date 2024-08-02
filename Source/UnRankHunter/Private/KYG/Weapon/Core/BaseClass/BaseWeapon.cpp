@@ -241,17 +241,22 @@ void ABaseWeapon::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortS
 	if (AbortSelection == EWeaponAbortSelection::None)
 		return;
 
-	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
+	// Check the bit flags in the AbortSelection enum to select which module to stop.
+
+	// Cancel fire module.
+	if (TriggerModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
 	{
 		TriggerModule->CancelModuleAction();
 	}
 
-	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
+	// Cancel reload module.
+	if (ReloadModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
 	{
 		ReloadModule->CancelModuleAction();
 	}
 
-	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
+	// Cancel zoom module.
+	if (ScopeModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
 	{
 		ScopeModule->CancelModuleAction();
 	}
