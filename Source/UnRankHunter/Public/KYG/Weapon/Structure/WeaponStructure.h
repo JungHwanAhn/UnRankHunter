@@ -6,6 +6,7 @@
 #include "Engine/DataTable.h"
 #include "WeaponStructure.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FWeaponParameter : public FTableRowBase
 {
