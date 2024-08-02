@@ -53,6 +53,36 @@ void AMT26::Attack()
 	}
 }
 
+void AMT26::ChargingShot()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->ChargingShot();
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::Shelling()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->Shelling();
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::ShellingToPlayer()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->ShellingToPlayer();
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
 void AMT26::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	Super::OnAttackMontageEnded(Montage, bInterrupted);

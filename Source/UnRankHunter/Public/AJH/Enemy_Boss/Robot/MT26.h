@@ -14,6 +14,12 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Attack() override;
+	void ChargingShot();
+	void Shelling();
+	void ShellingToPlayer();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void SpawnShelling();
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
