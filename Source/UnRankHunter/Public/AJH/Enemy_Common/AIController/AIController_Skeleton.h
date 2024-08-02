@@ -25,6 +25,7 @@ private:
 	float lastEnemyScan = 0.0f;
 	float enemyScanInterval = 0.2f;
 
+
 	FVector AvoidanceVector;
 	void EnemyScan();
 };

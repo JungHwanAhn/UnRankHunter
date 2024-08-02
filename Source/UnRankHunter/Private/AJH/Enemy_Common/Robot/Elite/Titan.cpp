@@ -18,7 +18,8 @@ ATitan::ATitan()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
 		GetMesh()->SetRelativeScale3D(FVector(1.5));
 		GetMesh()->SetSkeletalMesh(TitanMesh.Object);
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->GetOwner()->Tags.Remove("Common");
+		GetMesh()->GetOwner()->Tags.Add("Elite");
 		GetMesh()->GetOwner()->Tags.Add("Titan");
 	}
 
