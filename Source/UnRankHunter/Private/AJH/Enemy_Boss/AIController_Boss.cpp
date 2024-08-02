@@ -1,5 +1,7 @@
 #include "AIController_Boss.h"
+#include "BaseEnemy_Common.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -25,9 +27,11 @@ void AAIController_Boss::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
+	ControlledPawn = Cast<ABaseEnemy_Common>(InPawn);
+
 	UBlackboardComponent* BlackboardComp = Blackboard;
 	if (UseBlackboard(BBEnemy, BlackboardComp)) {
-		AActor* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		if (Player) {
 			BlackboardComp->SetValueAsObject(TargetKey, Player);
 		}
@@ -56,5 +60,13 @@ void AAIController_Boss::StartAI()
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
 	if (!BehaviorTreeComponent) {
 		BehaviorTreeComponent->StartTree(*this->BTEnemy, EBTExecutionMode::Looped);
+	}
+}
+
+void AAIController_Boss::Tick(float DeltaSeconds)
+{
+	if (!ControlledPawn->bIsEnemyDie) {
+		FVector AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, 0.0f, -13000.0f);
+		ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
 	}
 }

@@ -19,9 +19,14 @@ public:
 	static const FName TargetKey;
 
 private:
+	virtual void Tick(float DeltaSeconds) override;
+
 	UPROPERTY(VisibleAnywhere, Category = "BehaviorTree")
 	class UBehaviorTree* BTEnemy;
 
 	UPROPERTY(VisibleAnywhere, Category = "BehaviorTree")
 	class UBlackboardData* BBEnemy;
+
+	class AActor* Player;
+	class ABaseEnemy_Common* ControlledPawn;
 };
