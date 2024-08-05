@@ -1,6 +1,7 @@
 #include "MT26.h"
 #include "MT26_Anim.h"
 #include "AIController_Boss.h"
+#include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,6 +29,9 @@ AMT26::AMT26()
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
 
+	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
+	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
+
 	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
 
@@ -37,6 +41,9 @@ void AMT26::BeginPlay()
 
 	MT26Anim = Cast<UMT26_Anim>(GetMesh()->GetAnimInstance());
 	if (!MT26Anim) return;
+
+	AIController = Cast<AAIController_Boss>(GetController());
+	if (!AIController) return;
 }
 
 void AMT26::Attack()
@@ -53,10 +60,12 @@ void AMT26::Attack()
 	}
 }
 
-void AMT26::ChargingShot()
+void AMT26::EnergyBall()
 {
 	if (!bIsEnemyDie) {
-		MT26Anim->ChargingShot();
+		MT26Anim->EnergyBall();
+
+		AimToValue(7050.0f, "EnergyBall");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -77,6 +86,18 @@ void AMT26::ShellingToPlayer()
 {
 	if (!bIsEnemyDie) {
 		MT26Anim->ShellingToPlayer();
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::LaserBeam()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->LaserBeam();
+
+		AimToValue(20000.0f, "LaserBeam");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

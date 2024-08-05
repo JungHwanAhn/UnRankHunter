@@ -18,6 +18,9 @@ public:
 
 	static const FName TargetKey;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float enemyRotator_Y = 1000.0f;
+
 private:
 	virtual void Tick(float DeltaSeconds) override;
 
