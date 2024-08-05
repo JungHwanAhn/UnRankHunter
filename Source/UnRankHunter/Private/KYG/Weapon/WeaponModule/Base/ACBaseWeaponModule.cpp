@@ -20,6 +20,8 @@ void UACBaseWeaponModule::BeginPlay()
 	auto OwnerInst = Cast<ABaseWeapon>(GetOwner());
 
 	OwnerWeapon = OwnerInst;
+
+	BeginModule(OwnerWeapon);
 }
 
 ABaseWeapon* UACBaseWeaponModule::GetOwnerWeapon()
