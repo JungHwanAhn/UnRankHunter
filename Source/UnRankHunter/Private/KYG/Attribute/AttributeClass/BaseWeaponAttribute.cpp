@@ -13,12 +13,16 @@ void UBaseWeaponAttribute::ApplyBonusStat(UPARAM(ref) FWeaponBonusStat& InWeapon
 	InWeapon = InWeapon + BonusStat;
 }
 
-void UBaseWeaponAttribute::EnableAttribute()
+void UBaseWeaponAttribute::EnableAttribute(bool bUpdate)
 {
 	OnAttributeEnabled();
+	if (bUpdate)
+		ParentWeapon->UpdateFinalStat();
 }
 
-void UBaseWeaponAttribute::DisableAttribute()
+void UBaseWeaponAttribute::DisableAttribute(bool bUpdate)
 {
 	OnAttributeDisabled();
+	if (bUpdate)
+		ParentWeapon->UpdateFinalStat();
 }

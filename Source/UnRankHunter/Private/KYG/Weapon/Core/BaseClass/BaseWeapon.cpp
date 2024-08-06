@@ -22,11 +22,11 @@ ABaseWeapon::ABaseWeapon()
 	auto RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
 	SetRootComponent(RootComp);
 
+	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
+	MuzzlePositionComponent->SetupAttachment(RootComponent);
+
 	MeshActorComp = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponMeshActor"));
 	MeshActorComp->SetupAttachment(RootComponent);
-
-	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
-	MuzzlePositionComponent->SetupAttachment(MeshActorComp);
 }
 
 // Called when the game starts or when spawned
@@ -34,9 +34,38 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetupModule();
-	LoadParameter();
-	SetupWeaponProperties();
+	// Load parameter data.
+	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
+	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
+	if (ParamTable != nullptr)
+	{
+		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
+
+		if (ParamRow != nullptr)
+		{
+			WeaponParameter = *ParamRow;
+
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), ParamRow->Damage);
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Test Log_ParamRow->Damage = %.2f"), WeaponParameter.Damage);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
+	}
+
+	// Find module components.
+	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
+	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
+	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
+	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
+
+	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+
 
 	// Initialize weapon variables.
 	auto AttachParent = GetAttachParentActor();
@@ -45,17 +74,12 @@ void ABaseWeapon::BeginPlay()
 	{
 		CameraPositionComponent = AttachParent->FindComponentByTag<USceneComponent>("Main Camera");
 	}
+
+	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
-void ABaseWeapon::SetupModule()
+void ABaseWeapon::GenerateBasicModule()
 {
-	// Find module components.
-	TriggerModule = GetComponentByClass<UACBaseTriggerModule>();
-	ShooterModule = GetComponentByClass<UACBaseShooterModule>();
-	ReloadModule = GetComponentByClass<UACBaseReloadModule>();
-	ScopeModule = GetComponentByClass<UACBaseScopeModule>();
-
-	// Generate base module. (not implemented)
 	if (TriggerModule != nullptr)
 	{
 		// Create Basic Trigger Module.
@@ -72,45 +96,6 @@ void ABaseWeapon::SetupModule()
 	{
 		// Create Basic Scope Module.
 	}
-
-	// Setup.
-	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
-}
-
-void ABaseWeapon::LoadParameter()
-{
-	// Load parameter data.
-	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
-	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
-	if (ParamTable != nullptr)
-	{
-		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
-
-		if (ParamRow != nullptr)
-		{
-			WeaponParameter = *ParamRow;
-			UE_LOG(LogTemp, Log, TEXT("[BaseWeapon] Load weapon parameter process is SUCCESS"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found '%s' ID in Weapon Parameter Table."), WeaponID);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Can't not found Weapon Parameter Table asset."));
-	}
-}
-
-void ABaseWeapon::SetupWeaponProperties()
-{
-	RemainAmmoCount = GetFinalStat().AmmoCapacity;
-}
-
-void ABaseWeapon::ConstructWeapon(const FWeaponConstructParams& Params)
-{
-	InitializeWeaponAttribute(Params.AttributeIDs);
-	SetupWeaponProperties();
 }
 
 void ABaseWeapon::ReceiveFireNotify(float Value)
@@ -241,22 +226,17 @@ void ABaseWeapon::CancelWeaponAction_Implementation(EWeaponAbortSelection AbortS
 	if (AbortSelection == EWeaponAbortSelection::None)
 		return;
 
-	// Check the bit flags in the AbortSelection enum to select which module to stop.
-
-	// Cancel fire module.
-	if (TriggerModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Fire)))
 	{
 		TriggerModule->CancelModuleAction();
 	}
 
-	// Cancel reload module.
-	if (ReloadModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Reload)))
 	{
 		ReloadModule->CancelModuleAction();
 	}
 
-	// Cancel zoom module.
-	if (ScopeModule && (static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
+	if ((static_cast<uint8>(AbortSelection) & static_cast<uint8>(EWeaponAbortSelection::Zoom)))
 	{
 		ScopeModule->CancelModuleAction();
 	}
@@ -401,7 +381,9 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 int32 ABaseWeapon::GetAmmoCapacity()
 {
 	// (FinalAmmoCapacity) = (Base) * (1 + (Bonus%)) + (Bonus+)
-	return GetFinalStat().AmmoCapacity;
+	int32 ApplyMultiple = FMath::FloorToInt32(GetFinalStat().AmmoCapacity * (1.0f + GetFinalBonusStat().AddAmmoMultiple));
+	int32 FinalAmmo = ApplyMultiple + GetFinalBonusStat().AddAmmoCount;
+	return FinalAmmo;
 }
 
 bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess)
@@ -474,139 +456,90 @@ const bool ABaseWeapon::GetWeaponSocket(FTransform& OutTransfrom, const FName So
 	return true;
 }
 
-#pragma region [Stat System]
-const FWeaponParameter& ABaseWeapon::GetFinalStat()
+const FWeaponParameter ABaseWeapon::GetFinalStat() const
 {
-	if (bIsStatRecent == false)
-	{
-		UpdateFinalStat();
-	}
+	FWeaponParameter FinalStat = WeaponParameter;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
+
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
+
+	FinalStat.AmmoCapacity = FMath::FloorToInt32(FinalStat.AmmoCapacity * (1.0f + Bonus.AddAmmoMultiple)) + Bonus.AddAmmoCount;
+
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
+
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
 
 	return FinalStat;
 }
 
 void ABaseWeapon::UpdateFinalStat()
 {
-	FWeaponParameter NewFinalStat = WeaponParameter;
-	FWeaponBonusStat Bonus = GetTotalBonusStat();
+	FWeaponParameter FinalStat = WeaponParameter;
+	const FWeaponBonusStat& Bonus = GetFinalBonusStat();
 
-	// Calculate Parameter + BonusStat.
-	//NewFinalStat.Damage *= 1.0f + Bonus.AllDamageUp;	// No apply AllDamageUp to damage stat. AllDamageUp will apply on final damage calculation.
+	FinalStat.Damage *= 1.0f + Bonus.AllDamageUp;
 
-	NewFinalStat.AmmoCapacity = FMath::FloorToInt32(NewFinalStat.AmmoCapacity * (1.0f + Bonus.AddAmmoMultiple)) + Bonus.AddAmmoCount; // baseCap * MultipleCap + AddCap
+	FinalStat.AmmoCapacity = FinalStat.AmmoCapacity * Bonus.AddAmmoMultiple * Bonus.AddAmmoCount;
 
-	NewFinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
-	NewFinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
-	NewFinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
-	NewFinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
-	NewFinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
+	FinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
+	FinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
+	FinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
+	FinalStat.BulletSize *= (1.0f + Bonus.AttackRange);
+	FinalStat.EffectiveDistance *= (1.0f + Bonus.EffecientDistanceUp);
 
-	NewFinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
-	NewFinalStat.CritDamage += Bonus.CritDamageUp;
-	// End calculate.
-
-	FinalStat = MoveTemp(NewFinalStat);
-
-	bIsStatRecent = true;
+	FinalStat.AccuracyRatio *= 1.0f + Bonus.AccuracyUp;
+	FinalStat.CritDamage += Bonus.CritDamageUp;
 }
 
-FWeaponBonusStat ABaseWeapon::GetTotalBonusStat()
+const FWeaponParameter& ABaseWeapon::GetBaseStat() const
 {
-	return DynamicStat + StaticStat;
+	return WeaponParameter;
 }
 
-void ABaseWeapon::UpdateStaticStat()
+const FWeaponBonusStat& ABaseWeapon::GetFinalBonusStat() const
 {
-	FWeaponBonusStat Bonus{};
-	for (auto Attribute : AttributeArray)
-	{
-		Attribute->ApplyBonusStat(Bonus);
-	}
-	StaticStat = MoveTemp(Bonus);
-
-	bIsStatRecent = false;
+	return BonusStat;
 }
 
-void ABaseWeapon::ModifyDynamicStat(const FBonusStatModifier Callback)
+FWeaponBonusStat ABaseWeapon::CalculateAttributeStat()
 {
-	Callback.ExecuteIfBound(DynamicStat);
+	FWeaponBonusStat Result{};
 
-	bIsStatRecent = false;
+	for (UBaseWeaponAttribute* Attribute : AttributeArray)
+	{
+		if (Attribute == nullptr)
+			continue;
+
+		Attribute->ApplyBonusStat(Result);
+	}
+
+	return Result;
 }
 
-void ABaseWeapon::InitializeWeaponAttribute(TArray<FName> AttributeIDs)
+// Instantiate new attribute class.
+void ABaseWeapon::AttachNewAttribute(TSubclassOf<UBaseWeaponAttribute> NewAttributeClass)
 {
-	// Clear all attributes.
-	for (auto attribute : AttributeArray)
+	if (NewAttributeClass)
 	{
-		attribute->DisableAttribute();
+		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Attach attribute FAILURE. Attribute class is nullptr."));
 	}
 
-	AttributeArray.Empty();
+	UBaseWeaponAttribute* AttributeInstance = NewObject<UBaseWeaponAttribute>(nullptr, NewAttributeClass);
 
-	// Create new attributes.
-	for (auto id : AttributeIDs)
-	{
-		AddAttribute(id);
-	}
-
-	UpdateStaticStat();
-}
-
-TSubclassOf<UBaseWeaponAttribute> ABaseWeapon::FindAttributeClass(FName ID)
-{
-	// !FUNCTION IS NOT IMPLEMENTED NOW!
-	FString AttributeDTPath = "DataTable'/Game/01_Core/KYG/WeaponAttribute/DataTable/KYG_DT_AttributeTable.KYG_DT_AttributeTable'";
-	UDataTable* AttributeDT = LoadObject<UDataTable>(nullptr, *AttributeDTPath);
-	if (AttributeDT == nullptr)
-	{
-		UE_LOG(LogTemp, Log, TEXT("[BaseWeapon] Finding Attribute Class is FAILURE! Data table is missing."));
-		return nullptr;
-	}
-
-	FWeaponAttributeRow* Row = AttributeDT->FindRow<FWeaponAttributeRow>(ID, nullptr);
-
-	if (Row == nullptr || Row->AttributeClass == nullptr)
-	{
-		UE_LOG(LogTemp, Log, TEXT("[BaseWeapon] Finding Attribute Class is FAILURE! Data table row is empty."));
-		return nullptr;
-	}
-
-	return Row->AttributeClass;
-}
-
-void ABaseWeapon::AddAttribute(FName AttributeID)
-{
-	// Find class.
-	auto AttributeClass = FindAttributeClass(AttributeID);
-
-	if (ensure(AttributeClass == nullptr))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Add attribute is FAILURE! Can't find attribute class of '%s' id."), *AttributeID.ToString());
-		return;
-	}
-
-	// Construct instance.
-	UBaseWeaponAttribute* AttributeInstance = NewObject<UBaseWeaponAttribute>(this, AttributeClass);
-
-	if (ensure(AttributeInstance == nullptr))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Add attribute is FAILURE! Fail to instantiate new attribute instance."), *AttributeID.ToString());
-		return;
-	}
-
-	AttributeArray.Emplace(AttributeInstance);
-
-	// Initialize instance.
 	AttributeInstance->InitializeOnCreated(this);
+
+	AttributeArray.Add(AttributeInstance);
 }
-#pragma endregion
 
-
-const float ABaseWeapon::CalculateDamage(const AActor* Target, ABaseWeapon* Weapon, const FWeaponDamageContext& Context)
+const float ABaseWeapon::CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, const FWeaponDamageContext& Context)
 {
 	const FWeaponParameter& BaseStat = Weapon->GetFinalStat();
-	FWeaponBonusStat BonusStat = Weapon->GetTotalBonusStat();
+	const FWeaponBonusStat& BonusStat = Weapon->GetFinalBonusStat();
 
 	float BonusByTargetType{ 0.0f };
 	if (Target->ActorHasTag("Boss"))

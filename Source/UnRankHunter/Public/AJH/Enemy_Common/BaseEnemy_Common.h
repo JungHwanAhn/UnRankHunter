@@ -23,6 +23,8 @@ public:
 	virtual void JumpAttack();
 
 protected:
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool Interrupted);
 

@@ -21,10 +21,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	// Called when the module is initialized.
-	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Module")
-	void BeginModule(class ABaseWeapon* ParentWeapon);
-
 public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module")
 	class ABaseWeapon* GetOwnerWeapon();

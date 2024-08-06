@@ -2,7 +2,6 @@
 
 
 #include "KYG/Weapon/Structure/WeaponStructure.h"
-#include "Attribute/AttributeClass/BaseWeaponAttribute.h"
 
 WeaponStructure::WeaponStructure()
 {
@@ -12,7 +11,7 @@ WeaponStructure::~WeaponStructure()
 {
 }
 
-FWeaponBonusStat FWeaponBonusStat::operator+(const FWeaponBonusStat& Other) const
+FWeaponBonusStat FWeaponBonusStat::operator+(const FWeaponBonusStat& Other)
 {
 	FWeaponBonusStat NewStat{};
 
@@ -32,7 +31,7 @@ FWeaponBonusStat FWeaponBonusStat::operator+(const FWeaponBonusStat& Other) cons
 	return NewStat;
 }
 
-FWeaponBonusStat FWeaponBonusStat::operator-(const FWeaponBonusStat& Other) const
+FWeaponBonusStat FWeaponBonusStat::operator-(const FWeaponBonusStat& Other)
 {
 	FWeaponBonusStat NewStat{};
 

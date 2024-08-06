@@ -42,7 +42,7 @@ void ATitan::BeginPlay()
 	Super::BeginPlay();
 
 	TitanAnim = Cast<UTitan_Anim>(GetMesh()->GetAnimInstance());
-	if (!TitanAnim) return;
+	if (TitanAnim == nullptr) return;
 }
 
 void ATitan::Attack()

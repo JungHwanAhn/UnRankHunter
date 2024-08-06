@@ -34,6 +34,12 @@ ABaseEnemy_Common::ABaseEnemy_Common()
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
+void ABaseEnemy_Common::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
 void ABaseEnemy_Common::OnAttackMontageEnded(UAnimMontage* Montage, bool Interrupted)
 {
 	OnAttackEnd.Broadcast();
