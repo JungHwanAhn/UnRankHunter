@@ -28,7 +28,7 @@ void AAIController_Range::Tick(float DeltaSeconds)
 				FCollisionQueryParams CollisionParams;
 				CollisionParams.AddIgnoredActor(ControlledPawn);
 
-				bool bIsPlayerInSight = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+				bool bIsPlayerInSight = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_GameTraceChannel4, CollisionParams);
 
 				if (bIsPlayerInSight && HitResult.GetActor() == PlayerPawn) {
 					moveRange = 1500.0f;

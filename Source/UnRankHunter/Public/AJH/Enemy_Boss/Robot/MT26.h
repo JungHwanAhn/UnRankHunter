@@ -13,18 +13,34 @@ public:
 	AMT26();
 
 	virtual void BeginPlay() override;
-	virtual void Attack() override;
-	void ChargingShot();
+	void EnergyBall();
 	void Shelling();
 	void ShellingToPlayer();
+	void LaserBeam();
+	void LaserShot(); 
+	void MultiLaserShot();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void SpawnShelling();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable , Category = "CPP Function")
+	void AimToValue(float location_Y, FName Pattern);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void ReturnAim(float location_Y);
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
 	virtual void OnCollisionStart_Implementation() override;
 	virtual void OnCollisionEnd_Implementation() override;
+
+	UPROPERTY(BlueprintReadWrite)
+	class AAIController_Boss* AIController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arrow")
+	class UArrowComponent* ShotDirection;
+
+	float chargingLocation = 0.0f;
 
 private:
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) override;
@@ -33,6 +49,6 @@ private:
 	virtual void EnemyDie() override;
 
 	class UMT26_Anim* MT26Anim;
-;
+
 	float mt26HP = 200;
 };
