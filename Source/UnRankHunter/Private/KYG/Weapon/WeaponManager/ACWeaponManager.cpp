@@ -33,7 +33,7 @@ IWeaponInterface* UACWeaponManager::GetEquippedWeapon()
 	return EquippedWeapon;
 }
 
-bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponFactoryParams Params, bool bForceAdd, bool bImmediatelyEquip)
+bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponConstructParams Params, bool bForceAdd, bool bImmediatelyEquip)
 {
 	// Exception handling: Index out of range.
 	if (!WeaponArray.IsValidIndex(SlotIndex))
@@ -83,6 +83,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponF
 	// Initialize the instance.
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
 	WeaponInst->ForceSetWeaponEnable(false);
+	WeaponInst->ConstructWeapon(Params);
 
 	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
 

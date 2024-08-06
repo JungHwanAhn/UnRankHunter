@@ -60,8 +60,17 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void GenerateBasicModule();
+	// Initialize function. Find or create weapon modules.
+	void SetupModule();
 
+	// Initialize function. Load weapon data table and apply parameter.
+	void LoadParameter();
+
+	// Initialize function. Set up properties that need to be initialized upon creation. (ex. ammo count)
+	void SetupWeaponProperties();
+
+public:
+	void ConstructWeapon(const FWeaponConstructParams& Params);
 
 private:
 	UFUNCTION()
@@ -143,10 +152,10 @@ public:
 	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
 
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	USceneComponent* GetCameraPosition() const;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	USceneComponent* GetMuzzlePosition() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
@@ -209,24 +218,24 @@ private:
 
 
 #pragma region [ WeaponStat ] 
-public:
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponParameter GetFinalStat() const;
-
-	void UpdateFinalStat();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponParameter& GetBaseStat() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	const FWeaponBonusStat& GetFinalBonusStat() const;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	FWeaponParameter WeaponParameter{};
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	FWeaponBonusStat BonusStat{};
+	//public:
+	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	//	const FWeaponParameter GetFinalStat() const;
+	//
+	//	void UpdateFinalStat();
+	//
+	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	//	const FWeaponParameter& GetBaseStat() const;
+	//
+	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	//	const FWeaponBonusStat GetFinalBonusStat() const;
+	//
+	//protected:
+	//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
+	//	FWeaponParameter WeaponParameter{};
+	//
+	//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
+	//	FWeaponBonusStat BonusStat{};
 #pragma endregion
 
 	// Events
@@ -236,15 +245,65 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	static const float CalculateDamage(const AActor* const Target, const ABaseWeapon* const Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
+	static const float CalculateDamage(const AActor* const Target, ABaseWeapon* Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
+#pragma region [Stat System]
+	DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
+#pragma region [Method]
+public:
+	// Get weapon stat of bonus applied.
+	// Use this function if you want to get current weapon stat.
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
+	const FWeaponParameter& GetFinalStat();
+
+	// Re-calculate final stat to recent version.
+	// If now final stat is not recent version, GetFinalStat() function will call this.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Stat")
+	void UpdateFinalStat();
+
+	// Return StaticStat + DynamicStat
+	FWeaponBonusStat GetTotalBonusStat();
+
+	// Re-calculate static stat(e.g. attribute stat).
+	// It calls once on weapon is created.
+	// If you want to update static stat immediately, you can use this.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Stat")
+	void UpdateStaticStat();
+
+	// Modify dynamic stat and change stat-recent state.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Stat")
+	void ModifyDynamicStat(const FBonusStatModifier Callback);
+
+	UFUNCTION()
+	TSubclassOf<UBaseWeaponAttribute> FindAttributeClass(FName ID);
+
+	// Create and initialzie attributes by id.
+	// It calls on weapon initialize time.
+	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
+	void InitializeWeaponAttribute(TArray<FName> AttributeIDs);
+
+	// Add attribute procedure.
 protected:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
+	void AddAttribute(FName AttributeID);
+#pragma endregion
+#pragma region [Field]
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Attributes")
 	TArray<class UBaseWeaponAttribute*> AttributeArray{};
 
-	int32 AttributeSlotCapacity{};
+private:
+	bool bIsStatRecent{ false };
 
-	FWeaponBonusStat CalculateAttributeStat();
+	FWeaponBonusStat StaticStat{};
 
-	void AttachNewAttribute(TSubclassOf<class UBaseWeaponAttribute> NewAttributeClass);
+	FWeaponBonusStat DynamicStat{};
+
+	FWeaponParameter FinalStat{};
+
+	FWeaponParameter WeaponParameter{};
+
+#pragma endregion
+#pragma endregion
 };
