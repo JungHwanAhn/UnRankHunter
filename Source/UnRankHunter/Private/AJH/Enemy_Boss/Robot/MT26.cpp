@@ -33,6 +33,7 @@ AMT26::AMT26()
 	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
 
 	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AMT26::BeginPlay()
