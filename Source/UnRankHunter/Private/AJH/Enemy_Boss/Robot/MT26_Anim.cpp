@@ -22,9 +22,21 @@ UMT26_Anim::UMT26_Anim()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		LaserBeam_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_LaserBeam.AJH_AM_MT26_LaserBeam'"));
+		LaserBeam_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_LaserBeam.AJH_AM_MT26_LaserBeam'"));
 	if (LaserBeam_Montage.Succeeded()) {
 		LaserBeamMontage = LaserBeam_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		LaserShot_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_LaserShot.AJH_AM_MT26_LaserShot'"));
+	if (LaserShot_Montage.Succeeded()) {
+		LaserShotMontage = LaserShot_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		MultiLaserShot_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_MultiLaserShot.AJH_AM_MT26_MultiLaserShot'"));
+	if (MultiLaserShot_Montage.Succeeded()) {
+		MultiLaserShotMontage = MultiLaserShot_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
@@ -32,10 +44,6 @@ UMT26_Anim::UMT26_Anim()
 	if (Die_Montage.Succeeded()) {
 		DieMontage = Die_Montage.Object;
 	}
-}
-
-void UMT26_Anim::Attack()
-{
 }
 
 void UMT26_Anim::EnergyBall()
@@ -56,6 +64,16 @@ void UMT26_Anim::ShellingToPlayer()
 void UMT26_Anim::LaserBeam()
 {
 	Montage_Play(LaserBeamMontage);
+}
+
+void UMT26_Anim::LaserShot()
+{
+	Montage_Play(LaserShotMontage);
+}
+
+void UMT26_Anim::MultiLaserShot()
+{
+	Montage_Play(MultiLaserShotMontage);
 }
 
 void UMT26_Anim::Die()

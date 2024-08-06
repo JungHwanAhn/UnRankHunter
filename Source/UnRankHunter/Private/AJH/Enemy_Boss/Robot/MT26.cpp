@@ -46,20 +46,6 @@ void AMT26::BeginPlay()
 	if (!AIController) return;
 }
 
-void AMT26::Attack()
-{
-	if (!bIsEnemyDie) {
-		Super::Attack();
-
-		damage = 30.0f;
-
-		MT26Anim->Attack();
-
-		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
-		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
-	}
-}
-
 void AMT26::EnergyBall()
 {
 	if (!bIsEnemyDie) {
@@ -96,8 +82,45 @@ void AMT26::LaserBeam()
 {
 	if (!bIsEnemyDie) {
 		MT26Anim->LaserBeam();
+		AIController->bIsLaserAttack = true;
+		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+		if (PlayerLocation.Y >= 4500.0f) {
+			AimToValue(18000.0f, "LaserBeam");
+		}
+		else {
+			AimToValue(-22000.0f, "LaserBeam");
+		}
 
-		AimToValue(20000.0f, "LaserBeam");
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::LaserShot()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->LaserShot();
+
+		AimToValue(7050.0f, "LaserShot");
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::MultiLaserShot()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->MultiLaserShot();
+
+		AIController->bIsLaserAttack = true;
+		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+		if (PlayerLocation.Y >= 4500.0f) {
+			AimToValue(18000.0f, "LaserBeam");
+		}
+		else {
+			AimToValue(-22000.0f, "LaserBeam");
+		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

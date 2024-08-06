@@ -13,10 +13,12 @@ public:
 	AMT26();
 
 	virtual void BeginPlay() override;
-	virtual void Attack() override;
 	void EnergyBall();
 	void Shelling();
 	void ShellingToPlayer();
+	void LaserBeam();
+	void LaserShot(); 
+	void MultiLaserShot();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void SpawnShelling();
@@ -27,14 +29,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void ReturnAim(float location_Y);
 
-	void LaserBeam();
-
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
 	virtual void OnCollisionStart_Implementation() override;
 	virtual void OnCollisionEnd_Implementation() override;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	class AAIController_Boss* AIController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arrow")
