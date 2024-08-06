@@ -24,6 +24,7 @@ enum class EWeaponType : uint8
 	Sniper_0,
 	MachineGun_0,
 	Pistol_0,
+	RocketLauncher_0
 };
 
 // This class does not need to be modified.
