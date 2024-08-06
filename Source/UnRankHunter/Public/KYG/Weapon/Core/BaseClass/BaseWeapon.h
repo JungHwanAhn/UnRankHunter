@@ -152,10 +152,10 @@ public:
 	bool ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 Cost, bool bFailOnLess = false);
 
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	USceneComponent* GetCameraPosition() const;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	USceneComponent* GetMuzzlePosition() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")

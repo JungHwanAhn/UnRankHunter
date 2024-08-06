@@ -22,11 +22,11 @@ ABaseWeapon::ABaseWeapon()
 	auto RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRootComponent"));
 	SetRootComponent(RootComp);
 
-	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
-	MuzzlePositionComponent->SetupAttachment(RootComponent);
-
 	MeshActorComp = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponMeshActor"));
 	MeshActorComp->SetupAttachment(RootComponent);
+
+	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
+	MuzzlePositionComponent->SetupAttachment(MeshActorComp);
 }
 
 // Called when the game starts or when spawned

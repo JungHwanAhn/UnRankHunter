@@ -6,12 +6,17 @@
 #include "UObject/NoExportTypes.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
+#include "Enums/ItemRarity.h"
 #include "BaseWeaponAttribute.generated.h"
 
+UENUM(BlueprintType)
+enum class EAttributeDataType
+{
+	Float,
+	Integer,
+	Percent,
+};
 
-/**
- *
- */
 UCLASS(Abstract, BlueprintType)
 class UNRANKHUNTER_API UBaseWeaponAttribute : public UObject
 {
@@ -42,11 +47,12 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Attribute")
-	FName AttributeID;
+	FName AttributeID{};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Attribute")
-	FWeaponBonusStat BonusStat;
+	FWeaponBonusStat BonusStat{};
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon Attribute")
-	class ABaseWeapon* ParentWeapon;
+	class ABaseWeapon* ParentWeapon{};
+
 };
