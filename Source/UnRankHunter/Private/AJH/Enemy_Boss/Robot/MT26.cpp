@@ -33,7 +33,6 @@ AMT26::AMT26()
 	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
 
 	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AMT26::BeginPlay()
@@ -52,7 +51,17 @@ void AMT26::EnergyBall()
 	if (!bIsEnemyDie) {
 		MT26Anim->EnergyBall();
 
-		AimToValue(7050.0f, "EnergyBall");
+		AimToValue(-7050.0f, "SingleShot");
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::PlazmaArea()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->PlazmaArea();
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -85,11 +94,11 @@ void AMT26::LaserBeam()
 		MT26Anim->LaserBeam();
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 4500.0f) {
-			AimToValue(18000.0f, "LaserBeam");
+		if (PlayerLocation.Y >= 0.0f) {
+			AimToValue(16000.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-22000.0f, "LaserBeam");
+			AimToValue(-24000.0f, "AllPlace");
 		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -102,7 +111,7 @@ void AMT26::LaserShot()
 	if (!bIsEnemyDie) {
 		MT26Anim->LaserShot();
 
-		AimToValue(7050.0f, "LaserShot");
+		AimToValue(-7050.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -116,12 +125,24 @@ void AMT26::MultiLaserShot()
 
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 4500.0f) {
-			AimToValue(18000.0f, "LaserBeam");
+		if (PlayerLocation.Y >= 0.0f) {
+			AimToValue(16000.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-22000.0f, "LaserBeam");
+			AimToValue(-24000.0f, "AllPlace");
 		}
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::HomingRocket()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->HomingRocket();
+
+		AimToValue(-7050.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

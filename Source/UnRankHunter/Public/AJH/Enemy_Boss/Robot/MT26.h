@@ -14,14 +14,19 @@ public:
 
 	virtual void BeginPlay() override;
 	void EnergyBall();
+	void PlazmaArea();
 	void Shelling();
 	void ShellingToPlayer();
 	void LaserBeam();
 	void LaserShot(); 
 	void MultiLaserShot();
+	void HomingRocket();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void SpawnShelling();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void SpawnPlazmaArea();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable , Category = "CPP Function")
 	void AimToValue(float location_Y, FName Pattern);

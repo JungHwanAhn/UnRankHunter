@@ -67,9 +67,9 @@ void AAIController_Boss::Tick(float DeltaSeconds)
 {
 	if (!ControlledPawn->bIsEnemyDie && ControlledPawn) {
 		if (Player) {
-			FVector AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
+			AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
 			if (bIsLaserAttack) {
-				AdjustedPlayerLocation.Y = enemyRotator_Y + 4500.0f;
+				AdjustedPlayerLocation.Y = enemyRotator_Y;
 			}
 			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
 		}

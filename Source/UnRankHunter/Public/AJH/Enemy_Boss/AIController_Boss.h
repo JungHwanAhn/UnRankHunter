@@ -23,6 +23,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsLaserAttack = false;
+	
+	UPROPERTY(BlueprintReadOnly)
+	FVector AdjustedPlayerLocation;
 
 private:
 	virtual void Tick(float DeltaSeconds) override;

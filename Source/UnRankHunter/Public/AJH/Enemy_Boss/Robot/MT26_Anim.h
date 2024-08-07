@@ -12,11 +12,13 @@ class UNRANKHUNTER_API UMT26_Anim : public UAnimInstance
 public:
 	UMT26_Anim();
 	void EnergyBall();
+	void PlazmaArea();
 	void Shelling();
 	void ShellingToPlayer();
 	void LaserBeam();
 	void LaserShot();
 	void MultiLaserShot();
+	void HomingRocket();
 	void Die();
 
 protected:
@@ -31,10 +33,16 @@ private:
 	UAnimMontage* EnergyBallMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* PlazmaAreaMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* ShellingMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* ShellingToPlayerMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* HomingRocketMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* LaserBeamMontage;
