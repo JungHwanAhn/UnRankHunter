@@ -18,6 +18,12 @@ public:
 
 	static const FName TargetKey;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float enemyRotator_Y = 1500.0f;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsLaserAttack = false;
+
 private:
 	virtual void Tick(float DeltaSeconds) override;
 
