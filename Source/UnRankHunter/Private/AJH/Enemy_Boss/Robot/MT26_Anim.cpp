@@ -4,21 +4,39 @@
 UMT26_Anim::UMT26_Anim()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		EnergyBall_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_EnergyBall.AJH_AM_MT26_EnergyBall'"));
+		EnergyBall_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_EnergyBall.AJH_AM_MT26_EnergyBall'"));
 	if (EnergyBall_Montage.Succeeded()) {
 		EnergyBallMontage = EnergyBall_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		Shelling_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_Shelling.AJH_AM_MT26_Shelling'"));
+		PlazmaArea_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_PlazmaArea.AJH_AM_MT26_PlazmaArea'"));
+	if (PlazmaArea_Montage.Succeeded()) {
+		PlazmaAreaMontage = PlazmaArea_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		PlazmaToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_PlazmaToPlayer.AJH_AM_MT26_PlazmaToPlayer'"));
+	if (PlazmaToPlayer_Montage.Succeeded()) {
+		PlazmaToPlayerMontage = PlazmaToPlayer_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		Shelling_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_Shelling.AJH_AM_MT26_Shelling'"));
 	if (Shelling_Montage.Succeeded()) {
 		ShellingMontage = Shelling_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		ShellingToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_ShellingToPlayer.AJH_AM_MT26_ShellingToPlayer'"));
+		ShellingToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_ShellingToPlayer.AJH_AM_MT26_ShellingToPlayer'"));
 	if (ShellingToPlayer_Montage.Succeeded()) {
 		ShellingToPlayerMontage = ShellingToPlayer_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		HomingRocket_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_HomingRocket.AJH_AM_MT26_HomingRocket'"));
+	if (HomingRocket_Montage.Succeeded()) {
+		HomingRocketMontage = HomingRocket_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
@@ -40,6 +58,12 @@ UMT26_Anim::UMT26_Anim()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		ChangeForm_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_ChangeForm.AJH_AM_MT26_ChangeForm'"));
+	if (ChangeForm_Montage.Succeeded()) {
+		ChangeFormMontage = ChangeForm_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
 		Die_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_Die.AJH_AM_MT26_Die'"));
 	if (Die_Montage.Succeeded()) {
 		DieMontage = Die_Montage.Object;
@@ -49,6 +73,16 @@ UMT26_Anim::UMT26_Anim()
 void UMT26_Anim::EnergyBall()
 {
 	Montage_Play(EnergyBallMontage);
+}
+
+void UMT26_Anim::PlazmaArea()
+{
+	Montage_Play(PlazmaAreaMontage);
+}
+
+void UMT26_Anim::PlazmaToPlayer()
+{
+	Montage_Play(PlazmaToPlayerMontage);
 }
 
 void UMT26_Anim::Shelling()
@@ -74,6 +108,16 @@ void UMT26_Anim::LaserShot()
 void UMT26_Anim::MultiLaserShot()
 {
 	Montage_Play(MultiLaserShotMontage);
+}
+
+void UMT26_Anim::HomingRocket()
+{
+	Montage_Play(HomingRocketMontage);
+}
+
+void UMT26_Anim::ChangeForm()
+{
+	Montage_Play(ChangeFormMontage);
 }
 
 void UMT26_Anim::Die()
