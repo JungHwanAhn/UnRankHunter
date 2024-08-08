@@ -68,6 +68,16 @@ void AMT26::PlazmaArea()
 	}
 }
 
+void AMT26::PlazmaToPlayer()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->PlazmaToPlayer();
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
 void AMT26::Shelling()
 {
 	if (!bIsEnemyDie) {
@@ -143,6 +153,16 @@ void AMT26::HomingRocket()
 		MT26Anim->HomingRocket();
 
 		AimToValue(-7050.0f, "SingleShot");
+
+		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
+		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMT26::ChangeForm()
+{
+	if (!bIsEnemyDie) {
+		MT26Anim->ChangeForm();
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

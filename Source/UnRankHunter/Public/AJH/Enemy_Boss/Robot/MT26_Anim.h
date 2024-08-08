@@ -13,12 +13,14 @@ public:
 	UMT26_Anim();
 	void EnergyBall();
 	void PlazmaArea();
+	void PlazmaToPlayer();
 	void Shelling();
 	void ShellingToPlayer();
 	void LaserBeam();
 	void LaserShot();
 	void MultiLaserShot();
 	void HomingRocket();
+	void ChangeForm();
 	void Die();
 
 protected:
@@ -34,6 +36,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* PlazmaAreaMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* PlazmaToPlayerMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* ShellingMontage;
@@ -52,6 +57,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* MultiLaserShotMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* ChangeFormMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;

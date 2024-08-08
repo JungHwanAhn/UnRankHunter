@@ -15,12 +15,14 @@ public:
 	virtual void BeginPlay() override;
 	void EnergyBall();
 	void PlazmaArea();
+	void PlazmaToPlayer();
 	void Shelling();
 	void ShellingToPlayer();
 	void LaserBeam();
 	void LaserShot(); 
 	void MultiLaserShot();
 	void HomingRocket();
+	void ChangeForm();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void SpawnShelling();
@@ -34,6 +36,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void ReturnAim(float location_Y);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "CPP Function")
+	void ChangeColor(FName Form);
+
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
 	virtual void OnCollisionStart_Implementation() override;
@@ -46,6 +51,7 @@ public:
 	class UArrowComponent* ShotDirection;
 
 	float chargingLocation = 0.0f;
+	bool bIsInitForm = false;
 
 private:
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) override;
