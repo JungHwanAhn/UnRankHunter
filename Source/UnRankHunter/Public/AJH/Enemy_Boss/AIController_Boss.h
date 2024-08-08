@@ -17,6 +17,11 @@ public:
 	void StartAI();
 
 	static const FName TargetKey;
+	static const FName FormKey;
+	static const FName bIsPlazmaAreaKey;
+	static const FName bIsChangeFormKey;
+	static const FName MaxPatternCountKey;
+	static const FName RandomPatternKey;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float enemyRotator_Y = 1500.0f;

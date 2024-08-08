@@ -7,6 +7,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 const FName AAIController_Boss::TargetKey(TEXT("Target"));
+const FName AAIController_Boss::FormKey(TEXT("Form"));
+const FName AAIController_Boss::bIsPlazmaAreaKey(TEXT("bIsPlazmaArea"));
+const FName AAIController_Boss::bIsChangeFormKey(TEXT("bIsChangeForm"));
+const FName AAIController_Boss::MaxPatternCountKey(TEXT("MaxPatternCount"));
+const FName AAIController_Boss::RandomPatternKey(TEXT("RandomPattern"));
 
 AAIController_Boss::AAIController_Boss()
 {
