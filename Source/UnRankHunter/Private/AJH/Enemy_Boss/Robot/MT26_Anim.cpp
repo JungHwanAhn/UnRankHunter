@@ -132,13 +132,3 @@ void UMT26_Anim::NativeInitializeAnimation()
 	Owner = TryGetPawnOwner();
 	MT26 = Cast<AMT26>(Owner);
 }
-
-void UMT26_Anim::NativeUpdateAnimation(float DeltaSeconds)
-{
-	Super::NativeUpdateAnimation(DeltaSeconds);
-	
-	if (MT26) {
-		velocity = MT26->GetVelocity();
-		speed = velocity.Size2D();
-	}
-}
