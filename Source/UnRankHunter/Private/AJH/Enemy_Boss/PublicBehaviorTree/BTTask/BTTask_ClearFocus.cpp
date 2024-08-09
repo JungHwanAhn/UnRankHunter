@@ -1,6 +1,5 @@
 #include "BTTask_ClearFocus.h"
-#include "AIController_Boss.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include "AIController_MT26.h"
 
 UBTTask_ClearFocus::UBTTask_ClearFocus()
 {

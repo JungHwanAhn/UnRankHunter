@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "AIController_Boss.generated.h"
+#include "AIController_MT26.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API AAIController_Boss : public AAIController
+class UNRANKHUNTER_API AAIController_MT26 : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
-	AAIController_Boss();
+	AAIController_MT26();
 
 	virtual void OnPossess(APawn* InPawn) override;
 	void StopAI();
@@ -28,7 +28,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsLaserAttack = false;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	FVector AdjustedPlayerLocation;
 
@@ -42,5 +42,5 @@ private:
 	class UBlackboardData* BBEnemy;
 
 	class AActor* Player;
-	class ABaseEnemy_Common* ControlledPawn;
+	class AMT26* MT26;
 };

@@ -1,6 +1,6 @@
 #include "BTService_ChangeForm.h"
 #include "MT26.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTService_ChangeForm::UBTService_ChangeForm()
@@ -22,30 +22,30 @@ void UBTService_ChangeForm::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 			return;
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Init"));
-		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_Boss::bIsChangeFormKey, true);
-		OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_Boss::MaxPatternCountKey, 2);
-		OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_Boss::FormKey, FName(TEXT("Laser")));
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_MT26::bIsChangeFormKey, true);
+		OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MT26::MaxPatternCountKey, 2);
+		OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_MT26::FormKey, FName(TEXT("Laser")));
 	}
 
 	timeElapsed += DeltaSeconds;
 
 	if (timeElapsed >= changeFormTime) {
 		timeElapsed = 0.0f;
-		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_Boss::bIsChangeFormKey, true);
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_MT26::bIsChangeFormKey, true);
 
-		FName CurrentForm = OwnerComp.GetBlackboardComponent()->GetValueAsName(AAIController_Boss::FormKey);
+		FName CurrentForm = OwnerComp.GetBlackboardComponent()->GetValueAsName(AAIController_MT26::FormKey);
 
 		if (CurrentForm == FName(TEXT("Laser"))) {
-			OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_Boss::bIsPlazmaAreaKey, true);
-			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_Boss::FormKey, FName(TEXT("Plazma")));
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_MT26::bIsPlazmaAreaKey, true);
+			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_MT26::FormKey, FName(TEXT("Plazma")));
 		}
 		else if (CurrentForm == FName(TEXT("Plazma"))) {
-			OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_Boss::MaxPatternCountKey, 1);
-			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_Boss::FormKey, FName(TEXT("Rocket")));
+			OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MT26::MaxPatternCountKey, 1);
+			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_MT26::FormKey, FName(TEXT("Rocket")));
 		}
 		else if (CurrentForm == FName(TEXT("Rocket"))) {
-			OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_Boss::MaxPatternCountKey, 2);
-			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_Boss::FormKey, FName(TEXT("Laser")));
+			OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MT26::MaxPatternCountKey, 2);
+			OwnerComp.GetBlackboardComponent()->SetValueAsName(AAIController_MT26::FormKey, FName(TEXT("Laser")));
 		}
 		else {
 			UE_LOG(LogTemp, Warning, TEXT("Form Key is not valid"));

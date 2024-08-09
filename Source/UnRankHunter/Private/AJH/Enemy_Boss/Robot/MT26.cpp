@@ -1,8 +1,7 @@
 #include "MT26.h"
 #include "MT26_Anim.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 #include "Components/ArrowComponent.h"
-#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -10,7 +9,7 @@ AMT26::AMT26()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Boss::StaticClass();
+	AIControllerClass = AAIController_MT26::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		MT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
@@ -42,7 +41,7 @@ void AMT26::BeginPlay()
 	MT26Anim = Cast<UMT26_Anim>(GetMesh()->GetAnimInstance());
 	if (!MT26Anim) return;
 
-	AIController = Cast<AAIController_Boss>(GetController());
+	AIController = Cast<AAIController_MT26>(GetController());
 	if (!AIController) return;
 }
 

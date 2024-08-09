@@ -1,19 +1,19 @@
-#include "AIController_Boss.h"
-#include "BaseEnemy_Common.h"
+#include "AIController_MT26.h"
+#include "MT26.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-const FName AAIController_Boss::TargetKey(TEXT("Target"));
-const FName AAIController_Boss::FormKey(TEXT("Form"));
-const FName AAIController_Boss::bIsPlazmaAreaKey(TEXT("bIsPlazmaArea"));
-const FName AAIController_Boss::bIsChangeFormKey(TEXT("bIsChangeForm"));
-const FName AAIController_Boss::MaxPatternCountKey(TEXT("MaxPatternCount"));
-const FName AAIController_Boss::RandomPatternKey(TEXT("RandomPattern"));
+const FName AAIController_MT26::TargetKey(TEXT("Target"));
+const FName AAIController_MT26::FormKey(TEXT("Form"));
+const FName AAIController_MT26::bIsPlazmaAreaKey(TEXT("bIsPlazmaArea"));
+const FName AAIController_MT26::bIsChangeFormKey(TEXT("bIsChangeForm"));
+const FName AAIController_MT26::MaxPatternCountKey(TEXT("MaxPatternCount"));
+const FName AAIController_MT26::RandomPatternKey(TEXT("RandomPattern"));
 
-AAIController_Boss::AAIController_Boss()
+AAIController_MT26::AAIController_MT26()
 {
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree>
 		BTObject(TEXT("BehaviorTree'/Game/01_Core/AJH/Enemy/Robot/Boss/BehaviorTree/AJH_BT_MT26.AJH_BT_MT26'"));
@@ -28,11 +28,11 @@ AAIController_Boss::AAIController_Boss()
 	}
 }
 
-void AAIController_Boss::OnPossess(APawn* InPawn)
+void AAIController_MT26::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ControlledPawn = Cast<ABaseEnemy_Common>(InPawn);
+	MT26 = Cast<AMT26>(InPawn);
 
 	UBlackboardComponent* BlackboardComp = Blackboard;
 	if (UseBlackboard(BBEnemy, BlackboardComp)) {
@@ -52,7 +52,7 @@ void AAIController_Boss::OnPossess(APawn* InPawn)
 	}
 }
 
-void AAIController_Boss::StopAI()
+void AAIController_MT26::StopAI()
 {
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
 	if (BehaviorTreeComponent) {
@@ -60,7 +60,7 @@ void AAIController_Boss::StopAI()
 	}
 }
 
-void AAIController_Boss::StartAI()
+void AAIController_MT26::StartAI()
 {
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
 	if (BehaviorTreeComponent) {
@@ -68,15 +68,15 @@ void AAIController_Boss::StartAI()
 	}
 }
 
-void AAIController_Boss::Tick(float DeltaSeconds)
+void AAIController_MT26::Tick(float DeltaSeconds)
 {
-	if (!ControlledPawn->bIsEnemyDie && ControlledPawn) {
+	if (!MT26->bIsEnemyDie && MT26) {
 		if (Player) {
 			AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
 			if (bIsLaserAttack) {
 				AdjustedPlayerLocation.Y = enemyRotator_Y;
 			}
-			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
+			MT26->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(MT26->GetActorLocation(), AdjustedPlayerLocation));
 		}
 	}
 }
