@@ -4,7 +4,7 @@
 
 UBTTask_ChargingShot::UBTTask_ChargingShot()
 {
-	NodeName = TEXT("ChargingShot");
+	NodeName = TEXT("EnergyBall");
 	bNotifyTick = true;
 	bIsAttacking = false;
 }
@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_ChargingShot::ExecuteTask(UBehaviorTreeComponent& Ow
 		return EBTNodeResult::Failed;
 	}
 
-	MT26->ChargingShot();
+	MT26->EnergyBall();
 	bIsAttacking = true;
 
 	MT26->OnAttackEnd.RemoveDynamic(this, &UBTTask_ChargingShot::OnAttackEnd);

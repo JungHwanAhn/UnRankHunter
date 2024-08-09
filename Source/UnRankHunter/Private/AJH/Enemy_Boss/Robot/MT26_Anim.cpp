@@ -4,21 +4,63 @@
 UMT26_Anim::UMT26_Anim()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		ChargingShot_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_ChargingShot.AJH_AM_MT26_ChargingShot'"));
-	if (ChargingShot_Montage.Succeeded()) {
-		ChargingShotMontage = ChargingShot_Montage.Object;
+		EnergyBall_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_EnergyBall.AJH_AM_MT26_EnergyBall'"));
+	if (EnergyBall_Montage.Succeeded()) {
+		EnergyBallMontage = EnergyBall_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		Shelling_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_Shelling.AJH_AM_MT26_Shelling'"));
+		PlazmaArea_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_PlazmaArea.AJH_AM_MT26_PlazmaArea'"));
+	if (PlazmaArea_Montage.Succeeded()) {
+		PlazmaAreaMontage = PlazmaArea_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		PlazmaToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MT26_PlazmaToPlayer.AJH_AM_MT26_PlazmaToPlayer'"));
+	if (PlazmaToPlayer_Montage.Succeeded()) {
+		PlazmaToPlayerMontage = PlazmaToPlayer_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		Shelling_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_Shelling.AJH_AM_MT26_Shelling'"));
 	if (Shelling_Montage.Succeeded()) {
 		ShellingMontage = Shelling_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-		ShellingToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_ShellingToPlayer.AJH_AM_MT26_ShellingToPlayer'"));
+		ShellingToPlayer_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_ShellingToPlayer.AJH_AM_MT26_ShellingToPlayer'"));
 	if (ShellingToPlayer_Montage.Succeeded()) {
 		ShellingToPlayerMontage = ShellingToPlayer_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		HomingRocket_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Shelling/AJH_AM_MT26_HomingRocket.AJH_AM_MT26_HomingRocket'"));
+	if (HomingRocket_Montage.Succeeded()) {
+		HomingRocketMontage = HomingRocket_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		LaserBeam_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_LaserBeam.AJH_AM_MT26_LaserBeam'"));
+	if (LaserBeam_Montage.Succeeded()) {
+		LaserBeamMontage = LaserBeam_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		LaserShot_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_LaserShot.AJH_AM_MT26_LaserShot'"));
+	if (LaserShot_Montage.Succeeded()) {
+		LaserShotMontage = LaserShot_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		MultiLaserShot_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Laser/AJH_AM_MT26_MultiLaserShot.AJH_AM_MT26_MultiLaserShot'"));
+	if (MultiLaserShot_Montage.Succeeded()) {
+		MultiLaserShotMontage = MultiLaserShot_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		ChangeForm_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_ChangeForm.AJH_AM_MT26_ChangeForm'"));
+	if (ChangeForm_Montage.Succeeded()) {
+		ChangeFormMontage = ChangeForm_Montage.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
@@ -28,13 +70,19 @@ UMT26_Anim::UMT26_Anim()
 	}
 }
 
-void UMT26_Anim::Attack()
+void UMT26_Anim::EnergyBall()
 {
+	Montage_Play(EnergyBallMontage);
 }
 
-void UMT26_Anim::ChargingShot()
+void UMT26_Anim::PlazmaArea()
 {
-	Montage_Play(ChargingShotMontage);
+	Montage_Play(PlazmaAreaMontage);
+}
+
+void UMT26_Anim::PlazmaToPlayer()
+{
+	Montage_Play(PlazmaToPlayerMontage);
 }
 
 void UMT26_Anim::Shelling()
@@ -45,6 +93,31 @@ void UMT26_Anim::Shelling()
 void UMT26_Anim::ShellingToPlayer()
 {
 	Montage_Play(ShellingToPlayerMontage);
+}
+
+void UMT26_Anim::LaserBeam()
+{
+	Montage_Play(LaserBeamMontage);
+}
+
+void UMT26_Anim::LaserShot()
+{
+	Montage_Play(LaserShotMontage);
+}
+
+void UMT26_Anim::MultiLaserShot()
+{
+	Montage_Play(MultiLaserShotMontage);
+}
+
+void UMT26_Anim::HomingRocket()
+{
+	Montage_Play(HomingRocketMontage);
+}
+
+void UMT26_Anim::ChangeForm()
+{
+	Montage_Play(ChangeFormMontage);
 }
 
 void UMT26_Anim::Die()

@@ -11,10 +11,16 @@ class UNRANKHUNTER_API UMT26_Anim : public UAnimInstance
 	
 public:
 	UMT26_Anim();
-	void Attack();
-	void ChargingShot();
+	void EnergyBall();
+	void PlazmaArea();
+	void PlazmaToPlayer();
 	void Shelling();
 	void ShellingToPlayer();
+	void LaserBeam();
+	void LaserShot();
+	void MultiLaserShot();
+	void HomingRocket();
+	void ChangeForm();
 	void Die();
 
 protected:
@@ -26,16 +32,34 @@ private:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
+	UAnimMontage* EnergyBallMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
-	UAnimMontage* ChargingShotMontage;
+	UAnimMontage* PlazmaAreaMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* PlazmaToPlayerMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* ShellingMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* ShellingToPlayerMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* HomingRocketMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* LaserBeamMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* LaserShotMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* MultiLaserShotMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* ChangeFormMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;

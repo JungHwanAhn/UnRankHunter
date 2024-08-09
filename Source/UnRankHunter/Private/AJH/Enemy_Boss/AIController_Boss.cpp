@@ -7,6 +7,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 const FName AAIController_Boss::TargetKey(TEXT("Target"));
+const FName AAIController_Boss::FormKey(TEXT("Form"));
+const FName AAIController_Boss::bIsPlazmaAreaKey(TEXT("bIsPlazmaArea"));
+const FName AAIController_Boss::bIsChangeFormKey(TEXT("bIsChangeForm"));
+const FName AAIController_Boss::MaxPatternCountKey(TEXT("MaxPatternCount"));
+const FName AAIController_Boss::RandomPatternKey(TEXT("RandomPattern"));
 
 AAIController_Boss::AAIController_Boss()
 {
@@ -31,7 +36,7 @@ void AAIController_Boss::OnPossess(APawn* InPawn)
 
 	UBlackboardComponent* BlackboardComp = Blackboard;
 	if (UseBlackboard(BBEnemy, BlackboardComp)) {
-		Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		if (Player) {
 			BlackboardComp->SetValueAsObject(TargetKey, Player);
 		}
@@ -50,7 +55,7 @@ void AAIController_Boss::OnPossess(APawn* InPawn)
 void AAIController_Boss::StopAI()
 {
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
-	if (!BehaviorTreeComponent) {
+	if (BehaviorTreeComponent) {
 		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
 	}
 }
@@ -58,15 +63,20 @@ void AAIController_Boss::StopAI()
 void AAIController_Boss::StartAI()
 {
 	auto BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
-	if (!BehaviorTreeComponent) {
+	if (BehaviorTreeComponent) {
 		BehaviorTreeComponent->StartTree(*this->BTEnemy, EBTExecutionMode::Looped);
 	}
 }
 
 void AAIController_Boss::Tick(float DeltaSeconds)
 {
-	if (!ControlledPawn->bIsEnemyDie) {
-		FVector AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, 0.0f, -13000.0f);
-		ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
+	if (!ControlledPawn->bIsEnemyDie && ControlledPawn) {
+		if (Player) {
+			AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
+			if (bIsLaserAttack) {
+				AdjustedPlayerLocation.Y = enemyRotator_Y;
+			}
+			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
+		}
 	}
 }

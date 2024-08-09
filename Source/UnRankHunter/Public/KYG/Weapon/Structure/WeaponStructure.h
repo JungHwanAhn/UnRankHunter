@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Enums/ItemRarity.h"
 #include "WeaponStructure.generated.h"
 
 
@@ -148,6 +149,20 @@ struct FWeaponAttributeRow : public FTableRowBase
 	TSubclassOf<class UBaseWeaponAttribute> AttributeClass{};
 };
 
+USTRUCT(BlueprintType, meta=(DisableSplitPin))
+struct FVirtualWeaponInstance
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName WeaponID{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EItemRarity> Rarity{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FName> AttributeIDs{};
+};
 
 class UNRANKHUNTER_API WeaponStructure
 {
