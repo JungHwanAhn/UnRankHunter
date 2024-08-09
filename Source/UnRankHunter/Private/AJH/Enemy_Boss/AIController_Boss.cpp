@@ -7,6 +7,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 const FName AAIController_Boss::TargetKey(TEXT("Target"));
+const FName AAIController_Boss::FormKey(TEXT("Form"));
+const FName AAIController_Boss::bIsPlazmaAreaKey(TEXT("bIsPlazmaArea"));
+const FName AAIController_Boss::bIsChangeFormKey(TEXT("bIsChangeForm"));
+const FName AAIController_Boss::MaxPatternCountKey(TEXT("MaxPatternCount"));
+const FName AAIController_Boss::RandomPatternKey(TEXT("RandomPattern"));
 
 AAIController_Boss::AAIController_Boss()
 {
@@ -67,9 +72,9 @@ void AAIController_Boss::Tick(float DeltaSeconds)
 {
 	if (!ControlledPawn->bIsEnemyDie && ControlledPawn) {
 		if (Player) {
-			FVector AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
+			AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
 			if (bIsLaserAttack) {
-				AdjustedPlayerLocation.Y = enemyRotator_Y + 4500.0f;
+				AdjustedPlayerLocation.Y = enemyRotator_Y;
 			}
 			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), AdjustedPlayerLocation));
 		}
