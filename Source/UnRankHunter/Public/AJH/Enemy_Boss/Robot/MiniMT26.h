@@ -2,42 +2,22 @@
 
 #include "CoreMinimal.h"
 #include "BaseEnemy_Common.h"
-#include "MT26.generated.h"
+#include "MiniMT26.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API AMT26 : public ABaseEnemy_Common
+class UNRANKHUNTER_API AMiniMT26 : public ABaseEnemy_Common
 {
 	GENERATED_BODY()
 	
 public:
-	AMT26();
+	AMiniMT26();
 
 	virtual void BeginPlay() override;
 	void EnergyBall();
-	void PlazmaArea();
-	void PlazmaToPlayer();
 	void Shelling();
 	void ShellingToPlayer();
-	void LaserBeam();
-	void LaserShot(); 
-	void MultiLaserShot();
+	void LaserShot();
 	void HomingRocket();
-	void ChangeForm();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
-	void SpawnShelling();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
-	void SpawnPlazmaArea();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable , Category = "CPP Function")
-	void AimToValue(float location_Y, FName Pattern);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
-	void ReturnAim(float location_Y);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "CPP Function")
-	void ChangeColor(FName Form);
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
@@ -45,12 +25,10 @@ public:
 	virtual void OnCollisionEnd_Implementation() override;
 
 	UPROPERTY(BlueprintReadWrite)
-	class AAIController_MT26* AIController;
+	class AAIController_MiniMT26* AIController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arrow")
 	class UArrowComponent* ShotDirection;
-
-	bool bIsInitForm = false;
 
 private:
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) override;
@@ -58,7 +36,7 @@ private:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void EnemyDie() override;
 
-	class UMT26_Anim* MT26Anim;
+	class UMiniMT26_Anim* MiniMT26Anim;
 
-	float mt26HP = 200;
+	float miniMT26HP = 200;
 };

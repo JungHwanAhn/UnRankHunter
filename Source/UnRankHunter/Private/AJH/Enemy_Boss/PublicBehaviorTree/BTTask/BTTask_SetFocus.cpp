@@ -1,5 +1,5 @@
 #include "BTTask_SetFocus.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_SetFocus::UBTTask_SetFocus()
@@ -17,7 +17,7 @@ EBTNodeResult::Type UBTTask_SetFocus::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		if (!ControlledPawn) {
 			return EBTNodeResult::Failed;
 		}
-		AActor* Player = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AAIController_Boss::TargetKey));
+		AActor* Player = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AAIController_MT26::TargetKey));
 		if (!Player) {
 			return EBTNodeResult::Failed;
 		}
