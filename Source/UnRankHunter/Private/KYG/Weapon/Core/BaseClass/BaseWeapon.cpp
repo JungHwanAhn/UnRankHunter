@@ -600,6 +600,7 @@ void ABaseWeapon::AddAttribute(FName AttributeID)
 
 	// Initialize instance.
 	AttributeInstance->InitializeOnCreated(this);
+	AttributeInstance->EnableAttribute();
 }
 #pragma endregion
 

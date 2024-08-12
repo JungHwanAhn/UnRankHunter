@@ -185,6 +185,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AActor* WeaponParent{};
 
+public:
+	AActor* GetWeaponParent()
+	{
+		return WeaponParent;
+	}
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
 	bool bUseWeaponTick{ false };
@@ -224,7 +230,7 @@ protected:
 	TEnumAsByte<EElementalType> ElementalType{ EElementalType::None };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Elemental")
-	float ElementalValue{0.0f};
+	float ElementalValue{ 0.0f };
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Elemental")
