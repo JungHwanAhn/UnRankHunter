@@ -24,13 +24,16 @@ public:
 	static const FName RandomPatternKey;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float enemyRotator_Y = 1500.0f;
+	float enemyRotator_Y = -60.0f;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsLaserAttack = false;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector AdjustedPlayerLocation;
+	FRotator LookAtRotation;
+
+	UPROPERTY(BlueprintReadOnly)
+	float adjustedYawValue = 0.0f;
 
 private:
 	virtual void Tick(float DeltaSeconds) override;

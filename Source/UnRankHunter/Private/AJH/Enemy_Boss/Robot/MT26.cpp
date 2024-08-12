@@ -50,7 +50,7 @@ void AMT26::EnergyBall()
 	if (!bIsEnemyDie) {
 		MT26Anim->EnergyBall();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -103,11 +103,11 @@ void AMT26::LaserBeam()
 		MT26Anim->LaserBeam();
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 0.0f) {
-			AimToValue(16000.0f, "AllPlace");
+		if (PlayerLocation.X + PlayerLocation.Y >= 145000.0f) {
+			AimToValue(-42.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-24000.0f, "AllPlace");
+			AimToValue(-92.0f, "AllPlace");
 		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -120,7 +120,7 @@ void AMT26::LaserShot()
 	if (!bIsEnemyDie) {
 		MT26Anim->LaserShot();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -134,11 +134,11 @@ void AMT26::MultiLaserShot()
 
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 0.0f) {
-			AimToValue(16000.0f, "AllPlace");
+		if (PlayerLocation.X + PlayerLocation.Y >= 145000.0f) {
+			AimToValue(-42.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-24000.0f, "AllPlace");
+			AimToValue(-92.0f, "AllPlace");
 		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -151,7 +151,7 @@ void AMT26::HomingRocket()
 	if (!bIsEnemyDie) {
 		MT26Anim->HomingRocket();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

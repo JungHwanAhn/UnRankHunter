@@ -72,11 +72,14 @@ void AAIController_MT26::Tick(float DeltaSeconds)
 {
 	if (!MT26->bIsEnemyDie && MT26) {
 		if (Player) {
-			AdjustedPlayerLocation = Player->GetActorLocation() + FVector(0.0f, enemyRotator_Y, -11500.0f);
+			LookAtRotation = FRotationMatrix::MakeFromX(Player->GetActorLocation() - MT26->GetActorLocation()).Rotator();
 			if (bIsLaserAttack) {
-				AdjustedPlayerLocation.Y = enemyRotator_Y;
+				adjustedYawValue = enemyRotator_Y;
 			}
-			MT26->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(MT26->GetActorLocation(), AdjustedPlayerLocation));
+			else {
+				adjustedYawValue = LookAtRotation.Yaw + enemyRotator_Y + 55.0f;
+			}
+			MT26->SetActorRotation(FRotator(-5.0f, adjustedYawValue, 0.0f));
 		}
 	}
 }
