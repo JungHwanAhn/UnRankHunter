@@ -5,6 +5,7 @@
 #include "Weapon/Interface/WeaponInterface.h"
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "UnRankHunter/UnRankHunter.h"
 
 UACWeaponManager::UACWeaponManager()
 {
@@ -135,13 +136,14 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 {
 	if (WeaponArray.IsValidIndex(SlotIndex) == false && SlotIndex != -1)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Fail to select weapon slot. %d is out of range."), SlotIndex);
+		//UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Fail to select weapon slot. %d is out of range."), SlotIndex);
+		UH_LogTempParam(Log, TEXT("Fail to select weapon slot. %d is out of range."), SlotIndex);
 		return;
 	}
 
 	if (EquippedSlot == SlotIndex)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
+		UH_LogTempParam( Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
 		return;
 	}
 
@@ -160,7 +162,7 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 		EquippedSlot = -1;
 		EquippedWeapon = nullptr;
 
-		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
+		UH_LogTempParam(Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
 	}
 	else
 	{
@@ -169,7 +171,7 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 		{
 			IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
-			UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+			UH_LogTempParam(Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
 
 			// Change controlled weapon.
 			EquippedSlot = SlotIndex;

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UnRankHunter/UnRankHunter.h"
 #include "Components/ActorComponent.h"
 #include "ACArtifactManager.generated.h"
 
@@ -21,5 +21,18 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+private:
+	// Container of all artifact instances.
+	TArray<class UArtifactObject*> ArtifactArray;
+
+#pragma region [ Public Interface ]
+public:
+	bool AddArtifact(class UArtifactObject* ArtifactInstance);
 	
+	bool AddArtifactByID(FName ArtifactID);
+#pragma endregion
+
+public:
+private:
+	TSubclassOf<class UArtifactObject> GetArtifactClass(FName ArtifactID);
 };

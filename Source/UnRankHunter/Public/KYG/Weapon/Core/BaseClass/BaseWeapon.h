@@ -45,6 +45,7 @@ struct FWeaponFireInfo
 	int32 BulletCount{};
 };
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
 
@@ -267,7 +268,6 @@ public:
 	static const float CalculateDamage(const AActor* const Target, ABaseWeapon* Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
 #pragma region [ Stat System ]
-	DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
 #pragma region [Method]
 public:

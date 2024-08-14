@@ -1,16 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "ArtifactSystem/ArtifactObject/ArtifactObject.h"
 #include "KYG/ArtifactSystem/ArtifactManager/ACArtifactManager.h"
 
 // Sets default values for this component's properties
 UACArtifactManager::UACArtifactManager()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -19,8 +16,6 @@ void UACArtifactManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
 }
 
 
@@ -29,6 +24,41 @@ void UACArtifactManager::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	
+	for (auto item : ArtifactArray)
+	{
+		if (item->bUseTick)
+		{
+			item->Tick(DeltaTime);
+		}
+	}
+}
+
+bool UACArtifactManager::AddArtifact(UArtifactObject* ArtifactInstance)
+{
+	ArtifactArray.Add(ArtifactInstance);
+	ArtifactInstance->InitializeArtifact(GetOwner());
+
+	return false;
+}
+
+bool UACArtifactManager::AddArtifactByID(FName ArtifactID)
+{
+	TSubclassOf<class UArtifactObject> ArtifactClass = GetArtifactClass(ArtifactID);
+	if (ArtifactClass == false)
+	{
+		UH_LogTempParam(Warning, TEXT("Add Artifact is FAILURE! id %s can't find."), *ArtifactID.ToString());
+		return;
+	}
+
+
+	UArtifactObject* ArtifactInstance = NewObject<UArtifactObject>(nullptr, ArtifactClass, "UArtifactInstance");
+	AddArtifact(ArtifactInstance);
+	return false;
+}
+
+TSubclassOf<class UArtifactObject> UACArtifactManager::GetArtifactClass(FName ArtifactID)
+{
+	return nullptr;
 }
 
