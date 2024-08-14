@@ -1,6 +1,6 @@
 #include "BTTask_LaserShot.h"
 #include "MT26.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 
 UBTTask_LaserShot::UBTTask_LaserShot()
 {

@@ -2,35 +2,23 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "AIController_Boss.generated.h"
+#include "AIController_MiniMT26.generated.h"
 
 UCLASS()
-class UNRANKHUNTER_API AAIController_Boss : public AAIController
+class UNRANKHUNTER_API AAIController_MiniMT26 : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
-	AAIController_Boss();
+	AAIController_MiniMT26();
 
 	virtual void OnPossess(APawn* InPawn) override;
 	void StopAI();
 	void StartAI();
 
 	static const FName TargetKey;
-	static const FName FormKey;
-	static const FName bIsPlazmaAreaKey;
-	static const FName bIsChangeFormKey;
 	static const FName MaxPatternCountKey;
 	static const FName RandomPatternKey;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float enemyRotator_Y = 1500.0f;
-
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsLaserAttack = false;
-	
-	UPROPERTY(BlueprintReadOnly)
-	FVector AdjustedPlayerLocation;
 
 private:
 	virtual void Tick(float DeltaSeconds) override;
@@ -42,5 +30,5 @@ private:
 	class UBlackboardData* BBEnemy;
 
 	class AActor* Player;
-	class ABaseEnemy_Common* ControlledPawn;
+	class AMiniMT26* MiniMT26;
 };
