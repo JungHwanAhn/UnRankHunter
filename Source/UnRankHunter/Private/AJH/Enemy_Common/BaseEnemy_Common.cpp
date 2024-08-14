@@ -1,4 +1,5 @@
 #include "BaseEnemy_Common.h"
+#include "AIController_Range.h"
 #include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -64,9 +65,23 @@ void ABaseEnemy_Common::JumpAttack()
 {
 }
 
-void ABaseEnemy_Common::Slow(float Value)
+void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
+	float velocity;
+	if (GetController()->IsA(AAIController_Range::StaticClass())) {
+		velocity = 800.0f;
+	}
+	else {
+		velocity = 850.0f;
+	}
 	
+	if (bIsSlow) {
+		velocity *= Value;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = velocity;
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), velocity);
 }
 
 void ABaseEnemy_Common::EnemyDie()
