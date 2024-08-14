@@ -145,34 +145,40 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 		return;
 	}
 
+	ABaseWeapon* Previous = nullptr;	// Event parameter, weapon instance of before changing.
+
 	// If manager equip any weapon, Disable this weapon.
 	if (WeaponArray.IsValidIndex(GetEquippedSlot()) == true && WeaponArray[GetEquippedSlot()] != nullptr)
 	{
-		auto PreWeaponInst = WeaponArray[GetEquippedSlot()];
+		Previous = WeaponArray[GetEquippedSlot()];
 
-		IWeaponInterface::Execute_SetWeaponEnabled(PreWeaponInst, false);
+		IWeaponInterface::Execute_SetWeaponEnabled(Previous, false);
 	}
 
-	if (SlotIndex == -1)
+	if (SlotIndex == -1)	// -1 is code of disarming weapon.
 	{
 		EquippedSlot = -1;
 		EquippedWeapon = nullptr;
 
 		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to disarm."), EquippedSlot, SlotIndex);
-		return;
 	}
-
-	auto NewWeaponInst = WeaponArray[SlotIndex];
-	if (NewWeaponInst)
+	else
 	{
-		IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
+		auto NewWeaponInst = WeaponArray[SlotIndex];
+		if (NewWeaponInst)
+		{
+			IWeaponInterface::Execute_SetWeaponEnabled(NewWeaponInst, true);
 
-		UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
+			UE_LOG(LogTemp, Log, TEXT("Weapon Manager: Success to select weapon slot from %d to %d"), EquippedSlot, SlotIndex);
 
-		// Change controlled weapon.
-		EquippedSlot = SlotIndex;
-		EquippedWeapon = NewWeaponInst;
+			// Change controlled weapon.
+			EquippedSlot = SlotIndex;
+			EquippedWeapon = NewWeaponInst;
+		}
 	}
+
+	// Invoke change event.
+	OnWeaponChanged.Broadcast(this, Previous, EquippedWeapon);
 }
 
 void UACWeaponManager::ForceEquipWeaponSlot(int32 SlotIndex)
@@ -210,7 +216,7 @@ UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 
 void UACWeaponManager::SetFireInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon)
+	if (EquippedWeapon && IWeaponInterface::Execute_CanFire(this))
 	{
 		IWeaponInterface::Execute_SetFireInput(EquippedWeapon->_getUObject(), bInput);
 	}
@@ -218,7 +224,7 @@ void UACWeaponManager::SetFireInput_Implementation(bool bInput)
 
 void UACWeaponManager::SetReloadInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon)
+	if (EquippedWeapon && IWeaponInterface::Execute_CanReload(this))
 	{
 		IWeaponInterface::Execute_SetReloadInput(EquippedWeapon->_getUObject(), bInput);
 	}
@@ -226,7 +232,7 @@ void UACWeaponManager::SetReloadInput_Implementation(bool bInput)
 
 void UACWeaponManager::SetZoomInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon)
+	if (EquippedWeapon && IWeaponInterface::Execute_CanZoom(this))
 	{
 		IWeaponInterface::Execute_SetZoomInput(EquippedWeapon->_getUObject(), bInput);
 	}
