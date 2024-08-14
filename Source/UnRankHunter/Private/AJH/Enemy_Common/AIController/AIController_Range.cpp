@@ -34,6 +34,7 @@ void AAIController_Range::Tick(float DeltaSeconds)
 					moveRange = 1500.0f;
 					if (!bIsAttack) {
 						bIsAttack = true;
+						UE_LOG(LogTemp, Warning, TEXT("%f"), attackDelay);
 						FTimerHandle AttackTimerHandle;
 						FTimerDelegate AttackCD = FTimerDelegate::CreateLambda([this]() {bIsAttack = false; });
 						GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, AttackCD, attackDelay, false);
