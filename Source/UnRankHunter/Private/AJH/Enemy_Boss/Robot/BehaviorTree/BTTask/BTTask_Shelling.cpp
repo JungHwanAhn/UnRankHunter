@@ -1,6 +1,6 @@
 #include "BTTask_Shelling.h"
 #include "MT26.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 
 UBTTask_Shelling::UBTTask_Shelling()
 {

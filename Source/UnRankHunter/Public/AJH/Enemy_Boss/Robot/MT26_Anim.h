@@ -23,13 +23,8 @@ public:
 	void ChangeForm();
 	void Die();
 
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MT26 State")
-	float speed = 0.0f;
-
 private:
 	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* EnergyBallMontage;
@@ -66,6 +61,4 @@ private:
 
 	class APawn* Owner;
 	class AMT26* MT26;
-
-	FVector velocity;
 };
