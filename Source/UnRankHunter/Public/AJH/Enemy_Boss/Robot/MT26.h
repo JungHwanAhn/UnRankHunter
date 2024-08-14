@@ -45,12 +45,11 @@ public:
 	virtual void OnCollisionEnd_Implementation() override;
 
 	UPROPERTY(BlueprintReadWrite)
-	class AAIController_Boss* AIController;
+	class AAIController_MT26* AIController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arrow")
 	class UArrowComponent* ShotDirection;
 
-	float chargingLocation = 0.0f;
 	bool bIsInitForm = false;
 
 private:

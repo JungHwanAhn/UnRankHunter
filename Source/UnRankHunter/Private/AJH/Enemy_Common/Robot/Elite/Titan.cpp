@@ -130,6 +130,8 @@ void ATitan::EnemyDie()
 	FTimerHandle DieTimerHandle;
 	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
 	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, dieDelay, false);
+
+	increaseXP = 50.0f;
 }
 
 void ATitan::OnSpawnFromPool_Implementation()

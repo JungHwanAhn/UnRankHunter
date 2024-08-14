@@ -17,6 +17,6 @@ protected:
 
 private:
 	float timeElapsed = 0.0f;
-	float changeFormTime = 20.0f;
+	float changeFormTime = 25.0f;
 	bool bIsInitForm = false;
 };

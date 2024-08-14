@@ -162,6 +162,9 @@ struct FVirtualWeaponInstance
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FName> AttributeIDs{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Price{};
 };
 
 class UNRANKHUNTER_API WeaponStructure

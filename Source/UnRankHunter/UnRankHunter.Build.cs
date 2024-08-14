@@ -18,7 +18,7 @@ public class UnRankHunter : ModuleRules
 
         // AJH_Boss
         PublicIncludePaths.AddRange(new string[] {
-            "UnRankHunter/Public/AJH/Enemy_Boss", "UnRankHunter/Public/AJH/Enemy_Boss/PublicBehaviorTree", "UnRankHunter/Public/AJH/Enemy_Boss/Robot",
+            "UnRankHunter/Public/AJH/Enemy_Boss", "UnRankHunter/Public/AJH/Enemy_Boss/PublicBehaviorTree", "UnRankHunter/Public/AJH/Enemy_Boss/Robot", "UnRankHunter/Public/AJH/Enemy_Boss/AIController",
             "UnRankHunter/Public/AJH/Enemy_Boss/PublicBehaviorTree/BTTask",
             "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree", "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree/BTTask", "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree/BTService" });
 
