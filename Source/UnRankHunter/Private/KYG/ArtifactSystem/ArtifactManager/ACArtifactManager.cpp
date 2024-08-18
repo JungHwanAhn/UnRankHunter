@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ArtifactSystem/ArtifactObject/ArtifactObject.h"
 #include "KYG/ArtifactSystem/ArtifactManager/ACArtifactManager.h"
+#include "ArtifactSystem/ArtifactObject/ArtifactObject.h"
 
 // Sets default values for this component's properties
 UACArtifactManager::UACArtifactManager()

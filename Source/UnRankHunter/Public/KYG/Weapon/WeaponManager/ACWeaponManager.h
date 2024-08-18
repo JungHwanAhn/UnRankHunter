@@ -164,8 +164,10 @@ protected:
 
 #pragma region [ Bonus Stat ]
 public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
 	void ModifyDynamicStat(FWeaponStatSetterCallback Modifier);
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
 	const FWeaponBonusStat& GetDynamicStat();
 
 private:
