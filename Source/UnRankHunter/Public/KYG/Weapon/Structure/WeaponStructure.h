@@ -7,7 +7,6 @@
 #include "Enums/ItemRarity.h"
 #include "WeaponStructure.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FWeaponParameter : public FTableRowBase
 {
@@ -166,6 +165,10 @@ struct FVirtualWeaponInstance
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Price{};
 };
+
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FWeaponStatSetterCallback, FWeaponBonusStat&, BonusStat);
+
 
 class UNRANKHUNTER_API WeaponStructure
 {

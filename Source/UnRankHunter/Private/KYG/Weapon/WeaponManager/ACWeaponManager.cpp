@@ -143,7 +143,7 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 
 	if (EquippedSlot == SlotIndex)
 	{
-		UH_LogTempParam( Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
+		UH_LogTempParam(Log, TEXT("Weapon Manager: Pass to select weapon slot. %d is already selected."), SlotIndex);
 		return;
 	}
 
@@ -176,6 +176,11 @@ void UACWeaponManager::SelectWeaponSlot(int32 SlotIndex)
 			// Change controlled weapon.
 			EquippedSlot = SlotIndex;
 			EquippedWeapon = NewWeaponInst;
+
+			// Update dynamic stat.
+			FBonusStatModifier InjectStat;
+			InjectStat.BindDynamic(this, &UACWeaponManager::InjectDynamicStatCallback);
+			NewWeaponInst->ModifyDynamicStat(InjectStat);
 		}
 	}
 
@@ -283,6 +288,10 @@ void UACWeaponManager::SetWeaponEnabled_Implementation(bool bNewEnabled)
 	if (EquippedWeapon)
 	{
 		IWeaponInterface::Execute_SetWeaponEnabled(EquippedWeapon->_getUObject(), bNewEnabled);
+
+		FBonusStatModifier InjectStat;
+		InjectStat.BindDynamic(this, &UACWeaponManager::InjectDynamicStatCallback);
+		EquippedWeapon->ModifyDynamicStat(InjectStat);
 	}
 }
 
@@ -320,6 +329,31 @@ void UACWeaponManager::RefillAmmoCount_Implementation(int32 AmmoCount)
 	{
 		IWeaponInterface::Execute_RefillAmmoCount(EquippedWeapon->_getUObject(), AmmoCount);
 	}
+}
+
+void UACWeaponManager::ModifyDynamicStat(FWeaponStatSetterCallback Modifier)
+{
+	if (Modifier.IsBound())
+	{
+		Modifier.Execute(DynamicStat);
+	}
+
+	if (EquippedWeapon)
+	{
+		FBonusStatModifier InjectStat;
+		InjectStat.BindDynamic(this, &UACWeaponManager::InjectDynamicStatCallback);
+		EquippedWeapon->ModifyDynamicStat(InjectStat);
+	}
+}
+
+const FWeaponBonusStat& UACWeaponManager::GetDynamicStat()
+{
+	return DynamicStat;
+}
+
+void UACWeaponManager::InjectDynamicStatCallback(FWeaponBonusStat& Stat)
+{
+	Stat = DynamicStat;
 }
 
 #pragma endregion

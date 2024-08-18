@@ -24,7 +24,7 @@ void UACArtifactManager::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
+
 	for (auto item : ArtifactArray)
 	{
 		if (item->bUseTick)
@@ -45,16 +45,16 @@ bool UACArtifactManager::AddArtifact(UArtifactObject* ArtifactInstance)
 bool UACArtifactManager::AddArtifactByID(FName ArtifactID)
 {
 	TSubclassOf<class UArtifactObject> ArtifactClass = GetArtifactClass(ArtifactID);
-	if (ArtifactClass == false)
+	if (ArtifactClass == nullptr)
 	{
 		UH_LogTempParam(Warning, TEXT("Add Artifact is FAILURE! id %s can't find."), *ArtifactID.ToString());
-		return;
+		return false;
 	}
 
 
 	UArtifactObject* ArtifactInstance = NewObject<UArtifactObject>(nullptr, ArtifactClass, "UArtifactInstance");
 	AddArtifact(ArtifactInstance);
-	return false;
+	return true;
 }
 
 TSubclassOf<class UArtifactObject> UACArtifactManager::GetArtifactClass(FName ArtifactID)

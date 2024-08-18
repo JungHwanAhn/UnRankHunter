@@ -302,7 +302,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void InitializeWeaponAttribute(TArray<FName> AttributeIDs);
 
-	// Add attribute procedure.
+	void RequestStatUpdate()
+	{
+		bIsStatRecent = false;
+	}
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void AddAttribute(FName AttributeID);

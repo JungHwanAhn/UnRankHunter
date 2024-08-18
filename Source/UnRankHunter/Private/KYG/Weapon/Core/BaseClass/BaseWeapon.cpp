@@ -74,7 +74,10 @@ void ABaseWeapon::SetupModule()
 	}
 
 	// Setup.
-	TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+	if (TriggerModule)
+	{
+		TriggerModule->OnFireNotified.AddDynamic(this, &ABaseWeapon::ReceiveFireNotify);
+	}
 }
 
 void ABaseWeapon::LoadParameter()
@@ -395,6 +398,11 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 		{
 			Module->SetModuleEnabled(bNewEnabled);
 		}
+	}
+
+	if (bNewEnabled == true)
+	{
+		bIsStatRecent = false;
 	}
 }
 

@@ -2,3 +2,8 @@
 
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "KYG/ArtifactSystem/ArtifactObject/ArtifactObject.h"
+
+void UArtifactObject::InitializeArtifact(AActor* Owner)
+{
+	ArtifactOwner = Owner;
+}

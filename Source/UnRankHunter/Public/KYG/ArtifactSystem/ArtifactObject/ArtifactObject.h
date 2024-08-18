@@ -7,13 +7,12 @@
 #include "Weapon/Structure/WeaponStructure.h"
 #include "ArtifactObject.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FWeaponStatSetterCallback, FWeaponBonusStat&, BonusStat);
 
 UCLASS(Abstract, BlueprintType)
 class UNRANKHUNTER_API UArtifactObject : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
 	bool bUseTick{ false };
 
@@ -21,10 +20,12 @@ public:
 public:
 	void InitializeArtifact(AActor* Owner);
 
-	void EnableArtifact();
+	void EnableArtifact() {};
 
-	void DisableArtifect();
+	void DisableArtifect() {};
 
-	virtual void Tick(float DeltaTime) = 0;
+	virtual void Tick(float DeltaTime) {};
+
+protected:
+	AActor* ArtifactOwner;
 };
- 
