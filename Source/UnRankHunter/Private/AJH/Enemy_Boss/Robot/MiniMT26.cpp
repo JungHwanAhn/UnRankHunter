@@ -2,6 +2,7 @@
 #include "MiniMT26_Anim.h"
 #include "AIController_MiniMT26.h"
 #include "Components/ArrowComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -14,7 +15,7 @@ AMiniMT26::AMiniMT26()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		MiniMT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
 	if (MiniMT26Mesh.Succeeded()) {
-		//GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
+		GetMesh()->SetRelativeLocation(FVector(0, 0, -370));
 		GetMesh()->SetRelativeScale3D(FVector(3.0f));
 		GetMesh()->SetSkeletalMesh(MiniMT26Mesh.Object);
 		GetMesh()->GetOwner()->Tags.Remove("Common");
@@ -31,7 +32,9 @@ AMiniMT26::AMiniMT26()
 	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
 	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
 
-	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
+	RHCollision->SetRelativeLocation(FVector(0, -70, 28));
+	RHCollision->SetBoxExtent(FVector(40, 170, 40));
+	GetCapsuleComponent()->InitCapsuleSize(200.0f, 370.0f);
 }
 
 void AMiniMT26::BeginPlay()
@@ -45,9 +48,23 @@ void AMiniMT26::BeginPlay()
 	if (!AIController) return;
 }
 
+void AMiniMT26::Attack()
+{
+	if (!bIsEnemyDie) {
+		Super::Attack();
+		damage = 50.0f;
+
+		MiniMT26Anim->GunAttack();
+
+		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+	}
+}
+
 void AMiniMT26::EnergyBall()
 {
 	if (!bIsEnemyDie) {
+		AimToValue(-13.0f);
 		MiniMT26Anim->EnergyBall();
 
 		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
@@ -58,17 +75,7 @@ void AMiniMT26::EnergyBall()
 void AMiniMT26::Shelling()
 {
 	if (!bIsEnemyDie) {
-		MiniMT26Anim->Shelling ();
-
-		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
-		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
-	}
-}
-
-void AMiniMT26::ShellingToPlayer()
-{
-	if (!bIsEnemyDie) {
-		MiniMT26Anim->ShellingToPlayer();
+		MiniMT26Anim->Shelling();
 
 		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
 		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
@@ -78,6 +85,7 @@ void AMiniMT26::ShellingToPlayer()
 void AMiniMT26::LaserShot()
 {
 	if (!bIsEnemyDie) {
+		AimToValue(-13.0f);
 		MiniMT26Anim->LaserShot();
 
 		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
