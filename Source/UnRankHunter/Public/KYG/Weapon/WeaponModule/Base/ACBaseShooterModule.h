@@ -76,6 +76,8 @@ class UNRANKHUNTER_API UACBaseShooterModule : public UACBaseWeaponModule
 	GENERATED_BODY()
 
 public:
+	UACBaseShooterModule();
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Shooter Module")
 	void ShotBullet(float TriggerRate);
 
@@ -92,6 +94,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Shooter Module")
 	FTransform GetSettingPosition();
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Shooter Module")
+	void ApplyWeaponDamage(AActor* DamagedActor, float Damage);
 
 protected:
 	// Sets the firing point of the weapon to either the camera or the muzzle.
@@ -101,4 +105,8 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Weapon Module|Shooter Module")
 	FOnShooterExecutedEvent OnShooterExecutedEvent;
+
+private:
+	UPROPERTY()
+	TSubclassOf<UDamageType> DamageClass;
 };

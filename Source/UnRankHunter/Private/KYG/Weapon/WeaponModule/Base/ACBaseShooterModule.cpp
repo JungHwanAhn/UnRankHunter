@@ -3,8 +3,19 @@
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseShooterModule.h"
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
+#include "Kismet/GameplayStatics.h"
 
 void UACBaseShooterModule::ShotBullet_Implementation(float TriggerRate) {}
+
+UACBaseShooterModule::UACBaseShooterModule()
+{
+	FString Path = "/Game/01_Core/KYG/ElementalSystem/DamageClass/KYG_DMG_WeaponDamage.KYG_DMG_WeaponDamage_C";
+	ConstructorHelpers::FClassFinder<UDamageType> DmgTypeFinder(*Path);
+	if (DmgTypeFinder.Succeeded())
+	{
+		DamageClass = DmgTypeFinder.Class;
+	}
+}
 
 FTransform UACBaseShooterModule::GetMuzzlePosition()
 {
@@ -57,4 +68,24 @@ FTransform UACBaseShooterModule::GetSettingPosition()
 	}
 
 	return PositionComp == nullptr ? FTransform{} : PositionComp->GetComponentTransform();
+}
+
+void UACBaseShooterModule::ApplyWeaponDamage(AActor* DamagedActor, float Damage)
+{
+	ensure(GetOwnerWeapon());
+
+	AActor* WeaponOwner = GetOwnerWeapon()->GetWeaponParent();
+
+	ensure(WeaponOwner);
+
+	APawn* OwnerAsPawn = Cast<APawn>(WeaponOwner);
+
+	AController* OwnerController{ nullptr };
+
+	if (ensure(OwnerAsPawn))
+	{
+		OwnerController = OwnerAsPawn->GetController();
+	}
+
+	UGameplayStatics::ApplyDamage(DamagedActor, Damage, OwnerController, GetOwnerWeapon(), DamageClass);
 }

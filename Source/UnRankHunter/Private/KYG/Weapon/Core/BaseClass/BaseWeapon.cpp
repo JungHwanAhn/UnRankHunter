@@ -495,6 +495,7 @@ void ABaseWeapon::UpdateFinalStat()
 
 	NewFinalStat.AmmoCapacity = FMath::FloorToInt32(NewFinalStat.AmmoCapacity * (1.0f + Bonus.AddAmmoMultiple)) + Bonus.AddAmmoCount; // baseCap * MultipleCap + AddCap
 
+	NewFinalStat.ElementalStrength += ElementalValue;
 	NewFinalStat.ElementalStrength *= (1.0f + Bonus.ElementalStrengthUp);
 	NewFinalStat.ReloadRate *= (1.0f + Bonus.ReloadSpeedUp);
 	NewFinalStat.RapidRate *= (1.0f + Bonus.FireSpeedUp);
@@ -599,6 +600,7 @@ void ABaseWeapon::AddAttribute(FName AttributeID)
 
 	// Initialize instance.
 	AttributeInstance->InitializeOnCreated(this);
+	AttributeInstance->EnableAttribute();
 }
 #pragma endregion
 

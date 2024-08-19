@@ -9,6 +9,8 @@
 #include "Engine/DataTable.h"
 #include "ACWeaponManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnWeaponChangedDelegate, UACWeaponManager*, Invoker, ABaseWeapon*, PreviousWeapon, ABaseWeapon*, CurrentWeapon);
+
 USTRUCT(BlueprintType)
 struct FWeaponDataTableRow : public FTableRowBase
 {
@@ -63,6 +65,19 @@ public:
 	// Returns the index of the inactive weapon slot.
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
 	int32 GetSubSlot();
+
+
+#pragma region [ Events ]
+
+	// Event calls on changing equipped weapon.
+	// ACWeaponManager*	Invoker
+	// ABaseWeapon*		PreviousWeapon
+	// ABaseWeapon*		CurrentWeapon
+	UPROPERTY(BlueprintAuthorityOnly, BlueprintAssignable, Category = "Weapon Manager|Events")
+	FOnWeaponChangedDelegate OnWeaponChanged{};
+
+#pragma endregion
+
 
 
 private:
@@ -129,17 +144,17 @@ private:
 #pragma endregion
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon Manager Setting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Manager Setting")
 	UDataTable* WeaponTable;
 
 protected:
 	const int ContainerSize{ 2 };
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Manager")
 	TArray<class ABaseWeapon*> WeaponArray{};
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon Manager")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Manager")
 	class ABaseWeapon* EquippedWeapon{};
 
 	UPROPERTY()

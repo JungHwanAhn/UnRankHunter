@@ -23,7 +23,7 @@ public:
 	virtual void JumpAttack();
 
 	UFUNCTION(BlueprintCallable)
-	void Slow(float Value);
+	void Slow(float Value, bool bIsSlow);
 
 protected:
 	UFUNCTION()
