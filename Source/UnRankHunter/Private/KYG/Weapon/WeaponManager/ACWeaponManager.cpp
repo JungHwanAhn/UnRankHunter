@@ -338,7 +338,7 @@ void UACWeaponManager::ModifyDynamicStat(FWeaponStatSetterCallback Modifier)
 		Modifier.Execute(DynamicStat);
 	}
 
-	if (EquippedWeapon)
+	if (EquippedWeapon != nullptr)
 	{
 		FBonusStatModifier InjectStat;
 		InjectStat.BindDynamic(this, &UACWeaponManager::InjectDynamicStatCallback);

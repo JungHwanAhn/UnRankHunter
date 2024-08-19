@@ -21,15 +21,18 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
+protected:
 	// Container of all artifact instances.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Artifact Manager")
 	TArray<class UArtifactObject*> ArtifactArray;
 
 #pragma region [ Public Interface ]
 public:
-	bool AddArtifact(class UArtifactObject* ArtifactInstance);
+	UFUNCTION(BlueprintCallable, Category = "Artifact Manager")
+	int32 AddArtifact(class UArtifactObject* ArtifactInstance);
 	
-	bool AddArtifactByID(FName ArtifactID);
+	UFUNCTION(BlueprintCallable, Category = "Artifact Manager")
+	int32 AddArtifactByID(FName ArtifactID);
 #pragma endregion
 
 public:
