@@ -104,7 +104,7 @@ struct FWeaponBonusStat
 };
 
 UENUM(BlueprintType)
-enum class EElementalType
+enum class EElementalType : uint8
 {
 	None = 0,
 	Lightning,

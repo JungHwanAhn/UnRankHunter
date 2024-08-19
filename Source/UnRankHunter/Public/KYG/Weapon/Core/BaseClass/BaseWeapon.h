@@ -10,7 +10,7 @@
 #include "BaseWeapon.generated.h"
 
 UENUM(BlueprintType)
-enum class EBulletType
+enum class EBulletType : uint8
 {
 	None = 0,
 	Hitscan,
