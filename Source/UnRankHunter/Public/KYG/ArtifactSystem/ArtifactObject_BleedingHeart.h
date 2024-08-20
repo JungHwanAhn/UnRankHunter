@@ -83,4 +83,20 @@ private:
 
 	UPROPERTY()
 	double BuffStartTime{};
+
+public:
+	void OnBuffBegin();
+
+	void OnBuffEnd();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Artifact|BleedingHeart")
+	TSoftObjectPtr<UMaterialInterface> MI_HeartBeatOverlay{ };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Artifact|BleedingHeart")
+	TSoftObjectPtr<class UNiagaraSystem> NS_Spark{ };
+
+private:
+	UPROPERTY()
+	class UNiagaraComponent* SparkParticleComponent{};
+
 };
