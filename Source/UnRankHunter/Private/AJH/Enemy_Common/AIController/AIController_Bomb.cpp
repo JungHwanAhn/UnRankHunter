@@ -33,6 +33,10 @@ void AAIController_Bomb::Tick(float DeltaSeconds)
                 }
             }
         }
+        else {
+            ControlledPawn->GetCharacterMovement()->StopActiveMovement();
+            ClearFocus(EAIFocusPriority::Gameplay);
+        }
     }
 }
 
