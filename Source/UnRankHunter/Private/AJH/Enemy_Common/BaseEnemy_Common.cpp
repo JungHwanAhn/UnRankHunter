@@ -1,4 +1,5 @@
 #include "BaseEnemy_Common.h"
+#include "AIController_Range.h"
 #include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -42,7 +43,7 @@ void ABaseEnemy_Common::OnAttackMontageEnded(UAnimMontage* Montage, bool Interru
 
 void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto Player = Cast<AActor>(OtherActor);
+	AActor* Player = Cast<AActor>(OtherActor);
 	if (Player && Player->ActorHasTag("Player")) {
 		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
 	}
@@ -64,9 +65,23 @@ void ABaseEnemy_Common::JumpAttack()
 {
 }
 
-void ABaseEnemy_Common::Slow(float Value)
+void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
+	float velocity;
+	if (GetController()->IsA(AAIController_Range::StaticClass())) {
+		velocity = 800.0f;
+	}
+	else {
+		velocity = 850.0f;
+	}
 	
+	if (bIsSlow) {
+		velocity *= Value;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = velocity;
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), velocity);
 }
 
 void ABaseEnemy_Common::EnemyDie()

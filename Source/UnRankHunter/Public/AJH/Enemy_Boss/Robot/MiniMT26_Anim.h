@@ -13,9 +13,9 @@ public:
 	UMiniMT26_Anim();
 	void EnergyBall();
 	void Shelling();
-	void ShellingToPlayer();
 	void LaserShot();
 	void HomingRocket();
+	void GunAttack();
 	void Die();
 
 protected:
@@ -33,13 +33,13 @@ private:
 	UAnimMontage* ShellingMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
-	UAnimMontage* ShellingToPlayerMontage;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* HomingRocketMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* LaserShotMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* GunAttackMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;

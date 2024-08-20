@@ -1,13 +1,13 @@
 #include "Spider.h"
 #include "Spider_Anim.h"
-#include "AIController_Range.h"
+#include "AIController_Spider.h"
 #include "Components/CapsuleComponent.h"
 
 ASpider::ASpider()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Range::StaticClass();
+	AIControllerClass = AAIController_Spider::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		SpiderMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SpiderMech/Mesh/SpiderMech/SK_SpriderMech.SK_SpriderMech'"));
