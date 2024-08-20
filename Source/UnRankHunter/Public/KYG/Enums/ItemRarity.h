@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
-enum class EItemRarity
+enum class EItemRarity : uint8
 {
 	Common = 0,
 	Uncommon,
