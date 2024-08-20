@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UnRankHunter/UnRankHunter.h"
 #include "KYG/Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
 #include "ACBaseTriggerModule.generated.h"
 
