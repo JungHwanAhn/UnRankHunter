@@ -9,8 +9,11 @@
 #include "Enums/ItemRarity.h"
 #include "BaseWeaponAttribute.generated.h"
 
+// abc
+// abd
+
 UENUM(BlueprintType)
-enum class EAttributeDataType
+enum class EAttributeDataType : uint8
 {
 	Float,
 	Integer,

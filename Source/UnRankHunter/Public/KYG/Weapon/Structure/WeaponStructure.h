@@ -7,7 +7,6 @@
 #include "Enums/ItemRarity.h"
 #include "WeaponStructure.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FWeaponParameter : public FTableRowBase
 {
@@ -105,7 +104,7 @@ struct FWeaponBonusStat
 };
 
 UENUM(BlueprintType)
-enum class EElementalType
+enum class EElementalType : uint8
 {
 	None = 0,
 	Lightning,
@@ -166,6 +165,10 @@ struct FVirtualWeaponInstance
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Price{};
 };
+
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FWeaponStatSetterCallback, FWeaponBonusStat&, BonusStat);
+
 
 class UNRANKHUNTER_API WeaponStructure
 {

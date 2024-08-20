@@ -15,7 +15,7 @@ public:
 };
 
 UENUM(BlueprintType)
-enum class EDamageElementalType
+enum class EDamageElementalType : uint8
 {
 	None = 0,
 	Basic,

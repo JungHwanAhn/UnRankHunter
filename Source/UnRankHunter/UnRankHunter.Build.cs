@@ -23,6 +23,7 @@ public class UnRankHunter : ModuleRules
             "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree", "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree/BTTask", "UnRankHunter/Public/AJH/Enemy_Boss/Robot/BehaviorTree/BTService" });
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AnimGraphRuntime", "AIModule" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Niagara" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
