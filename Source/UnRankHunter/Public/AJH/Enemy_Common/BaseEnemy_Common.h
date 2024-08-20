@@ -22,6 +22,9 @@ public:
 	virtual void DashAttack();
 	virtual void JumpAttack();
 
+	UFUNCTION(BlueprintCallable)
+	void Slow(float Value, bool bIsSlow);
+
 protected:
 	UFUNCTION()
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool Interrupted);
@@ -35,6 +38,7 @@ protected:
 	float damage = 0.0f;
 	float dieDelay = 3.0f;
 	float enemyHP = 100.0f;
+	float increaseXP = 10.0f;
 
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -1,22 +1,19 @@
 #include "MT26.h"
 #include "MT26_Anim.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 #include "Components/ArrowComponent.h"
-#include "Components/BoxComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AMT26::AMT26()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Boss::StaticClass();
+	AIControllerClass = AAIController_MT26::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		MT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
 	if (MT26Mesh.Succeeded()) {
-		//GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
-		//GetMesh()->SetRelativeScale3D(FVector(1.5));
+		GetMesh()->SetRelativeScale3D(FVector(80));
 		GetMesh()->SetSkeletalMesh(MT26Mesh.Object);
 		GetMesh()->GetOwner()->Tags.Remove("Common");
 		GetMesh()->GetOwner()->Tags.Add("Boss");
@@ -31,8 +28,6 @@ AMT26::AMT26()
 
 	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
 	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
-
-	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
 
 void AMT26::BeginPlay()
@@ -42,7 +37,7 @@ void AMT26::BeginPlay()
 	MT26Anim = Cast<UMT26_Anim>(GetMesh()->GetAnimInstance());
 	if (!MT26Anim) return;
 
-	AIController = Cast<AAIController_Boss>(GetController());
+	AIController = Cast<AAIController_MT26>(GetController());
 	if (!AIController) return;
 }
 
@@ -51,7 +46,7 @@ void AMT26::EnergyBall()
 	if (!bIsEnemyDie) {
 		MT26Anim->EnergyBall();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -104,11 +99,11 @@ void AMT26::LaserBeam()
 		MT26Anim->LaserBeam();
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 0.0f) {
-			AimToValue(16000.0f, "AllPlace");
+		if (PlayerLocation.X + PlayerLocation.Y >= 145000.0f) {
+			AimToValue(-42.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-24000.0f, "AllPlace");
+			AimToValue(-92.0f, "AllPlace");
 		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -121,7 +116,7 @@ void AMT26::LaserShot()
 	if (!bIsEnemyDie) {
 		MT26Anim->LaserShot();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -135,11 +130,11 @@ void AMT26::MultiLaserShot()
 
 		AIController->bIsLaserAttack = true;
 		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		if (PlayerLocation.Y >= 0.0f) {
-			AimToValue(16000.0f, "AllPlace");
+		if (PlayerLocation.X + PlayerLocation.Y >= 145000.0f) {
+			AimToValue(-42.0f, "AllPlace");
 		}
 		else {
-			AimToValue(-24000.0f, "AllPlace");
+			AimToValue(-92.0f, "AllPlace");
 		}
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
@@ -152,7 +147,7 @@ void AMT26::HomingRocket()
 	if (!bIsEnemyDie) {
 		MT26Anim->HomingRocket();
 
-		AimToValue(-7050.0f, "SingleShot");
+		AimToValue(-67.0f, "SingleShot");
 
 		MT26Anim->OnMontageEnded.RemoveDynamic(this, &AMT26::OnAttackMontageEnded);
 		MT26Anim->OnMontageEnded.AddDynamic(this, &AMT26::OnAttackMontageEnded);

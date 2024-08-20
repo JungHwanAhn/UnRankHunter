@@ -19,6 +19,9 @@ public:
 	virtual void OnCollisionStart_Implementation() override;
 	virtual void OnCollisionEnd_Implementation() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arrow")
+	class UArrowComponent* ShotDirection;
+
 private:
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted) override;
 	virtual void AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;

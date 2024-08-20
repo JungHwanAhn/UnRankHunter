@@ -185,6 +185,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AActor* WeaponParent{};
 
+public:
+	AActor* GetWeaponParent()
+	{
+		return WeaponParent;
+	}
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
 	bool bUseWeaponTick{ false };
@@ -217,28 +223,41 @@ private:
 	bool bWeaponEnabled{ true };
 
 
-#pragma region [ WeaponStat ] 
-	//public:
-	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	//	const FWeaponParameter GetFinalStat() const;
-	//
-	//	void UpdateFinalStat();
-	//
-	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	//	const FWeaponParameter& GetBaseStat() const;
-	//
-	//	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Stat")
-	//	const FWeaponBonusStat GetFinalBonusStat() const;
-	//
-	//protected:
-	//	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	//	FWeaponParameter WeaponParameter{};
-	//
-	//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Stat")
-	//	FWeaponBonusStat BonusStat{};
-#pragma endregion
+#pragma region [ Elemental ]
 
-	// Events
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Elemental")
+	TEnumAsByte<EElementalType> ElementalType{ EElementalType::None };
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Data|Elemental")
+	float ElementalValue{ 0.0f };
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Data|Elemental")
+	TEnumAsByte<EElementalType> GetElementalType()
+	{
+		return ElementalType;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Elemental")
+	void SetElementalType(TEnumAsByte<EElementalType> Value)
+	{
+		this->ElementalType = Value;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Elemental")
+	float GetElementalValue()
+	{
+		return ElementalValue;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Elemental")
+	void SetElementalValue(float Value)
+	{
+		this->ElementalValue = Value;
+	}
+
+#pragma endregion
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
 	FWeaponFireEvent OnWeaponFireEvent{};
@@ -247,7 +266,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static const float CalculateDamage(const AActor* const Target, ABaseWeapon* Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
-#pragma region [Stat System]
+#pragma region [ Stat System ]
 	DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
 #pragma region [Method]

@@ -1,9 +1,11 @@
 #include "BaseEnemy_Common.h"
+#include "AIController_Range.h"
 #include "PoolSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Experience.h"
 
 #define ECC_Enemy ECC_GameTraceChannel1
 
@@ -41,7 +43,7 @@ void ABaseEnemy_Common::OnAttackMontageEnded(UAnimMontage* Montage, bool Interru
 
 void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto Player = Cast<AActor>(OtherActor);
+	AActor* Player = Cast<AActor>(OtherActor);
 	if (Player && Player->ActorHasTag("Player")) {
 		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
 	}
@@ -63,12 +65,42 @@ void ABaseEnemy_Common::JumpAttack()
 {
 }
 
+void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
+{
+	float velocity;
+	if (GetController()->IsA(AAIController_Range::StaticClass())) {
+		velocity = 800.0f;
+	}
+	else {
+		velocity = 850.0f;
+	}
+	
+	if (bIsSlow) {
+		velocity *= Value;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = velocity;
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), velocity);
+}
+
 void ABaseEnemy_Common::EnemyDie()
 {
 	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
 	if (PoolSubsystem) {
 		PoolSubsystem->ReturnToPool(this);
 		bIsEnemyDie = false;
+		
+		FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
+		UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
+
+		if (ExperienceClass) {
+			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
+			if (Experience) {
+				Experience->addXP = increaseXP;
+				UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
+			}
+		}
 	}
 }
 

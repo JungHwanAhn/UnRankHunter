@@ -1,6 +1,6 @@
 #include "BTTask_PlazmaToPlayer.h"
 #include "MT26.h"
-#include "AIController_Boss.h"
+#include "AIController_MT26.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_PlazmaToPlayer::UBTTask_PlazmaToPlayer()
@@ -31,7 +31,7 @@ void UBTTask_PlazmaToPlayer::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
 	if (!bIsAttacking) {
-		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_Boss::bIsPlazmaAreaKey, false);
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_MT26::bIsPlazmaAreaKey, false);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
