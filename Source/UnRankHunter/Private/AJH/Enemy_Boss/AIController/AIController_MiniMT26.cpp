@@ -69,7 +69,10 @@ void AAIController_MiniMT26::Tick(float DeltaSeconds)
 {
 	if (!MiniMT26->bIsEnemyDie && MiniMT26) {
 		if (Player) {
-			MiniMT26->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(MiniMT26->GetActorLocation(), Player->GetActorLocation()));
+			AdjustedRotation = UKismetMathLibrary::FindLookAtRotation(MiniMT26->GetActorLocation(), Player->GetActorLocation());
+			AdjustedRotation.Yaw += enemyRotator_Y;
+			AdjustedRotation.Pitch -= 5.0f;
+			MiniMT26->SetActorRotation(AdjustedRotation);
 		}
 	}
 }

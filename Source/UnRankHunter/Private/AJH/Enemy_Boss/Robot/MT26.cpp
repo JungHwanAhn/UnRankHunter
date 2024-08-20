@@ -2,7 +2,6 @@
 #include "MT26_Anim.h"
 #include "AIController_MT26.h"
 #include "Components/ArrowComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AMT26::AMT26()
@@ -14,8 +13,7 @@ AMT26::AMT26()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		MT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
 	if (MT26Mesh.Succeeded()) {
-		//GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
-		//GetMesh()->SetRelativeScale3D(FVector(1.5));
+		GetMesh()->SetRelativeScale3D(FVector(80));
 		GetMesh()->SetSkeletalMesh(MT26Mesh.Object);
 		GetMesh()->GetOwner()->Tags.Remove("Common");
 		GetMesh()->GetOwner()->Tags.Add("Boss");
@@ -30,8 +28,6 @@ AMT26::AMT26()
 
 	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
 	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
-
-	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
 
 void AMT26::BeginPlay()

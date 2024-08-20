@@ -13,9 +13,9 @@ public:
 	AMiniMT26();
 
 	virtual void BeginPlay() override;
+	virtual void Attack() override;
 	void EnergyBall();
 	void Shelling();
-	void ShellingToPlayer();
 	void LaserShot();
 	void HomingRocket();
 
@@ -23,6 +23,12 @@ public:
 	virtual void OnReturnToPool_Implementation() override;
 	virtual void OnCollisionStart_Implementation() override;
 	virtual void OnCollisionEnd_Implementation() override;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void AimToValue(float location_Y);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void ReturnAim(float location_Y);
 
 	UPROPERTY(BlueprintReadWrite)
 	class AAIController_MiniMT26* AIController;
