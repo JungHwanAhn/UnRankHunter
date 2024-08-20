@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Weapon/Interface/WeaponInterface.h"
+#include "Weapon/Structure/WeaponStructure.h"
 //#include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Engine/DataTable.h"
 #include "ACWeaponManager.generated.h"
@@ -159,4 +160,22 @@ protected:
 
 	UPROPERTY()
 	int32 EquippedSlot{ -1 };
+
+
+#pragma region [ Bonus Stat ]
+public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	void ModifyDynamicStat(FWeaponStatSetterCallback Modifier);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	const FWeaponBonusStat& GetDynamicStat();
+
+private:
+	UFUNCTION()
+	void InjectDynamicStatCallback(FWeaponBonusStat& Stat);
+
+protected:
+	FWeaponBonusStat DynamicStat{};
+#pragma endregion
+
 };

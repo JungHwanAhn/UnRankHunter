@@ -10,7 +10,7 @@
 #include "BaseWeapon.generated.h"
 
 UENUM(BlueprintType)
-enum class EBulletType
+enum class EBulletType : uint8
 {
 	None = 0,
 	Hitscan,
@@ -45,6 +45,7 @@ struct FWeaponFireInfo
 	int32 BulletCount{};
 };
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
 
@@ -267,7 +268,6 @@ public:
 	static const float CalculateDamage(const AActor* const Target, ABaseWeapon* Weapon, UPARAM(ref) const FWeaponDamageContext& Context);
 
 #pragma region [ Stat System ]
-	DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatReference);
 
 #pragma region [Method]
 public:
@@ -302,7 +302,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void InitializeWeaponAttribute(TArray<FName> AttributeIDs);
 
-	// Add attribute procedure.
+	void RequestStatUpdate()
+	{
+		bIsStatRecent = false;
+	}
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void AddAttribute(FName AttributeID);
