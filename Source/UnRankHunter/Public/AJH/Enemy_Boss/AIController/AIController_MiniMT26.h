@@ -20,6 +20,9 @@ public:
 	static const FName MaxPatternCountKey;
 	static const FName RandomPatternKey;
 
+	UPROPERTY(BlueprintReadWrite)
+	float enemyRotator_Y = 0.0f;
+
 private:
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -31,4 +34,7 @@ private:
 
 	class AActor* Player;
 	class AMiniMT26* MiniMT26;
+
+	FRotator AdjustedRotation;
+	bool bIsAimToPlayer = false;
 };

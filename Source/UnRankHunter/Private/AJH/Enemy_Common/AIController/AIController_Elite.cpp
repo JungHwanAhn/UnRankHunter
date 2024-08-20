@@ -32,6 +32,7 @@ void AAIController_Elite::Tick(float DeltaSeconds)
 				else {
 					MoveToActor(PlayerPawn, 210);
 					if (distance < 410.0f) {
+						ControlledPawn->GetCharacterMovement()->StopActiveMovement();
 						bIsAttack = true;
 						int randomPattern = FMath::RandRange(1, 4);
 

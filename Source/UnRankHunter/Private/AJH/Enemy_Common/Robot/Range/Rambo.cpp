@@ -1,11 +1,12 @@
 #include "Rambo.h"
 #include "Rambo_Anim.h"
-#include "AIController_Range.h"
+#include "AIController_Rambo.h"
+#include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
 
 ARambo::ARambo()
 {
-	AIControllerClass = AAIController_Range::StaticClass();
+	AIControllerClass = AAIController_Rambo::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		RamboMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkMech2837/Mesh/SK_SteamPunkMech_2837_Gun.SK_SteamPunkMech_2837_Gun'"));
@@ -21,6 +22,9 @@ ARambo::ARambo()
 	if (AnimInstance.Succeeded()) {
 		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
 	}
+
+	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
+	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("RightHand"));
 
 	GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
