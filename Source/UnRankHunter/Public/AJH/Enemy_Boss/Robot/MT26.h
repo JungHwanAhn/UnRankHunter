@@ -60,5 +60,5 @@ private:
 
 	class UMT26_Anim* MT26Anim;
 
-	float mt26HP = 200;
+	float mt26HP = 5000;
 };

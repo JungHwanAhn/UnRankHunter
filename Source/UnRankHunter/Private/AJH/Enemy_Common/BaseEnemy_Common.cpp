@@ -1,6 +1,7 @@
 #include "BaseEnemy_Common.h"
-#include "AIController_Range.h"
 #include "PoolSubsystem.h"
+#include "AIController_Rambo.h"
+#include "AIController_Spider.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -68,7 +69,7 @@ void ABaseEnemy_Common::JumpAttack()
 void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
 	float velocity;
-	if (GetController()->IsA(AAIController_Range::StaticClass())) {
+	if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
 		velocity = 800.0f;
 	}
 	else {
