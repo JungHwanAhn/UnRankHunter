@@ -18,6 +18,8 @@ public:
 	void Shelling();
 	void LaserShot();
 	void HomingRocket();
+	void PlazmaCircle();
+	void Firebat();
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;

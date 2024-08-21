@@ -103,6 +103,26 @@ void AMiniMT26::HomingRocket()
 	}
 }
 
+void AMiniMT26::PlazmaCircle()
+{
+	if (!bIsEnemyDie) {
+		MiniMT26Anim->PlazmaCircle();
+
+		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMiniMT26::Firebat()
+{
+	if (!bIsEnemyDie) {
+		MiniMT26Anim->Firebat();
+
+		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+	}
+}
+
 void AMiniMT26::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	Super::OnAttackMontageEnded(Montage, bInterrupted);
