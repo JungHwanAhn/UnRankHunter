@@ -18,7 +18,7 @@ private:
 	class ASpider* Spider;
 
 	bool bIsAttack = false;
-	float attackDelay = 1.0f;
+	float attackDelay = 1.5f;
 	float moveRange = 1700.0f;
 
 	float acceptanceRadius = 1800.0f;
