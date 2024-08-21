@@ -127,6 +127,10 @@ void AMiniMT26::EnemyDie()
 {
 	bIsEnemyDie = true;
 	MiniMT26Anim->Die();
+
+	FTimerHandle DieTimerHandle;
+	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, 5.3f, false);
 }
 
 void AMiniMT26::OnSpawnFromPool_Implementation()
