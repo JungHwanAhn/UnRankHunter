@@ -46,6 +46,7 @@ void AAIController_Spider::Tick(float DeltaSeconds)
             }
         }
         else {
+            Spider->GetCharacterMovement()->StopActiveMovement();
             ClearFocus(EAIFocusPriority::Gameplay);
         }
     }
