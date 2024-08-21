@@ -32,10 +32,6 @@ ARambo::ARambo()
 void ARambo::Attack()
 {
 	if (!bIsEnemyDie) {
-		Super::Attack();
-
-		damage = 20.0f;
-
 		URambo_Anim* RamboAnim = Cast<URambo_Anim>(GetMesh()->GetAnimInstance());
 		if (RamboAnim == nullptr) return;
 
