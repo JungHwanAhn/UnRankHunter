@@ -116,6 +116,12 @@ void AMiniMT26::PlazmaCircle()
 void AMiniMT26::Firebat()
 {
 	if (!bIsEnemyDie) {
+		AimToValue(-22.0f);
+
+		FTimerHandle AimTimerHandle;
+		FTimerDelegate AimBack = FTimerDelegate::CreateLambda([this]() { ReturnAim(AIController->enemyRotator_Y); });
+		GetWorld()->GetTimerManager().SetTimer(AimTimerHandle, AimBack, 3.0f, false);
+
 		MiniMT26Anim->Firebat();
 
 		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);

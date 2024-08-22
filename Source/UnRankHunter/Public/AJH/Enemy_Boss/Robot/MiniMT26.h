@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void ReturnAim(float location_Y);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void SpawnFire();
+
 	UPROPERTY(BlueprintReadWrite)
 	class AAIController_MiniMT26* AIController;
 
