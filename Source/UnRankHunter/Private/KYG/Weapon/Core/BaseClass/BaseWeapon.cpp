@@ -589,7 +589,7 @@ void ABaseWeapon::AddAttribute(FName AttributeID)
 	// Find class.
 	auto AttributeClass = FindAttributeClass(AttributeID);
 
-	if (ensure(AttributeClass == nullptr))
+	if (AttributeClass == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Add attribute is FAILURE! Can't find attribute class of '%s' id."), *AttributeID.ToString());
 		return;
@@ -598,7 +598,7 @@ void ABaseWeapon::AddAttribute(FName AttributeID)
 	// Construct instance.
 	UBaseWeaponAttribute* AttributeInstance = NewObject<UBaseWeaponAttribute>(this, AttributeClass);
 
-	if (ensure(AttributeInstance == nullptr))
+	if (AttributeInstance == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[BaseWeapon] Add attribute is FAILURE! Fail to instantiate new attribute instance."), *AttributeID.ToString());
 		return;
