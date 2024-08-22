@@ -45,8 +45,9 @@ void ABaseEnemy_Common::OnAttackMontageEnded(UAnimMontage* Montage, bool Interru
 void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AActor* Player = Cast<AActor>(OtherActor);
-	if (Player && Player->ActorHasTag("Player")) {
+	if (Player && Player->ActorHasTag("Player") && bIsDamage) {
 		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
+		bIsDamage = false;
 	}
 }
 
