@@ -101,6 +101,8 @@ struct FWeaponBonusStat
 	FWeaponBonusStat operator+(const FWeaponBonusStat& Other) const;
 
 	FWeaponBonusStat operator-(const FWeaponBonusStat& Other) const;
+
+	FString ToString();
 };
 
 UENUM(BlueprintType)
