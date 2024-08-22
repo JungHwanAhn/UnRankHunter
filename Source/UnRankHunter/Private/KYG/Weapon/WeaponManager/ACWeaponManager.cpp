@@ -223,7 +223,7 @@ UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const
 
 void UACWeaponManager::SetFireInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon && IWeaponInterface::Execute_CanFire(this))
+	if (EquippedWeapon)
 	{
 		IWeaponInterface::Execute_SetFireInput(EquippedWeapon->_getUObject(), bInput);
 	}
@@ -231,7 +231,7 @@ void UACWeaponManager::SetFireInput_Implementation(bool bInput)
 
 void UACWeaponManager::SetReloadInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon && IWeaponInterface::Execute_CanReload(this))
+	if (EquippedWeapon)
 	{
 		IWeaponInterface::Execute_SetReloadInput(EquippedWeapon->_getUObject(), bInput);
 	}
@@ -239,7 +239,7 @@ void UACWeaponManager::SetReloadInput_Implementation(bool bInput)
 
 void UACWeaponManager::SetZoomInput_Implementation(bool bInput)
 {
-	if (EquippedWeapon && IWeaponInterface::Execute_CanZoom(this))
+	if (EquippedWeapon)
 	{
 		IWeaponInterface::Execute_SetZoomInput(EquippedWeapon->_getUObject(), bInput);
 	}

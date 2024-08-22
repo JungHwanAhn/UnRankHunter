@@ -25,6 +25,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Slow(float Value, bool bIsSlow);
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsDamage = false;
+
 protected:
 	UFUNCTION()
 	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool Interrupted);
