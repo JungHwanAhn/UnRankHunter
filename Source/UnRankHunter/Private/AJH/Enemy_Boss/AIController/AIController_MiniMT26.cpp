@@ -9,6 +9,8 @@
 const FName AAIController_MiniMT26::TargetKey(TEXT("Target"));
 const FName AAIController_MiniMT26::MaxPatternCountKey(TEXT("MaxPatternCount"));
 const FName AAIController_MiniMT26::RandomPatternKey(TEXT("RandomPattern"));
+const FName AAIController_MiniMT26::bIsCheckingKey(TEXT("bIsChecking"));
+const FName AAIController_MiniMT26::bIsPlazmaCircleKey(TEXT("bIsPlazmaCircle"));
 
 AAIController_MiniMT26::AAIController_MiniMT26()
 {
@@ -36,6 +38,8 @@ void AAIController_MiniMT26::OnPossess(APawn* InPawn)
 		Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		if (Player) {
 			BlackboardComp->SetValueAsObject(TargetKey, Player);
+			BlackboardComp->SetValueAsBool(bIsCheckingKey, true);
+			BlackboardComp->SetValueAsBool(bIsPlazmaCircleKey, false);
 		}
 		else {
 			UE_LOG(LogTemp, Warning, TEXT("AIController couldn't get player"));

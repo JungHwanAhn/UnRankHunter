@@ -1,6 +1,7 @@
 #include "BTTask_PlazmaCircle.h"
 #include "MiniMT26.h"
 #include "AIController_MiniMT26.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_PlazmaCircle::UBTTask_PlazmaCircle()
 {
@@ -29,6 +30,7 @@ void UBTTask_PlazmaCircle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
 	if (!bIsAttacking) {
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AAIController_MiniMT26::bIsPlazmaCircleKey, true);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
