@@ -33,6 +33,18 @@ UMiniMT26_Anim::UMiniMT26_Anim()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		PlazmaCircle_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/Plazma/AJH_AM_MiniMT26_PlazmaCircle.AJH_AM_MiniMT26_PlazmaCircle'"));
+	if (PlazmaCircle_Montage.Succeeded()) {
+		PlazmaCircleMontage = PlazmaCircle_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
+		Firebat_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MiniMT26_Firebat.AJH_AM_MiniMT26_Firebat'"));
+	if (Firebat_Montage.Succeeded()) {
+		FirebatMontage = Firebat_Montage.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>
 		Die_Montage(TEXT("AnimMontage'/Game/01_Core/AJH/Enemy/Robot/Boss/Montage/AJH_AM_MT26_Die.AJH_AM_MT26_Die'"));
 	if (Die_Montage.Succeeded()) {
 		DieMontage = Die_Montage.Object;
@@ -62,6 +74,16 @@ void UMiniMT26_Anim::HomingRocket()
 void UMiniMT26_Anim::GunAttack()
 {
 	Montage_Play(GunAttackMontage);
+}
+
+void UMiniMT26_Anim::PlazmaCircle()
+{
+	Montage_Play(PlazmaCircleMontage);
+}
+
+void UMiniMT26_Anim::Firebat()
+{
+	Montage_Play(FirebatMontage);
 }
 
 void UMiniMT26_Anim::Die()

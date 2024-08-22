@@ -1,5 +1,8 @@
 #include "BTTask_RandomPattern.h"
+#include "MT26.h"
 #include "AIController_MT26.h"
+#include "MiniMT26.h"
+#include "AIController_MiniMT26.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_RandomPattern::UBTTask_RandomPattern()
@@ -9,7 +12,17 @@ UBTTask_RandomPattern::UBTTask_RandomPattern()
 
 EBTNodeResult::Type UBTTask_RandomPattern::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	int32 randomPattern = FMath::RandRange(0, OwnerComp.GetBlackboardComponent()->GetValueAsInt(AAIController_MT26::MaxPatternCountKey));
-	OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MT26::RandomPatternKey, randomPattern);
-	return EBTNodeResult::Succeeded;
+	if (OwnerComp.GetAIOwner()->GetPawn()->IsA(AMT26::StaticClass())) {
+		int32 randomPattern = FMath::RandRange(0, OwnerComp.GetBlackboardComponent()->GetValueAsInt(AAIController_MT26::MaxPatternCountKey));
+		OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MT26::RandomPatternKey, randomPattern);
+		return EBTNodeResult::Succeeded;
+	}
+	else if (OwnerComp.GetAIOwner()->GetPawn()->IsA(AMiniMT26::StaticClass())) {
+		int32 randomPattern = FMath::RandRange(0, OwnerComp.GetBlackboardComponent()->GetValueAsInt(AAIController_MiniMT26::MaxPatternCountKey));
+		OwnerComp.GetBlackboardComponent()->SetValueAsInt(AAIController_MiniMT26::RandomPatternKey, randomPattern);
+		return EBTNodeResult::Succeeded;
+	}
+	else {
+		return EBTNodeResult::Failed;
+	}
 }
