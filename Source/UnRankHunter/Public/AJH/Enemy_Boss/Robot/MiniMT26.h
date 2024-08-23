@@ -18,6 +18,8 @@ public:
 	void Shelling();
 	void LaserShot();
 	void HomingRocket();
+	void PlazmaCircle();
+	void Firebat();
 
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
@@ -29,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
 	void ReturnAim(float location_Y);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP Function")
+	void SpawnFire();
 
 	UPROPERTY(BlueprintReadWrite)
 	class AAIController_MiniMT26* AIController;

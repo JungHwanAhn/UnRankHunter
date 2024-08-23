@@ -7,6 +7,7 @@
 #include "Weapon/Interface/WeaponInterface.h"
 #include "Weapon/Structure/WeaponStructure.h"
 //#include "Weapon/Core/BaseClass/BaseWeapon.h"
+#include "Weapon/Interface/WeaponManagerInterface.h"
 #include "Engine/DataTable.h"
 #include "ACWeaponManager.generated.h"
 
@@ -25,7 +26,7 @@ struct FWeaponDataTableRow : public FTableRowBase
 };
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface
+class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface//, public IWeaponManagerInterface
 {
 	GENERATED_BODY()
 
@@ -168,7 +169,16 @@ public:
 	void ModifyDynamicStat(FWeaponStatSetterCallback Modifier);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	void SetDynamicStat(UPARAM(ref) const FWeaponBonusStat& Stat);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
 	const FWeaponBonusStat& GetDynamicStat();
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
+	void UpdateProviderStat();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Manager")
+	const FWeaponBonusStat& GetProviderStat();
 
 private:
 	UFUNCTION()
@@ -176,6 +186,11 @@ private:
 
 protected:
 	FWeaponBonusStat DynamicStat{};
+
+	FWeaponBonusStat ProvidedStat{};
+
+public:
+	TArray<UActorComponent*> WeaponStatProvierArray{};
 #pragma endregion
 
 };
