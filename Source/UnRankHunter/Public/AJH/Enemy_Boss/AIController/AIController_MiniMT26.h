@@ -19,6 +19,8 @@ public:
 	static const FName TargetKey;
 	static const FName MaxPatternCountKey;
 	static const FName RandomPatternKey;
+	static const FName bIsCheckingKey;
+	static const FName bIsPlazmaCircleKey;
 
 	UPROPERTY(BlueprintReadWrite)
 	float enemyRotator_Y = 0.0f;

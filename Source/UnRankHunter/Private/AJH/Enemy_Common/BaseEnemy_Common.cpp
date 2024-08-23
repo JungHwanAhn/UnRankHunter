@@ -1,6 +1,7 @@
 #include "BaseEnemy_Common.h"
-#include "AIController_Range.h"
 #include "PoolSubsystem.h"
+#include "AIController_Rambo.h"
+#include "AIController_Spider.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -44,8 +45,9 @@ void ABaseEnemy_Common::OnAttackMontageEnded(UAnimMontage* Montage, bool Interru
 void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AActor* Player = Cast<AActor>(OtherActor);
-	if (Player && Player->ActorHasTag("Player")) {
+	if (Player && Player->ActorHasTag("Player") && bIsDamage) {
 		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
+		bIsDamage = false;
 	}
 }
 
@@ -68,7 +70,7 @@ void ABaseEnemy_Common::JumpAttack()
 void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
 	float velocity;
-	if (GetController()->IsA(AAIController_Range::StaticClass())) {
+	if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
 		velocity = 800.0f;
 	}
 	else {

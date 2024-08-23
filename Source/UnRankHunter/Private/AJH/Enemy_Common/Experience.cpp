@@ -43,7 +43,6 @@ void AExperience::Tick(float DeltaTime)
 
 	float distance = FVector::Distance(GetActorLocation(), Player->GetActorLocation());
 	float clampedDistance = FMath::GetMappedRangeValueClamped(FVector2D(0, 1500), FVector2D(12, 1), distance);
-	UE_LOG(LogTemp, Warning, TEXT("%f"), clampedDistance);
 	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), Player->GetActorLocation(), DeltaTime, clampedDistance);
 	SetActorLocation(NewLocation);
 }

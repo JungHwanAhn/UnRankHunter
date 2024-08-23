@@ -46,6 +46,7 @@ void AAIController_Rambo::Tick(float DeltaSeconds)
             }
         }
         else {
+            Rambo->GetCharacterMovement()->StopActiveMovement();
             ClearFocus(EAIFocusPriority::Gameplay);
         }
     }

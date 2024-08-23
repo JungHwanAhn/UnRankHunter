@@ -98,11 +98,11 @@ void UArtifactObject_BleedingHeart::OnActorDamaged(AActor* DamagedActor, float D
 		float MaxHealth = IPlayerStatInterface::Execute_GetMaxHealth(PlayerStat);
 		float HealthRatio = CurrentHealth / MaxHealth;
 
-		GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, *FString::Printf(TEXT("HP Ratio: %f"), HealthRatio));// Debug
+		//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, *FString::Printf(TEXT("HP Ratio: %f"), HealthRatio));// Debug
 
 		if (HealthRatio <= ActiveHealthRatio)
 		{
-			GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, TEXT("Reach Ratio"));	// Debug
+			//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, TEXT("Reach Ratio"));	// Debug
 			AffectBuff();
 		}
 	}

@@ -103,6 +103,32 @@ void AMiniMT26::HomingRocket()
 	}
 }
 
+void AMiniMT26::PlazmaCircle()
+{
+	if (!bIsEnemyDie) {
+		MiniMT26Anim->PlazmaCircle();
+
+		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+	}
+}
+
+void AMiniMT26::Firebat()
+{
+	if (!bIsEnemyDie) {
+		AimToValue(-22.0f);
+
+		FTimerHandle AimTimerHandle;
+		FTimerDelegate AimBack = FTimerDelegate::CreateLambda([this]() { ReturnAim(AIController->enemyRotator_Y); });
+		GetWorld()->GetTimerManager().SetTimer(AimTimerHandle, AimBack, 3.0f, false);
+
+		MiniMT26Anim->Firebat();
+
+		MiniMT26Anim->OnMontageEnded.RemoveDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+		MiniMT26Anim->OnMontageEnded.AddDynamic(this, &AMiniMT26::OnAttackMontageEnded);
+	}
+}
+
 void AMiniMT26::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	Super::OnAttackMontageEnded(Montage, bInterrupted);
@@ -127,6 +153,10 @@ void AMiniMT26::EnemyDie()
 {
 	bIsEnemyDie = true;
 	MiniMT26Anim->Die();
+
+	FTimerHandle DieTimerHandle;
+	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, 5.3f, false);
 }
 
 void AMiniMT26::OnSpawnFromPool_Implementation()

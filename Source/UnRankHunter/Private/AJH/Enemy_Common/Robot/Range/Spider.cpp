@@ -30,10 +30,6 @@ ASpider::ASpider()
 void ASpider::Attack()
 {
 	if (!bIsEnemyDie) {
-		Super::Attack();
-
-		damage = 20.0f;
-
 		USpider_Anim* SpiderAnim = Cast<USpider_Anim>(GetMesh()->GetAnimInstance());
 		if (SpiderAnim == nullptr) return;
 
