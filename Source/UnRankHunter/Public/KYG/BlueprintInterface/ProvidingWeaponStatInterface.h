@@ -15,7 +15,7 @@ class UProvidingWeaponStatInterface : public UInterface
 };
 
 /**
- * 
+ *
  */
 class UNRANKHUNTER_API IProvidingWeaponStatInterface
 {
@@ -23,6 +23,6 @@ class UNRANKHUNTER_API IProvidingWeaponStatInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Providing Weapon Stat Interface", meta = (DisplayName = "Get Weapon Bonus Stat"))
-	FWeaponBonusStat GetWeaponBonusStat_Blueprint();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Providing Weapon Stat Interface", meta = (DisplayName = "Get Weapon Bonus Stat"))
+	FWeaponBonusStat GetWeaponBonusStat();
 };

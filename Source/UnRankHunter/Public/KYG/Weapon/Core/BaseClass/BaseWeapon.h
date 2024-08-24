@@ -308,6 +308,9 @@ public:
 	{
 		bIsStatRecent = false;
 	}
+
+	void SetStatProvider(class IProvidingWeaponStatInterface* Provider);
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void AddAttribute(FName AttributeID);
@@ -317,6 +320,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Attributes")
 	TArray<class UBaseWeaponAttribute*> AttributeArray{};
 
+	IProvidingWeaponStatInterface* StatProvider{};
 private:
 	bool bIsStatRecent{ false };
 

@@ -27,6 +27,8 @@ void UACWeaponManager::BeginPlay()
 
 	WeaponStatProvierArray = GetOwner()->GetComponentsByInterface(UProvidingWeaponStatInterface::StaticClass());
 
+	WeaponStatProvierArray.Remove(this);
+
 	UH_LogTempParam(Log, TEXT("[Weapon Manager Initialize] Get Weapon Stat Provider. Count is %d"), WeaponStatProvierArray.Num());
 
 	//UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
@@ -90,6 +92,7 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponC
 	IWeaponInterface::Execute_SetupWeaponAttachment(WeaponInst->_getUObject(), GetOwner());
 	WeaponInst->ForceSetWeaponEnable(false);
 	WeaponInst->ConstructWeapon(Params);
+	WeaponInst->SetStatProvider(this);
 
 	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
 
@@ -336,6 +339,28 @@ void UACWeaponManager::RefillAmmoCount_Implementation(int32 AmmoCount)
 	}
 }
 
+FWeaponBonusStat UACWeaponManager::GetWeaponBonusStat_Implementation()
+{
+	ProvidedStat = FWeaponBonusStat{};
+
+	for (UActorComponent* Comp : WeaponStatProvierArray)
+	{
+		if (Comp == this)
+		{
+			continue;
+		}
+
+		if (Comp->Implements<UProvidingWeaponStatInterface>())
+		{
+			auto CompStat = IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat(Comp);
+			ProvidedStat = ProvidedStat + CompStat;
+		}
+	}
+
+	//UH_LogTempParam(Log, TEXT("Provider Stat is UPDATED. ProvidedStat = %s"), *ProvidedStat.ToString());
+	return ProvidedStat;
+}
+
 void UACWeaponManager::ModifyDynamicStat(FWeaponStatSetterCallback Modifier)
 {
 	if (Modifier.IsBound())
@@ -370,18 +395,28 @@ const FWeaponBonusStat& UACWeaponManager::GetDynamicStat()
 
 void UACWeaponManager::UpdateProviderStat()
 {
-	ProvidedStat = FWeaponBonusStat{};
+	//ProvidedStat = FWeaponBonusStat{};
 
-	for (UActorComponent* Comp : WeaponStatProvierArray)
+	//for (UActorComponent* Comp : WeaponStatProvierArray)
+	//{
+	//	if (Comp == this)
+	//	{
+	//		continue;
+	//	}
+
+	//	if (Comp->Implements<UProvidingWeaponStatInterface>())
+	//	{
+	//		auto CompStat = IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat(Comp);
+	//		ProvidedStat = ProvidedStat + CompStat;
+	//	}
+	//}
+
+	//UH_LogTempParam(Log, TEXT("Provider Stat is UPDATED. ProvidedStat = %s"), *ProvidedStat.ToString());
+
+	if (EquippedWeapon)
 	{
-		if (Comp->Implements<UProvidingWeaponStatInterface>())
-		{
-			auto CompStat = IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat_Blueprint(Comp);
-			ProvidedStat = ProvidedStat + CompStat;
-		}
+		EquippedWeapon->UpdateStaticStat();
 	}
-
-	UH_LogTempParam(Log, TEXT("Provider Stat is UPDATED. ProvidedStat = %s"), *ProvidedStat.ToString());
 }
 
 const FWeaponBonusStat& UACWeaponManager::GetProviderStat()

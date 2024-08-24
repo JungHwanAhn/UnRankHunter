@@ -10,6 +10,7 @@
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "Attribute/AttributeClass/BaseWeaponAttribute.h"
+#include "BlueprintInterface/ProvidingWeaponStatInterface.h"
 #include "Engine/DataTable.h"
 
 // Sets default values
@@ -107,6 +108,7 @@ void ABaseWeapon::LoadParameter()
 
 void ABaseWeapon::SetupWeaponProperties()
 {
+	UpdateStaticStat();
 	RemainAmmoCount = GetFinalStat().AmmoCapacity;
 }
 
@@ -403,6 +405,7 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 	if (bNewEnabled == true)
 	{
 		bIsStatRecent = false;
+		UpdateStaticStat();	// Stat Update 0824
 	}
 }
 
@@ -533,6 +536,11 @@ void ABaseWeapon::UpdateStaticStat()
 	}
 	StaticStat = MoveTemp(Bonus);
 
+	if (StatProvider)
+	{
+		StaticStat = StaticStat + IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat(StatProvider->_getUObject());
+	}
+
 	bIsStatRecent = false;
 }
 
@@ -582,6 +590,11 @@ TSubclassOf<UBaseWeaponAttribute> ABaseWeapon::FindAttributeClass(FName ID)
 	}
 
 	return Row->AttributeClass;
+}
+
+void ABaseWeapon::SetStatProvider(IProvidingWeaponStatInterface* Provider)
+{
+	StatProvider = Provider;
 }
 
 void ABaseWeapon::AddAttribute(FName AttributeID)
