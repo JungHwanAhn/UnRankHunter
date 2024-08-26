@@ -95,7 +95,7 @@ void ABaseEnemy_Common::EnemyDie()
 		
 		FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
 		UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
-
+		
 		if (ExperienceClass) {
 			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 			if (Experience) {
@@ -104,6 +104,8 @@ void ABaseEnemy_Common::EnemyDie()
 			}
 		}
 	}
+
+	OnDeath.Broadcast(this);
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

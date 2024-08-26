@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackEnd);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeath, class ABaseEnemy_Common*, Invoker);
+
 UCLASS()
 class UNRANKHUNTER_API ABaseEnemy_Common : public ACharacter, public ICollisionController, public IPoolable
 {
@@ -65,5 +67,16 @@ public:
 	bool bIsActive = false;
 	bool bIsNear = false;
 private:
+
+	// KYG Extention
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy")
+	FName EnemyID{};
+
+
+	// Event Dispatcher
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Enemy")
+	FOnEnemyDeath OnDeath;
 	
 };
