@@ -1,4 +1,5 @@
 #include "BaseEnemy_Common.h"
+#include "UnRankHunter/UnRankHunter.h"
 #include "PoolSubsystem.h"
 #include "AIController_Rambo.h"
 #include "AIController_Spider.h"
@@ -70,12 +71,13 @@ void ABaseEnemy_Common::JumpAttack()
 void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
 	float velocity;
-	if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
-		velocity = 800.0f;
-	}
-	else {
-		velocity = 850.0f;
-	}
+	velocity = BaseMoveSpeed;
+	//if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
+	//	velocity = 800.0f;
+	//}
+	//else {
+	//	velocity = 850.0f;
+	//}
 	
 	if (bIsSlow) {
 		velocity *= Value;
@@ -83,7 +85,7 @@ void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 
 	GetCharacterMovement()->MaxWalkSpeed = velocity;
 
-	UE_LOG(LogTemp, Warning, TEXT("%f"), velocity);
+	UE_LOG(UH_LogDefault, Warning, TEXT("Enemy is slow of %f percents."), velocity);
 }
 
 void ABaseEnemy_Common::EnemyDie()
@@ -99,7 +101,7 @@ void ABaseEnemy_Common::EnemyDie()
 		if (ExperienceClass) {
 			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 			if (Experience) {
-				Experience->addXP = increaseXP;
+				Experience->addXP = BaseDropExp;
 				UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
 			}
 		}
@@ -135,5 +137,24 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 	enemyHP = 100.0f;
 
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
+float ABaseEnemy_Common::GetMoveSpeed_Implementation()
+{
+	return BaseMoveSpeed;
+}
+
+void ABaseEnemy_Common::InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken)
+{
+	this->BaseMaxHealth = MaxHealth;
+	this->BaseDamange = Damage;
+	this->BaseMoveSpeed = MoveSpeed;
+
+	this->BaseDropExp = DropExp;
+	this->BaseDropMoney = DropMoney;
+	this->BaseDropToken = DropToken;
+
+	enemyHP = MaxHealth;
+	GetCharacterMovement()->MaxWalkSpeed = MoveSpeed;
 }
 
