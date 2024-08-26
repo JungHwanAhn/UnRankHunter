@@ -51,3 +51,25 @@ FWeaponBonusStat FWeaponBonusStat::operator-(const FWeaponBonusStat& Other) cons
 
 	return NewStat;
 }
+
+FString FWeaponBonusStat::ToString()
+{
+	FString str;
+	str.Append(TEXT("{\n"));
+	str.Appendf(TEXT("  AllDamageUp = %.2f,\n"), this->AllDamageUp);
+	str.Appendf(TEXT("  BossDamageUp = %.2f,\n"), this->BossDamageUp);
+	str.Appendf(TEXT("  EliteDamageUp = %.2f,\n"), this->EliteDamageUp);
+	str.Appendf(TEXT("  CommonEnemyDamageUp = %.2f,\n"), this->CommonEnemyDamageUp);
+	str.Appendf(TEXT("  CritDamageUp = %.2f,\n"), this->CritDamageUp);
+	str.Appendf(TEXT("  AddAmmoCount = %d,\n"), this->AddAmmoCount);
+	str.Appendf(TEXT("  AddAmmoMultiple = %.2f,\n"), this->AddAmmoMultiple);
+	str.Appendf(TEXT("  FireSpeedUp = %.2f,\n"), this->FireSpeedUp);
+	str.Appendf(TEXT("  ReloadSpeedUp = %.2f,\n"), this->ReloadSpeedUp);
+	str.Appendf(TEXT("  AttackRange = %.2f,\n"), this->AttackRange);
+	str.Appendf(TEXT("  EffecientDistanceUp = %.2f,\n"), this->EffecientDistanceUp);
+	str.Appendf(TEXT("  AccuracyUp = %.2f,\n"), this->AccuracyUp);
+	str.Appendf(TEXT("  ElementalStrengthUp = %.2f\n"), this->ElementalStrengthUp);
+	str.Append(TEXT("}"));
+
+	return str;
+}

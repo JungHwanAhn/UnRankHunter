@@ -16,6 +16,8 @@ public:
 	void LaserShot();
 	void HomingRocket();
 	void GunAttack();
+	void PlazmaCircle();
+	void Firebat();
 	void Die();
 
 protected:
@@ -40,6 +42,12 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* GunAttackMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* PlazmaCircleMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
+	UAnimMontage* FirebatMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Montage")
 	UAnimMontage* DieMontage;

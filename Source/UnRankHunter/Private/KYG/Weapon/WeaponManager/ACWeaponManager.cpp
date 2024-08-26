@@ -5,6 +5,7 @@
 #include "Weapon/Interface/WeaponInterface.h"
 #include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "BlueprintInterface/ProvidingWeaponStatInterface.h"
 #include "UnRankHunter/UnRankHunter.h"
 
 UACWeaponManager::UACWeaponManager()
@@ -23,6 +24,10 @@ void UACWeaponManager::BeginPlay()
 	Super::BeginPlay();
 
 	WeaponArray.Init(nullptr, ContainerSize);
+
+	WeaponStatProvierArray = GetOwner()->GetComponentsByInterface(UProvidingWeaponStatInterface::StaticClass());
+
+	UH_LogTempParam(Log, TEXT("[Weapon Manager Initialize] Get Weapon Stat Provider. Count is %d"), WeaponStatProvierArray.Num());
 
 	//UE_LOG(LogTemp, Warning, TEXT("Weapon Manager Begin Play : %d"), WeaponArray.Num());
 
@@ -346,9 +351,42 @@ void UACWeaponManager::ModifyDynamicStat(FWeaponStatSetterCallback Modifier)
 	}
 }
 
+void UACWeaponManager::SetDynamicStat(UPARAM(ref) const FWeaponBonusStat& Stat)
+{
+	DynamicStat = Stat;
+
+	if (EquippedWeapon != nullptr)
+	{
+		FBonusStatModifier InjectStat;
+		InjectStat.BindDynamic(this, &UACWeaponManager::InjectDynamicStatCallback);
+		EquippedWeapon->ModifyDynamicStat(InjectStat);
+	}
+}
+
 const FWeaponBonusStat& UACWeaponManager::GetDynamicStat()
 {
 	return DynamicStat;
+}
+
+void UACWeaponManager::UpdateProviderStat()
+{
+	ProvidedStat = FWeaponBonusStat{};
+
+	for (UActorComponent* Comp : WeaponStatProvierArray)
+	{
+		if (Comp->Implements<UProvidingWeaponStatInterface>())
+		{
+			auto CompStat = IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat_Blueprint(Comp);
+			ProvidedStat = ProvidedStat + CompStat;
+		}
+	}
+
+	UH_LogTempParam(Log, TEXT("Provider Stat is UPDATED. ProvidedStat = %s"), *ProvidedStat.ToString());
+}
+
+const FWeaponBonusStat& UACWeaponManager::GetProviderStat()
+{
+	return ProvidedStat;
 }
 
 void UACWeaponManager::InjectDynamicStatCallback(FWeaponBonusStat& Stat)

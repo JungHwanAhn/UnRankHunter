@@ -176,6 +176,8 @@ protected:
 	class UACBaseReloadModule* ReloadModule{};
 	class UACBaseScopeModule* ScopeModule{};
 
+	//class IWeaponManagerInterface* WeaponManager{};
+
 protected:
 	UPROPERTY()
 	USceneComponent* CameraPositionComponent{};
