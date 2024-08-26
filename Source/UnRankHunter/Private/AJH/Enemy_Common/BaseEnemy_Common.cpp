@@ -78,7 +78,7 @@ void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 	//else {
 	//	velocity = 850.0f;
 	//}
-	
+
 	if (bIsSlow) {
 		velocity *= Value;
 	}
@@ -94,10 +94,10 @@ void ABaseEnemy_Common::EnemyDie()
 	if (PoolSubsystem) {
 		PoolSubsystem->ReturnToPool(this);
 		bIsEnemyDie = false;
-		
+
 		FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
 		UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
-		
+
 		if (ExperienceClass) {
 			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 			if (Experience) {
@@ -139,15 +139,10 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
-float ABaseEnemy_Common::GetMoveSpeed_Implementation()
-{
-	return BaseMoveSpeed;
-}
-
 void ABaseEnemy_Common::InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken)
 {
 	this->BaseMaxHealth = MaxHealth;
-	this->BaseDamange = Damage;
+	this->BaseDamage = Damage;
 	this->BaseMoveSpeed = MoveSpeed;
 
 	this->BaseDropExp = DropExp;
