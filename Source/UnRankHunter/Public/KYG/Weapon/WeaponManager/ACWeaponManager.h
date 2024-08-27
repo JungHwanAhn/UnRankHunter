@@ -8,6 +8,7 @@
 #include "Weapon/Structure/WeaponStructure.h"
 //#include "Weapon/Core/BaseClass/BaseWeapon.h"
 #include "Weapon/Interface/WeaponManagerInterface.h"
+#include "BlueprintInterface/ProvidingWeaponStatInterface.h"
 #include "Engine/DataTable.h"
 #include "ACWeaponManager.generated.h"
 
@@ -26,7 +27,7 @@ struct FWeaponDataTableRow : public FTableRowBase
 };
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface//, public IWeaponManagerInterface
+class UNRANKHUNTER_API UACWeaponManager : public UActorComponent, public IWeaponInterface, public IProvidingWeaponStatInterface
 {
 	GENERATED_BODY()
 
@@ -145,6 +146,11 @@ private:
 	virtual void RefillAmmoCount_Implementation(int32 AmmoCount) override;
 #pragma endregion
 
+#pragma region [Providing Weapon Stat Interface Implement]
+	virtual FWeaponBonusStat GetWeaponBonusStat_Implementation();
+#pragma endregion
+
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Manager Setting")
 	UDataTable* WeaponTable;
@@ -177,6 +183,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Manager")
 	void UpdateProviderStat();
 
+	// Deprecated
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Manager")
 	const FWeaponBonusStat& GetProviderStat();
 

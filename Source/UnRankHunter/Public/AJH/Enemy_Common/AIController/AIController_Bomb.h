@@ -19,4 +19,8 @@ private:
 
 	bool bIsAttack = false;
 	int32 attackDelay = 5;
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	float RushSpeedRate{ 1.2f };
 };

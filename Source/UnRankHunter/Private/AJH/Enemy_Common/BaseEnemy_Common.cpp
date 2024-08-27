@@ -1,4 +1,5 @@
 #include "BaseEnemy_Common.h"
+#include "UnRankHunter/UnRankHunter.h"
 #include "PoolSubsystem.h"
 #include "AIController_Rambo.h"
 #include "AIController_Spider.h"
@@ -70,20 +71,21 @@ void ABaseEnemy_Common::JumpAttack()
 void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 {
 	float velocity;
-	if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
-		velocity = 800.0f;
-	}
-	else {
-		velocity = 850.0f;
-	}
-	
+	velocity = BaseMoveSpeed;
+	//if (GetController()->IsA(AAIController_Rambo::StaticClass()) || GetController()->IsA(AAIController_Spider::StaticClass())) {
+	//	velocity = 800.0f;
+	//}
+	//else {
+	//	velocity = 850.0f;
+	//}
+
 	if (bIsSlow) {
 		velocity *= Value;
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = velocity;
 
-	UE_LOG(LogTemp, Warning, TEXT("%f"), velocity);
+	UE_LOG(UH_LogDefault, Warning, TEXT("Enemy is slow of %f percents."), velocity);
 }
 
 void ABaseEnemy_Common::EnemyDie()
@@ -92,18 +94,20 @@ void ABaseEnemy_Common::EnemyDie()
 	if (PoolSubsystem) {
 		PoolSubsystem->ReturnToPool(this);
 		bIsEnemyDie = false;
-		
+
 		FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
 		UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
 
 		if (ExperienceClass) {
 			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 			if (Experience) {
-				Experience->addXP = increaseXP;
+				Experience->addXP = BaseDropExp;
 				UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
 			}
 		}
 	}
+
+	OnDeath.Broadcast(this);
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -133,5 +137,19 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 	enemyHP = 100.0f;
 
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
+void ABaseEnemy_Common::InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken)
+{
+	this->BaseMaxHealth = MaxHealth;
+	this->BaseDamage = Damage;
+	this->BaseMoveSpeed = MoveSpeed;
+
+	this->BaseDropExp = DropExp;
+	this->BaseDropMoney = DropMoney;
+	this->BaseDropToken = DropToken;
+
+	enemyHP = MaxHealth;
+	GetCharacterMovement()->MaxWalkSpeed = MoveSpeed;
 }
 
