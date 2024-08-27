@@ -116,8 +116,10 @@ float ATitan::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 {
 	float actualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (actualDamage > 0.f && !bIsEnemyDie) {
-		titanHP -= actualDamage;
-		if (titanHP <= 0.f) EnemyDie();
+		enemyHP -= actualDamage;
+		if (enemyHP <= 0.f) EnemyDie();
+		//titanHP -= actualDamage; // 08.26 modified by kyg.
+		//if (titanHP <= 0.f) EnemyDie();
 	}
 	return actualDamage;
 }

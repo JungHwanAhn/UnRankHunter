@@ -15,7 +15,7 @@ void AAIController_Spider::Tick(float DeltaSeconds)
             Spider->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Spider->GetActorLocation(), PlayerPawn->GetActorLocation()));
             float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
             if (!Spider->bIsNear && distance < 4000.0f) {
-                Spider->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+                Spider->GetCharacterMovement()->MaxWalkSpeed = Spider->GetBaseMoveSpeed();
                 Spider->bIsNear = true;
             }
 

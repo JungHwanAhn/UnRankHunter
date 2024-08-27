@@ -10,6 +10,7 @@
 #include "Weapon/WeaponModule/Base/ACBaseScopeModule.h"
 #include "Weapon/Structure/WeaponStructure.h"
 #include "Attribute/AttributeClass/BaseWeaponAttribute.h"
+#include "BlueprintInterface/ProvidingWeaponStatInterface.h"
 #include "Engine/DataTable.h"
 
 // Sets default values
@@ -107,7 +108,8 @@ void ABaseWeapon::LoadParameter()
 
 void ABaseWeapon::SetupWeaponProperties()
 {
-	RemainAmmoCount = GetFinalStat().AmmoCapacity;
+	UpdateStaticStat();
+	SetAmmoCount(GetFinalStat().AmmoCapacity);
 }
 
 void ABaseWeapon::ConstructWeapon(const FWeaponConstructParams& Params)
@@ -360,8 +362,11 @@ void ABaseWeapon::RefillAmmoCount_Implementation(int32 AmmoCount)
 	if (RemainAmmoCount == -1)
 		return;
 
-	RemainAmmoCount = (RemainAmmoCount + AmmoCount);
-	RemainAmmoCount = (RemainAmmoCount > GetAmmoCapacity()) ? GetAmmoCapacity() : (RemainAmmoCount < 0) ? 0 : RemainAmmoCount;
+	int32 NewCount = (RemainAmmoCount + AmmoCount);
+	NewCount = (NewCount > GetAmmoCapacity()) ? GetAmmoCapacity() : (NewCount < 0) ? 0 : NewCount;
+	SetAmmoCount(NewCount);
+	//RemainAmmoCount = (RemainAmmoCount + AmmoCount);
+	//RemainAmmoCount = (RemainAmmoCount > GetAmmoCapacity()) ? GetAmmoCapacity() : (RemainAmmoCount < 0) ? 0 : RemainAmmoCount;
 }
 
 #pragma endregion
@@ -403,6 +408,7 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 	if (bNewEnabled == true)
 	{
 		bIsStatRecent = false;
+		UpdateStaticStat();	// Stat Update 0824
 	}
 }
 
@@ -427,7 +433,8 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 	// Amount of remain ammo is bigger than cost.
 	if (FinalAmmo >= 0)
 	{
-		RemainAmmoCount = FinalAmmo;
+		//RemainAmmoCount = FinalAmmo; // Refactor
+		SetAmmoCount(FinalAmmo);
 		OutRemainAmmo = RemainAmmoCount;
 		OutReduceAmmo = Cost;
 		return true;
@@ -441,7 +448,8 @@ bool ABaseWeapon::ConsumeAmmo(int32& OutRemainAmmo, int32& OutReduceAmmo, int32 
 	}
 
 	OutReduceAmmo = RemainAmmoCount;	// Consume all remains ammo.
-	RemainAmmoCount = 0;
+	//RemainAmmoCount = 0;
+	SetAmmoCount(0);
 	OutRemainAmmo = 0;
 	return OutReduceAmmo > 0;	// Return ammo is decrease?
 }
@@ -480,6 +488,36 @@ const bool ABaseWeapon::GetWeaponSocket(FTransform& OutTransfrom, const FName So
 
 	OutTransfrom = WeaponMesh->GetSocketTransform(SocketName);
 	return true;
+}
+
+UACBaseTriggerModule* ABaseWeapon::GetTriggerModule()
+{
+	return TriggerModule;
+}
+
+UACBaseShooterModule* ABaseWeapon::GetShooterModule()
+{
+	return ShooterModule;
+}
+
+UACBaseReloadModule* ABaseWeapon::GetReloadModule()
+{
+	return ReloadModule;
+}
+
+UACBaseScopeModule* ABaseWeapon::GetScopeModule()
+{
+	return ScopeModule;
+}
+
+void ABaseWeapon::SetAmmoCount(int32 count)
+{
+	int PreCount = RemainAmmoCount;
+
+	count = count < 0 ? 0 : count > GetFinalStat().AmmoCapacity ? GetFinalStat().AmmoCapacity : count;
+	RemainAmmoCount = count;
+
+	OnAmmoCountChanged.Broadcast(this, RemainAmmoCount, PreCount, GetFinalStat().AmmoCapacity);
 }
 
 #pragma region [Stat System]
@@ -533,6 +571,11 @@ void ABaseWeapon::UpdateStaticStat()
 	}
 	StaticStat = MoveTemp(Bonus);
 
+	if (StatProvider)
+	{
+		StaticStat = StaticStat + IProvidingWeaponStatInterface::Execute_GetWeaponBonusStat(StatProvider->_getUObject());
+	}
+
 	bIsStatRecent = false;
 }
 
@@ -582,6 +625,11 @@ TSubclassOf<UBaseWeaponAttribute> ABaseWeapon::FindAttributeClass(FName ID)
 	}
 
 	return Row->AttributeClass;
+}
+
+void ABaseWeapon::SetStatProvider(IProvidingWeaponStatInterface* Provider)
+{
+	StatProvider = Provider;
 }
 
 void ABaseWeapon::AddAttribute(FName AttributeID)

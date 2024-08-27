@@ -49,6 +49,8 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FBonusStatModifier, FWeaponBonusStat&, StatRef
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponFireEvent, ABaseWeapon*, Weapon, UPARAM(ref) const FWeaponFireInfo&, WeaponInfo);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnWeaponAmmoCountChanged, ABaseWeapon*, Invoker, int32, CurrentCount, int32, PreCount, int32, MaxCapacity);
+
 UCLASS(BlueprintType, Blueprintable)
 class UNRANKHUNTER_API ABaseWeapon : public AActor, public IWeaponInterface
 {
@@ -169,12 +171,28 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	UChildActorComponent* MeshActorComp{};
 
+#pragma region [ Weapon Module ]
 protected:
 	// Assign On Begin Play
 	class UACBaseTriggerModule* TriggerModule{};
 	class UACBaseShooterModule* ShooterModule{};
 	class UACBaseReloadModule* ReloadModule{};
 	class UACBaseScopeModule* ScopeModule{};
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
+	class UACBaseTriggerModule* GetTriggerModule();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
+	class UACBaseShooterModule* GetShooterModule();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
+	class UACBaseReloadModule* GetReloadModule();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module")
+	class UACBaseScopeModule* GetScopeModule();
+#pragma endregion
+
 
 	//class IWeaponManagerInterface* WeaponManager{};
 
@@ -200,6 +218,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Option")
 	FName WeaponSocket{};
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Data|Ammo")
+	void SetAmmoCount(int32 count);
 
 protected:
 	// [Weapon Datas]
@@ -262,8 +284,13 @@ public:
 
 #pragma endregion
 public:
+#pragma region [ Event ]
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
 	FWeaponFireEvent OnWeaponFireEvent{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
+	FOnWeaponAmmoCountChanged OnAmmoCountChanged{};
+#pragma endregion
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -308,6 +335,9 @@ public:
 	{
 		bIsStatRecent = false;
 	}
+
+	void SetStatProvider(class IProvidingWeaponStatInterface* Provider);
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Construct")
 	void AddAttribute(FName AttributeID);
@@ -317,6 +347,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Attributes")
 	TArray<class UBaseWeaponAttribute*> AttributeArray{};
 
+	IProvidingWeaponStatInterface* StatProvider{};
 private:
 	bool bIsStatRecent{ false };
 

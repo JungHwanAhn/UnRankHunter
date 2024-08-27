@@ -15,7 +15,7 @@ void AAIController_Rambo::Tick(float DeltaSeconds)
             Rambo->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Rambo->GetActorLocation(), PlayerPawn->GetActorLocation()));
             float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
             if (!Rambo->bIsNear && distance < 4000.0f) {
-                Rambo->GetCharacterMovement()->MaxWalkSpeed = 800.0f;
+                Rambo->GetCharacterMovement()->MaxWalkSpeed = Rambo->GetBaseMoveSpeed(); // Before is 800.0f
                 Rambo->bIsNear = true;
             }
 

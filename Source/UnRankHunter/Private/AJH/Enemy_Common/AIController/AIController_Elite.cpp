@@ -14,7 +14,7 @@ void AAIController_Elite::Tick(float DeltaSeconds)
 			ControlledPawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(ControlledPawn->GetActorLocation(), PlayerPawn->GetActorLocation()));
 			float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
 			if (!ControlledPawn->bIsNear && distance < 3500.0f) {
-				ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+				ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = ControlledPawn->GetBaseMoveSpeed();
 				ControlledPawn->bIsNear = true;
 			}
 
