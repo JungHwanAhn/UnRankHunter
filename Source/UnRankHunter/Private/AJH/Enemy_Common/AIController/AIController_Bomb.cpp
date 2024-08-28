@@ -13,10 +13,12 @@ void AAIController_Bomb::Tick(float DeltaSeconds)
             float distance = FVector::Distance(this->GetPawn()->GetActorLocation(), PlayerPawn->GetActorLocation());
             if (!ControlledPawn->bIsNear) {
                 if (distance > 3500.0f) {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+                    //ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = ControlledPawn->GetBaseMoveSpeed();
                 }
                 else {
-                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+                    //ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = 850.0f;
+                    ControlledPawn->GetCharacterMovement()->MaxWalkSpeed = ControlledPawn->GetBaseMoveSpeed() * RushSpeedRate;
                     ControlledPawn->bIsNear = true;
                 }
             }
