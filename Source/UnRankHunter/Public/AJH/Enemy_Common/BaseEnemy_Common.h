@@ -54,6 +54,16 @@ public:
 	virtual void OnSpawnFromPool_Implementation() override;
 	virtual void OnReturnToPool_Implementation() override;
 
+	// It is called when the character dies. It deactivates the character object.
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void DestroyEnemy();
+
+protected:
+	// It is called when the character dies. It spawns an Explosive Ore.
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void SpawnExpOre();
+
+public:
 	FOnAttackEnd OnAttackEnd;
 
 	bool bIsEnemyDie = false;

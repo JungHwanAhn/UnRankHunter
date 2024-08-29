@@ -12,6 +12,8 @@
 #include "Attribute/AttributeClass/BaseWeaponAttribute.h"
 #include "BlueprintInterface/ProvidingWeaponStatInterface.h"
 #include "Engine/DataTable.h"
+#include "Blueprint/UserWidget.h"
+#include "BlueprintInterface/WeaponHudInterface.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
@@ -379,6 +381,9 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 	bWeaponEnabled = bNewEnabled;
 	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
+	// Set enabled state of WeaponUI.
+	SetWeaponUIEnabled(bNewEnabled);
+
 	auto AllComps = GetComponents();
 	for (auto Comp : AllComps)
 	{
@@ -657,6 +662,43 @@ void ABaseWeapon::AddAttribute(FName AttributeID)
 	// Initialize instance.
 	AttributeInstance->InitializeOnCreated(this);
 	AttributeInstance->EnableAttribute();
+}
+
+void ABaseWeapon::InitializeCrosshairUI()
+{
+	if (CrosshairUIClass == nullptr)
+	{
+		return;
+	}
+
+	if (CrosshairUIInstance == nullptr)
+	{
+		CrosshairUIInstance = CreateWidget(GetWorld(), CrosshairUIClass);
+	}
+
+	if (CrosshairUIInstance->GetClass()->ImplementsInterface(UWeaponHudInterface::StaticClass()))
+	{
+		IWeaponHudInterface::Execute_SetupBaseWeapon(CrosshairUIInstance, this);
+	}
+}
+
+void ABaseWeapon::SetWeaponUIEnabled(bool bEnabled)
+{
+	if (CrosshairUIClass == nullptr)
+	{
+		UH_LogTemp(Log, TEXT("Weapon UI Class is missing!"));
+		return;
+	}
+
+	if (CrosshairUIInstance == nullptr)
+	{
+		InitializeCrosshairUI();
+	}
+
+	if (CrosshairUIInstance->GetClass()->ImplementsInterface(UWeaponHudInterface::StaticClass()))
+	{
+		IWeaponHudInterface::Execute_SetUIEnabled(CrosshairUIInstance, bEnabled);
+	}
 }
 #pragma endregion
 

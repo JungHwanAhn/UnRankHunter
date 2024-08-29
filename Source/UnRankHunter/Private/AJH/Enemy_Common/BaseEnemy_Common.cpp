@@ -90,22 +90,11 @@ void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 
 void ABaseEnemy_Common::EnemyDie()
 {
-	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
-	if (PoolSubsystem) {
-		PoolSubsystem->ReturnToPool(this);
-		bIsEnemyDie = false;
+	// Deactivate enemy instance.
+	DestroyEnemy();
 
-		FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
-		UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
-
-		if (ExperienceClass) {
-			AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
-			if (Experience) {
-				Experience->addXP = BaseDropExp;
-				UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
-			}
-		}
-	}
+	// Spawn EXP ore.
+	SpawnExpOre();
 
 	OnDeath.Broadcast(this);
 }
@@ -137,6 +126,32 @@ void ABaseEnemy_Common::OnReturnToPool_Implementation()
 	enemyHP = 100.0f;
 
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+}
+
+void ABaseEnemy_Common::SpawnExpOre()
+{
+	// Spawn EXP ore.
+	FTransform SpawnTransform(FRotator::ZeroRotator, GetActorLocation());
+	UClass* ExperienceClass = LoadObject<UClass>(nullptr, TEXT("/Game/01_Core/AJH/Enemy/AJH_BP_Experience.AJH_BP_Experience_C"));
+
+	if (ExperienceClass) {
+		AExperience* Experience = Cast<AExperience>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this, ExperienceClass, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
+		if (Experience) {
+			Experience->addXP = BaseDropExp;
+			UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
+		}
+	}
+}
+
+void ABaseEnemy_Common::DestroyEnemy()
+{
+	// Deactivate enemy instance.
+	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
+	if (PoolSubsystem)
+	{
+		PoolSubsystem->ReturnToPool(this);
+		bIsEnemyDie = false;
+	}
 }
 
 void ABaseEnemy_Common::InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken)
