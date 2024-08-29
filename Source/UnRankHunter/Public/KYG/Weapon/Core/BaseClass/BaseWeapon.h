@@ -361,4 +361,24 @@ private:
 
 #pragma endregion
 #pragma endregion
+
+#pragma region [ UI ]
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon UI")
+	TSubclassOf<UUserWidget> CrosshairUIClass{};
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon UI")
+	UUserWidget* CrosshairUIInstance{};
+
+
+protected:
+	UFUNCTION()
+	void InitializeCrosshairUI();
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon UI")
+	void SetWeaponUIEnabled(bool bEnabled);
+
+#pragma endregion
+
 };
