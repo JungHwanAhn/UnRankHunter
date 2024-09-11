@@ -10,31 +10,32 @@ ATitan::ATitan()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Elite::StaticClass();
+	// Debug build test
+	//AIControllerClass = AAIController_Elite::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		TitanMesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonCrunch/Characters/Heroes/Crunch/Skins/Teir_1/Military/Meshes/Crunch_Military.Crunch_Military'"));
-	if (TitanMesh.Succeeded()) {
-		GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
-		GetMesh()->SetRelativeScale3D(FVector(1.5));
-		GetMesh()->SetSkeletalMesh(TitanMesh.Object);
-		GetMesh()->GetOwner()->Tags.Remove("Common");
-		GetMesh()->GetOwner()->Tags.Add("Elite");
-		GetMesh()->GetOwner()->Tags.Add("Titan");
-	}
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh>
+	//	TitanMesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonCrunch/Characters/Heroes/Crunch/Skins/Teir_1/Military/Meshes/Crunch_Military.Crunch_Military'"));
+	//if (TitanMesh.Succeeded()) {
+	//	GetMesh()->SetRelativeLocation(FVector(0, 0, -120));
+	//	GetMesh()->SetRelativeScale3D(FVector(1.5));
+	//	GetMesh()->SetSkeletalMesh(TitanMesh.Object);
+	//	GetMesh()->GetOwner()->Tags.Remove("Common");
+	//	GetMesh()->GetOwner()->Tags.Add("Elite");
+	//	GetMesh()->GetOwner()->Tags.Add("Titan");
+	//}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance>
-		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Elite/AJH_ABP_Titan.AJH_ABP_Titan_C"));
-	if (AnimInstance.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
-	}
+	//static ConstructorHelpers::FClassFinder<UAnimInstance>
+	//	AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Elite/AJH_ABP_Titan.AJH_ABP_Titan_C"));
+	//if (AnimInstance.Succeeded()) {
+	//	GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
+	//}
 
-	RHCollision->SetBoxExtent(FVector(45, 40, 40));
-	RHCollision->SetRelativeLocation(FVector(-20, -20, 0));
-	LHCollision->SetBoxExtent(FVector(45, 40, 40));
-	LHCollision->SetRelativeLocation(FVector(20, 20, 0));
+	//RHCollision->SetBoxExtent(FVector(45, 40, 40));
+	//RHCollision->SetRelativeLocation(FVector(-20, -20, 0));
+	//LHCollision->SetBoxExtent(FVector(45, 40, 40));
+	//LHCollision->SetRelativeLocation(FVector(20, 20, 0));
 
-	GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
+	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 170.0f);
 }
 
 void ATitan::BeginPlay()

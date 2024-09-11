@@ -8,6 +8,7 @@ ARambo::ARambo()
 {
 	AIControllerClass = AAIController_Rambo::StaticClass();
 
+	// Debug build test
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		RamboMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SteamPunkMech2837/Mesh/SK_SteamPunkMech_2837_Gun.SK_SteamPunkMech_2837_Gun'"));
 	if (RamboMesh.Succeeded()) {

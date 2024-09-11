@@ -7,24 +7,25 @@ ASpider::ASpider()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_Spider::StaticClass();
+	//// Debug build test
+	//AIControllerClass = AAIController_Spider::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		SpiderMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SpiderMech/Mesh/SpiderMech/SK_SpriderMech.SK_SpriderMech'"));
-	if (SpiderMesh.Succeeded()) {
-		GetMesh()->SetSkeletalMesh(SpiderMesh.Object);
-		GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
-		GetMesh()->SetRelativeScale3D(FVector(1.9));
-		GetMesh()->GetOwner()->Tags.Add("Spider");
-	}
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh>
+	//	SpiderMesh(TEXT("SkeletalMesh'/Game/02_Asset/SteamPunkCollection/SpiderMech/Mesh/SpiderMech/SK_SpriderMech.SK_SpriderMech'"));
+	//if (SpiderMesh.Succeeded()) {
+	//	GetMesh()->SetSkeletalMesh(SpiderMesh.Object);
+	//	GetMesh()->SetRelativeLocation(FVector(0, 0, -200));
+	//	GetMesh()->SetRelativeScale3D(FVector(1.9));
+	//	GetMesh()->GetOwner()->Tags.Add("Spider");
+	//}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance>
-		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Range/AJH_ABP_Spider.AJH_ABP_Spider_C"));
-	if (AnimInstance.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
-	}
+	//static ConstructorHelpers::FClassFinder<UAnimInstance>
+	//	AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Range/AJH_ABP_Spider.AJH_ABP_Spider_C"));
+	//if (AnimInstance.Succeeded()) {
+	//	GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
+	//}
 
-	GetCapsuleComponent()->InitCapsuleSize(100.0f, 115.0f);
+	//GetCapsuleComponent()->InitCapsuleSize(100.0f, 115.0f);
 }
 
 void ASpider::Attack()

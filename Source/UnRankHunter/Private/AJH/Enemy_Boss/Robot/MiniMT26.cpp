@@ -10,31 +10,32 @@ AMiniMT26::AMiniMT26()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_MiniMT26::StaticClass();
+	// Debug build test
+	//AIControllerClass = AAIController_MiniMT26::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		MiniMT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
-	if (MiniMT26Mesh.Succeeded()) {
-		GetMesh()->SetRelativeLocation(FVector(0, 0, -370));
-		GetMesh()->SetRelativeScale3D(FVector(3.0f));
-		GetMesh()->SetSkeletalMesh(MiniMT26Mesh.Object);
-		GetMesh()->GetOwner()->Tags.Remove("Common");
-		GetMesh()->GetOwner()->Tags.Add("Boss");
-		GetMesh()->GetOwner()->Tags.Add("MiniMT26");
-	}
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh>
+	//	MiniMT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
+	//if (MiniMT26Mesh.Succeeded()) {
+	//	GetMesh()->SetRelativeLocation(FVector(0, 0, -370));
+	//	GetMesh()->SetRelativeScale3D(FVector(3.0f));
+	//	GetMesh()->SetSkeletalMesh(MiniMT26Mesh.Object);
+	//	GetMesh()->GetOwner()->Tags.Remove("Common");
+	//	GetMesh()->GetOwner()->Tags.Add("Boss");
+	//	GetMesh()->GetOwner()->Tags.Add("MiniMT26");
+	//}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance>
-		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Boss/AJH_ABP_MiniMT26.AJH_ABP_MiniMT26_C"));
-	if (AnimInstance.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
-	}
+	//static ConstructorHelpers::FClassFinder<UAnimInstance>
+	//	AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Boss/AJH_ABP_MiniMT26.AJH_ABP_MiniMT26_C"));
+	//if (AnimInstance.Succeeded()) {
+	//	GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
+	//}
 
-	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
-	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
+	//ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
+	//ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
 
-	RHCollision->SetRelativeLocation(FVector(0, -70, 28));
-	RHCollision->SetBoxExtent(FVector(40, 170, 40));
-	GetCapsuleComponent()->InitCapsuleSize(200.0f, 370.0f);
+	//RHCollision->SetRelativeLocation(FVector(0, -70, 28));
+	//RHCollision->SetBoxExtent(FVector(40, 170, 40));
+	//GetCapsuleComponent()->InitCapsuleSize(200.0f, 370.0f);
 }
 
 void AMiniMT26::BeginPlay()

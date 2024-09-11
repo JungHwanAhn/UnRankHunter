@@ -8,26 +8,27 @@ AMT26::AMT26()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	AIControllerClass = AAIController_MT26::StaticClass();
+	// Debug build test
+	//AIControllerClass = AAIController_MT26::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		MT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
-	if (MT26Mesh.Succeeded()) {
-		GetMesh()->SetRelativeScale3D(FVector(80));
-		GetMesh()->SetSkeletalMesh(MT26Mesh.Object);
-		GetMesh()->GetOwner()->Tags.Remove("Common");
-		GetMesh()->GetOwner()->Tags.Add("Boss");
-		GetMesh()->GetOwner()->Tags.Add("MT26");
-	}
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh>
+	//	MT26Mesh(TEXT("SkeletalMesh'/Game/02_Asset/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
+	//if (MT26Mesh.Succeeded()) {
+	//	GetMesh()->SetRelativeScale3D(FVector(80));
+	//	GetMesh()->SetSkeletalMesh(MT26Mesh.Object);
+	//	GetMesh()->GetOwner()->Tags.Remove("Common");
+	//	GetMesh()->GetOwner()->Tags.Add("Boss");
+	//	GetMesh()->GetOwner()->Tags.Add("MT26");
+	//}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance>
-		AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Boss/AJH_ABP_MT26.AJH_ABP_MT26_C"));
-	if (AnimInstance.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
-	}
+	//static ConstructorHelpers::FClassFinder<UAnimInstance>
+	//	AnimInstance(TEXT("/Game/01_Core/AJH/Enemy/Robot/Boss/AJH_ABP_MT26.AJH_ABP_MT26_C"));
+	//if (AnimInstance.Succeeded()) {
+	//	GetMesh()->SetAnimInstanceClass(AnimInstance.Class);
+	//}
 
-	ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
-	ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
+	//ShotDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ShotDirection"));
+	//ShotDirection->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Muzzle_01"));
 }
 
 void AMT26::BeginPlay()

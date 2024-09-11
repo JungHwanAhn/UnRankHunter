@@ -8,6 +8,7 @@ ASaw::ASaw()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	// Debug build test
 	AIControllerClass = AAIController_Common::StaticClass();
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
