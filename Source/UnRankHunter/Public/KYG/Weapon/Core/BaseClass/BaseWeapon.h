@@ -290,6 +290,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
 	FOnWeaponAmmoCountChanged OnAmmoCountChanged{};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "Weapon Event")
+	FOnWeaponHit OnWeaponHit{};
 #pragma endregion
 
 public:

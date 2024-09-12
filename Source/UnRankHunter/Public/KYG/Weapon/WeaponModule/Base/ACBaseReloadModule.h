@@ -6,9 +6,22 @@
 #include "KYG/Weapon/WeaponModule/Base/ACBaseWeaponModule.h"
 #include "ACBaseReloadModule.generated.h"
 
-/**
- *
- */
+UENUM(BlueprintType)
+enum class EReloadResult : uint8
+{
+	Success,
+	Failure,
+	Continue
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnReloadStartDelegate, class UACBaseReloadModule*, ReloadModule, float, ReloadTime);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnReloadEndDelegate, 
+	class UACBaseReloadModule*, ReloadModule, 
+	TEnumAsByte<EReloadResult>, ReloadResult, 
+	int32, Amount
+);
+
 UCLASS(Abstract, BlueprintType, Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNRANKHUNTER_API UACBaseReloadModule : public UACBaseWeaponModule
 {
@@ -18,7 +31,6 @@ public:
 	UACBaseReloadModule();
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon Module|Reload Module")
@@ -35,6 +47,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Reload Module")
 	bool SetReloadInput(bool bInput);
+
+public:
+	FOnReloadStartDelegate OnReloadBeginEvent{};
+
+	FOnReloadEndDelegate OnReloadEndEvent{};
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Reload Module")
+	void ReloadWeapon(int32 RefillAmount, TEnumAsByte<EReloadResult> Result);
 
 protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon Module|Reload Module")

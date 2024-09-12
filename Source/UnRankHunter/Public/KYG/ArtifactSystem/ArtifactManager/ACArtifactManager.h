@@ -7,7 +7,7 @@
 #include "ACArtifactManager.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), Blueprintable, BlueprintType, meta=(BlueprintSpawnableComponent) )
 class UNRANKHUNTER_API UACArtifactManager : public UActorComponent
 {
 	GENERATED_BODY()

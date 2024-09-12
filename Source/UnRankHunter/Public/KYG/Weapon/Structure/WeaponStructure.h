@@ -171,6 +171,12 @@ struct FVirtualWeaponInstance
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FWeaponStatSetterCallback, FWeaponBonusStat&, BonusStat);
 
+// FOnWeaponHit(
+// class ABaseWeapon* Invoker, 
+// AActor* Target, 
+// float BaseDamage, 
+// const FHitResult& HitResult)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnWeaponHit, class ABaseWeapon*, Invoker, AActor*, Target, float, BaseDamage, const FHitResult&, HitResult);
 
 class UNRANKHUNTER_API WeaponStructure
 {
