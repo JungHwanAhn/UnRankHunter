@@ -47,7 +47,7 @@ void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AAc
 {
 	AActor* Player = Cast<AActor>(OtherActor);
 	if (Player && Player->ActorHasTag("Player") && bIsDamage) {
-		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
+		UGameplayStatics::ApplyDamage(OtherActor, BaseDamage, GetController(), nullptr, NULL);
 		bIsDamage = false;
 	}
 }

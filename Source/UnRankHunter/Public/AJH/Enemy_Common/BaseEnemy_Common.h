@@ -84,25 +84,25 @@ public:
 	void InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken);
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	FName EnemyID{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseMaxHealth{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseDamage{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseMoveSpeed{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseDropExp{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	int32 BaseDropMoney{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	int32 BaseDropToken{};
 
 public:
