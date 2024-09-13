@@ -69,7 +69,6 @@ void ABombSpider::EnemyDie()
 {
 	bIsEnemyDie = true;
 	float bombDelay = 2.0f;
-	FTimerHandle DieTimerHandle;
-	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
-	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, bombDelay, false);
+	dieDelay = 2.0f;
+	Super::EnemyDie();
 }

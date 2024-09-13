@@ -90,13 +90,23 @@ void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 
 void ABaseEnemy_Common::EnemyDie()
 {
-	// Deactivate enemy instance.
-	DestroyEnemy();
+	bIsEnemyDie = true;
+
+	//// Deactivate enemy instance.
+	//DestroyEnemy();
 
 	// Spawn EXP ore.
 	SpawnExpOre();
 
+	// Stop and deactivate enemy procedure.
+	DisableEnemy();
+
 	OnDeath.Broadcast(this);
+
+	// Destroy enemy object after a seconds.
+	FTimerHandle DieTimerHandle;
+	FTimerDelegate DestroyCallback = FTimerDelegate::CreateLambda([this]() { DestroyEnemy(); });
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, DestroyCallback, dieDelay, false);
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -141,6 +151,11 @@ void ABaseEnemy_Common::SpawnExpOre()
 			UGameplayStatics::FinishSpawningActor(Experience, SpawnTransform);
 		}
 	}
+}
+
+void ABaseEnemy_Common::DisableEnemy()
+{
+	GetCapsuleComponent()->SetCollisionProfileName(DeathCollisionProfile.Name, false);
 }
 
 void ABaseEnemy_Common::DestroyEnemy()

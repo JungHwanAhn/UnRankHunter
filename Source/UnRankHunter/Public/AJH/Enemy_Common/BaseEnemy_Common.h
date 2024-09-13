@@ -63,6 +63,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Enemy")
 	void SpawnExpOre();
 
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void DisableEnemy();
+
+public:
+	UPROPERTY(EditAnywhere, Category="Enemy Collision")
+	FCollisionProfileName DeathCollisionProfile { TEXT("EnemyDeathCollision") };
+
 public:
 	FOnAttackEnd OnAttackEnd;
 

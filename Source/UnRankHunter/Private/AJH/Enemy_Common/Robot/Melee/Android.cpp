@@ -113,7 +113,5 @@ void AAndroid::EnemyDie()
 
 	AndroidAnim->Die();
 
-	FTimerHandle DieTimerHandle;
-	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
-	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, dieDelay, false);
+	Super::EnemyDie();
 }
