@@ -105,7 +105,12 @@ void ABaseEnemy_Common::EnemyDie()
 
 	// Destroy enemy object after a seconds.
 	FTimerHandle DieTimerHandle;
-	FTimerDelegate DestroyCallback = FTimerDelegate::CreateLambda([this]() { DestroyEnemy(); });
+	FTimerDelegate DestroyCallback = FTimerDelegate::CreateLambda([this]() {
+		if (this->bIsActive == false)
+			return;
+
+		DestroyEnemy();
+		});
 	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, DestroyCallback, dieDelay, false);
 }
 
@@ -126,6 +131,8 @@ void ABaseEnemy_Common::OnCollisionEnd_Implementation()
 void ABaseEnemy_Common::OnSpawnFromPool_Implementation()
 {
 	bIsActive = true;
+
+	GetCapsuleComponent()->SetCollisionProfileName(EnemyCollisionProfile.Name);
 }
 
 void ABaseEnemy_Common::OnReturnToPool_Implementation()

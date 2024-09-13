@@ -45,7 +45,7 @@ protected:
 	float enemyHP = 100.0f;
 	float increaseXP = 10.0f;	// Deprecated. cause: unusing variable. kyg 08-26 modified.
 
-public:	
+public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnCollisionStart_Implementation() override;
@@ -67,8 +67,12 @@ protected:
 	void DisableEnemy();
 
 public:
-	UPROPERTY(EditAnywhere, Category="Enemy Collision")
-	FCollisionProfileName DeathCollisionProfile { TEXT("EnemyDeathCollision") };
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Collision")
+	FCollisionProfileName EnemyCollisionProfile{ TEXT("EnemyCollision") };
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Collision")
+	FCollisionProfileName DeathCollisionProfile{ TEXT("EnemyDeathCollision") };
 
 public:
 	FOnAttackEnd OnAttackEnd;
