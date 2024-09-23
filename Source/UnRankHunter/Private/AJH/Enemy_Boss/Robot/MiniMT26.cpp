@@ -153,8 +153,6 @@ void AMiniMT26::EnemyDie()
 {
 	bIsEnemyDie = true;
 	MiniMT26Anim->Die();
-	AIController->StopAI();
-	
 
 	FTimerHandle DieTimerHandle;
 	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
