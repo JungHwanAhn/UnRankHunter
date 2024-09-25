@@ -168,6 +168,9 @@ void ABaseEnemy_Common::DisableEnemy()
 void ABaseEnemy_Common::DestroyEnemy()
 {
 	// Deactivate enemy instance.
+	if (GetWorld() == nullptr)
+		return;
+
 	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
 	if (PoolSubsystem)
 	{
