@@ -72,20 +72,46 @@ FTransform UACBaseShooterModule::GetSettingPosition()
 
 void UACBaseShooterModule::ApplyWeaponDamage(AActor* DamagedActor, float Damage)
 {
-	ensure(GetOwnerWeapon());
-
-	AActor* WeaponOwner = GetOwnerWeapon()->GetWeaponParent();
-
-	ensure(WeaponOwner);
-
-	APawn* OwnerAsPawn = Cast<APawn>(WeaponOwner);
-
 	AController* OwnerController{ nullptr };
 
-	if (ensure(OwnerAsPawn))
+	if (GetOwnerWeapon())
 	{
-		OwnerController = OwnerAsPawn->GetController();
+		AActor* WeaponOwner = GetOwnerWeapon()->GetWeaponParent();
+		if (WeaponOwner)
+		{
+			APawn* OwnerAsPawn = Cast<APawn>(WeaponOwner);
+
+			if (OwnerAsPawn)
+			{
+				OwnerController = OwnerAsPawn->GetController();
+			}
+		}
 	}
 
 	UGameplayStatics::ApplyDamage(DamagedActor, Damage, OwnerController, GetOwnerWeapon(), DamageClass);
+
+	OwnerWeapon->OnWeaponHit.Broadcast(OwnerWeapon, DamagedActor, Damage, FHitResult{});
+}
+
+void UACBaseShooterModule::ApplyWeaponPointDamage(AActor* DamagedActor, float Damage, FVector HitFromVector, const FHitResult& HitResult)
+{
+	AController* OwnerController{ nullptr };
+
+	if (GetOwnerWeapon())
+	{
+		AActor* WeaponOwner = GetOwnerWeapon()->GetWeaponParent();
+		if (WeaponOwner)
+		{
+			APawn* OwnerAsPawn = Cast<APawn>(WeaponOwner);
+
+			if (OwnerAsPawn)
+			{
+				OwnerController = OwnerAsPawn->GetController();
+			}
+		}
+	}
+
+	UGameplayStatics::ApplyPointDamage(DamagedActor, Damage, HitFromVector, HitResult, OwnerController, GetOwnerWeapon(), nullptr);
+
+	OwnerWeapon->OnWeaponHit.Broadcast(OwnerWeapon, DamagedActor, Damage, HitResult);
 }

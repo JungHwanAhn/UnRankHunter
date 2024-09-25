@@ -71,9 +71,7 @@ void ARambo::EnemyDie()
 
 	RamboAnim->Die();
 
-	FTimerHandle DieTimerHandle;
-	FTimerDelegate CallEnemyDie = FTimerDelegate::CreateLambda([this]() { Super::EnemyDie(); });
-	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, CallEnemyDie, dieDelay, false);
+	Super::EnemyDie();
 }
 
 void ARambo::OnSpawnFromPool_Implementation()

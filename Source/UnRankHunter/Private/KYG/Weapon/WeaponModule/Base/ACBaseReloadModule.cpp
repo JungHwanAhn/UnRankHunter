@@ -2,9 +2,15 @@
 
 
 #include "KYG/Weapon/WeaponModule/Base/ACBaseReloadModule.h"
+#include "Weapon/Core/BaseClass/BaseWeapon.h"
 
 UACBaseReloadModule::UACBaseReloadModule()
 {
+}
+
+void UACBaseReloadModule::ReloadWeapon(int32 RefillAmount, TEnumAsByte<EReloadResult> Result)
+{
+	IWeaponInterface::Execute_RefillAmmoCount(OwnerWeapon, RefillAmount);
 }
 
 void UACBaseReloadModule::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

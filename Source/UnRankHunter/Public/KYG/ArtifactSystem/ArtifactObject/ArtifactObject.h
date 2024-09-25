@@ -57,7 +57,11 @@ public:
 	bool IsEnabled();
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Category="Artifact")
 	AActor* ArtifactOwner{};
+
+	UPROPERTY(BlueprintReadOnly, Category="Artifact")
+	UWorld* WorldContext{};
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Artifact")
@@ -79,6 +83,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Artifact")
 	TEnumAsByte<EItemRarity> GetRarity() { return Rarity; }
 
+
+	UFUNCTION(BlueprintCallable, Category = "Artifact")
+	AActor* SpawnActor(TSubclassOf<AActor> ActorClass, FVector Location, FRotator Rotation);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Artifact")

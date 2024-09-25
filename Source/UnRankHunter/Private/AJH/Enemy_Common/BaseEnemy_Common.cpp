@@ -47,7 +47,7 @@ void ABaseEnemy_Common::AttackCheckOverlap(UPrimitiveComponent* OverlapComp, AAc
 {
 	AActor* Player = Cast<AActor>(OtherActor);
 	if (Player && Player->ActorHasTag("Player") && bIsDamage) {
-		UGameplayStatics::ApplyDamage(OtherActor, damage, GetController(), nullptr, NULL);
+		UGameplayStatics::ApplyDamage(OtherActor, BaseDamage, GetController(), nullptr, NULL);
 		bIsDamage = false;
 	}
 }
@@ -90,13 +90,28 @@ void ABaseEnemy_Common::Slow(float Value, bool bIsSlow)
 
 void ABaseEnemy_Common::EnemyDie()
 {
-	// Deactivate enemy instance.
-	DestroyEnemy();
+	bIsEnemyDie = true;
+
+	//// Deactivate enemy instance.
+	//DestroyEnemy();
 
 	// Spawn EXP ore.
 	SpawnExpOre();
 
+	// Stop and deactivate enemy procedure.
+	DisableEnemy();
+
 	OnDeath.Broadcast(this);
+
+	// Destroy enemy object after a seconds.
+	FTimerHandle DieTimerHandle;
+	FTimerDelegate DestroyCallback = FTimerDelegate::CreateLambda([this]() {
+		if (this->bIsActive == false)
+			return;
+
+		DestroyEnemy();
+		});
+	GetWorld()->GetTimerManager().SetTimer(DieTimerHandle, DestroyCallback, dieDelay, false);
 }
 
 void ABaseEnemy_Common::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -116,6 +131,8 @@ void ABaseEnemy_Common::OnCollisionEnd_Implementation()
 void ABaseEnemy_Common::OnSpawnFromPool_Implementation()
 {
 	bIsActive = true;
+
+	GetCapsuleComponent()->SetCollisionProfileName(EnemyCollisionProfile.Name);
 }
 
 void ABaseEnemy_Common::OnReturnToPool_Implementation()
@@ -143,9 +160,17 @@ void ABaseEnemy_Common::SpawnExpOre()
 	}
 }
 
+void ABaseEnemy_Common::DisableEnemy()
+{
+	GetCapsuleComponent()->SetCollisionProfileName(DeathCollisionProfile.Name, false);
+}
+
 void ABaseEnemy_Common::DestroyEnemy()
 {
 	// Deactivate enemy instance.
+	if (GetWorld() == nullptr)
+		return;
+
 	UPoolSubsystem* PoolSubsystem = GetWorld()->GetSubsystem<UPoolSubsystem>();
 	if (PoolSubsystem)
 	{
