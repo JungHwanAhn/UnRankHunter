@@ -97,6 +97,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Shooter Module")
 	void ApplyWeaponDamage(AActor* DamagedActor, float Damage);
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Module|Shooter Module")
+	void ApplyWeaponPointDamage(AActor* DamagedActor, float Damage, FVector HitFromVector, const FHitResult& HitResult);
+
+
 protected:
 	// Sets the firing point of the weapon to either the camera or the muzzle.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Module|Shooter Module")

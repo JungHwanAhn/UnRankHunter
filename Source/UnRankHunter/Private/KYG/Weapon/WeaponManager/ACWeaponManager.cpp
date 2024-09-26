@@ -94,6 +94,9 @@ bool UACWeaponManager::AddWeaponToSlot(int32 SlotIndex, FName WeaponID, FWeaponC
 	WeaponInst->ConstructWeapon(Params);
 	WeaponInst->SetStatProvider(this);
 
+	// Assign weapon event.
+	WeaponInst->OnWeaponHit.AddDynamic(this, &UACWeaponManager::OnWeaponHitCallback);
+
 	UE_LOG(LogTemp, Log, TEXT("WeaponManager: Success to add weapon. SUCCESS Add weapon to slot."));
 
 	if (bImmediatelyEquip)
@@ -130,6 +133,7 @@ bool UACWeaponManager::RemoveWeaponFromSlot(ABaseWeapon*& OutWeaponInstance, int
 
 	if (bDestroyInstance)
 	{
+		IWeaponInterface::Execute_SetWeaponEnabled(WeaponInst, false);
 		WeaponInst->Destroy();
 	}
 	else
@@ -209,6 +213,11 @@ int32 UACWeaponManager::GetEquippedSlot()
 int32 UACWeaponManager::GetSubSlot()
 {
 	return EquippedSlot == 0 ? 1 : 0;
+}
+
+void UACWeaponManager::OnWeaponHitCallback(ABaseWeapon* Invoker, AActor* Target, float BaseDamage, const FHitResult& HitResult)
+{
+	OnWeaponHit.Broadcast(Invoker, Target, BaseDamage, HitResult);
 }
 
 UClass* UACWeaponManager::GetWeaponBlueprintClass(FName WeaponID) const

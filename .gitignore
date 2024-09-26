@@ -77,3 +77,4 @@ DerivedDataCache/*
 # Massive asset file for project
 Content/02_Asset/*
 Content/StarterContent/*
+/Packages

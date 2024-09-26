@@ -76,12 +76,20 @@ public:
 	// ACWeaponManager*	Invoker
 	// ABaseWeapon*		PreviousWeapon
 	// ABaseWeapon*		CurrentWeapon
-	UPROPERTY(BlueprintAuthorityOnly, BlueprintAssignable, Category = "Weapon Manager|Events")
+	UPROPERTY(BlueprintAuthorityOnly, BlueprintAssignable, Category = "Weapon Manager Events")
 	FOnWeaponChangedDelegate OnWeaponChanged{};
 
+	UPROPERTY(BlueprintAssignable, Category = "Weapon Manager Events")
+	FOnWeaponHit OnWeaponHit{};
+
+private:
+	UFUNCTION()
+	void OnWeaponHitCallback(
+		class ABaseWeapon* Invoker,
+		AActor* Target,
+		float BaseDamage,
+		const FHitResult& HitResult);
 #pragma endregion
-
-
 
 private:
 	// Returns the weapon blueprint class for the given weapon ID.

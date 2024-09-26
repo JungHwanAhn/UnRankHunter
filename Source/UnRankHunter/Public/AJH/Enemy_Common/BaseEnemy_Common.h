@@ -45,7 +45,7 @@ protected:
 	float enemyHP = 100.0f;
 	float increaseXP = 10.0f;	// Deprecated. cause: unusing variable. kyg 08-26 modified.
 
-public:	
+public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnCollisionStart_Implementation() override;
@@ -62,6 +62,17 @@ protected:
 	// It is called when the character dies. It spawns an Explosive Ore.
 	UFUNCTION(BlueprintCallable, Category = "Enemy")
 	void SpawnExpOre();
+
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void DisableEnemy();
+
+public:
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Collision")
+	FCollisionProfileName EnemyCollisionProfile{ TEXT("EnemyCollision") };
+
+	UPROPERTY(EditAnywhere, Category = "Enemy Collision")
+	FCollisionProfileName DeathCollisionProfile{ TEXT("EnemyDeathCollision") };
 
 public:
 	FOnAttackEnd OnAttackEnd;
@@ -84,25 +95,25 @@ public:
 	void InitializeEnemyStat(float MaxHealth, float Damage, float MoveSpeed, float DropExp, int32 DropMoney, int32 DropToken);
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	FName EnemyID{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseMaxHealth{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseDamage{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseMoveSpeed{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	float BaseDropExp{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	int32 BaseDropMoney{};
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Stat")
 	int32 BaseDropToken{};
 
 public:
