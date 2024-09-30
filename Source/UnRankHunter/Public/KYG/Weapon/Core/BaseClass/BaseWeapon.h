@@ -384,4 +384,13 @@ protected:
 
 #pragma endregion
 
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data Table References")
+	UDataTable* WeaponParamDataTable{};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data Table References")
+	UDataTable* AttributeDataTable{};
+
+	UFUNCTION()
+	void ConstructDataTableReferences();
 };

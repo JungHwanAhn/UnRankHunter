@@ -118,5 +118,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Weapon|Bullet", meta = (ForceAsFunction))
 	void RefillAmmoCount(int32 AmmoCount);
-
 };

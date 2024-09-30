@@ -30,6 +30,8 @@ ABaseWeapon::ABaseWeapon()
 
 	MuzzlePositionComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePointComponent"));
 	MuzzlePositionComponent->SetupAttachment(MeshActorComp);
+
+	ConstructDataTableReferences();
 }
 
 // Called when the game starts or when spawned
@@ -86,8 +88,7 @@ void ABaseWeapon::SetupModule()
 void ABaseWeapon::LoadParameter()
 {
 	// Load parameter data.
-	FString ParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
-	UDataTable* ParamTable = LoadObject<UDataTable>(nullptr, *ParamDTPath);
+	UDataTable* ParamTable = WeaponParamDataTable;
 	if (ParamTable != nullptr)
 	{
 		FWeaponParameter* ParamRow = ParamTable->FindRow<FWeaponParameter>(WeaponID, "");
@@ -381,9 +382,6 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 	bWeaponEnabled = bNewEnabled;
 	//SetActorTickEnabled(bNewEnabled && bUseWeaponTick);
 
-	// Set enabled state of WeaponUI.
-	SetWeaponUIEnabled(bNewEnabled);
-
 	auto AllComps = GetComponents();
 	for (auto Comp : AllComps)
 	{
@@ -415,6 +413,9 @@ void ABaseWeapon::ForceSetWeaponEnable(bool bNewEnabled)
 		bIsStatRecent = false;
 		UpdateStaticStat();	// Stat Update 0824
 	}
+
+	// Set enabled state of WeaponUI.
+	SetWeaponUIEnabled(bNewEnabled);
 }
 
 int32 ABaseWeapon::GetAmmoCapacity()
@@ -613,8 +614,7 @@ void ABaseWeapon::InitializeWeaponAttribute(TArray<FName> AttributeIDs)
 TSubclassOf<UBaseWeaponAttribute> ABaseWeapon::FindAttributeClass(FName ID)
 {
 	// !FUNCTION IS NOT IMPLEMENTED NOW!
-	FString AttributeDTPath = "DataTable'/Game/01_Core/KYG/WeaponAttribute/DataTable/KYG_DT_AttributeTable.KYG_DT_AttributeTable'";
-	UDataTable* AttributeDT = LoadObject<UDataTable>(nullptr, *AttributeDTPath);
+	UDataTable* AttributeDT = AttributeDataTable;
 	if (AttributeDT == nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("[BaseWeapon] Finding Attribute Class is FAILURE! Data table is missing."));
@@ -698,6 +698,25 @@ void ABaseWeapon::SetWeaponUIEnabled(bool bEnabled)
 	if (CrosshairUIInstance->GetClass()->ImplementsInterface(UWeaponHudInterface::StaticClass()))
 	{
 		IWeaponHudInterface::Execute_SetUIEnabled(CrosshairUIInstance, bEnabled);
+	}
+}
+void ABaseWeapon::ConstructDataTableReferences()
+{
+	using DataTableFinder = ConstructorHelpers::FObjectFinder<UDataTable>;
+
+	FString WeaponParamDTPath = "DataTable'/Game/01_Core/KYG/Weapon/DataTable/KYG_DT_WeaponParamTable.KYG_DT_WeaponParamTable'";
+	FString AttributeDTPath = "DataTable'/Game/01_Core/KYG/WeaponAttribute/DataTable/KYG_DT_AttributeTable.KYG_DT_AttributeTable'";
+
+	static DataTableFinder WeaponParamDTAsset(*WeaponParamDTPath);
+	if (WeaponParamDTAsset.Succeeded())
+	{
+		WeaponParamDataTable = WeaponParamDTAsset.Object;
+	}
+
+	static DataTableFinder AttributeDTAsset(*AttributeDTPath);
+	if (AttributeDTAsset.Succeeded())
+	{
+		AttributeDataTable = AttributeDTAsset.Object;
 	}
 }
 #pragma endregion
