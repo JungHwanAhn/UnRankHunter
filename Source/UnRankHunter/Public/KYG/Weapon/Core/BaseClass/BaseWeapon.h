@@ -24,7 +24,7 @@ struct FWeaponFireInfo
 	GENERATED_BODY()
 
 	FWeaponFireInfo() {}
-	FWeaponFireInfo(EBulletType BulletType, TArray<AActor*> Bullets, TArray<FHitResult> HitResults, int32 BulletCount)
+	FWeaponFireInfo(TEnumAsByte<EBulletType> BulletType, TArray<AActor*> Bullets, TArray<FHitResult> HitResults, int32 BulletCount)
 	{
 		this->BulletType = BulletType;
 		this->Bullets = Bullets;
@@ -33,7 +33,7 @@ struct FWeaponFireInfo
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EBulletType BulletType{};
+	TEnumAsByte<EBulletType> BulletType{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AActor*> Bullets{};

@@ -14,7 +14,7 @@ public class UnRankHunter : ModuleRules
 		PublicIncludePaths.AddRange(new string[] {
 			"UnRankHunter/Public/AJH/Interface", "UnRankHunter/Public/AJH/Subsystem", "UnRankHunter/Public/AJH/Enemy_Common", "UnRankHunter/Public/AJH/Enemy_Common/AIController",
             "UnRankHunter/Public/AJH/Enemy_Common/Robot", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Melee", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Range", "UnRankHunter/Public/AJH/Enemy_Common/Robot/Elite",
-            "UnRankHunter/Public/AJH/Enemy_Common/Skeleton", "UnRankHunter/Public/AJH/Enemy_Common/Skeleton/Melee", "UnRankHunter/Public/AJH/Enemy_Common/Skeleton/Range", "UnRankHunter/Public/AJH/Enemy_Common/Skeleton/Elite" });
+            });
 
         // AJH_Boss
         PublicIncludePaths.AddRange(new string[] {
